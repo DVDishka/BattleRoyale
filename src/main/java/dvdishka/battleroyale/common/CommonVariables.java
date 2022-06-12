@@ -1,5 +1,6 @@
 package dvdishka.battleroyale.common;
 
+import it.unimi.dsi.fastutil.Pair;
 import org.bukkit.Bukkit;
 
 import java.util.Arrays;
@@ -10,9 +11,21 @@ public class CommonVariables {
 
     public static final Logger logger = Bukkit.getLogger();
 
-    public static final List<Integer> zones = Arrays.asList(2000, 1000, 700, 400, 200);
+    public static final List<Integer> zones = Arrays.asList(2000, 1500, 700, 400, 200);
 
-    public static final int finalZoneTime = 60;
+    public static final int timeOut = 120;
+
+    public static final int finalZoneTime = 120;
+
+    private static volatile int finalZoneCenter = 0;
+
+    public static void setFinalZoneCenter(int center) {
+        finalZoneCenter = center;
+    }
+
+    public static synchronized int getFinalZoneCenter() {
+        return finalZoneCenter;
+    }
 
     private static volatile int zoneStage = 0;
 
@@ -34,5 +47,5 @@ public class CommonVariables {
         executedZoneStage = num;
     }
 
-    public static final List<Integer> times = Arrays.asList(30, 30, 30, 30, 30);
+    public static final List<Integer> times = Arrays.asList(1500, 1200, 900, 600, 300);
 }

@@ -3,9 +3,8 @@ package dvdishka.battleroyale.handlers;
 import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.threads.PlayerUpdater;
 import dvdishka.battleroyale.threads.Logic;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.WorldBorder;
+import dvdishka.battleroyale.threads.Tasks.GiveSuperPower;
+import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -14,6 +13,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
 
 public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
@@ -30,9 +31,9 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
         if (commandName.equals("start")) {
             BossBar bossBar = Bukkit.createBossBar("", BarColor.RED, BarStyle.SEGMENTED_10);
-            Thread timer = new Logic(bossBar, "timer");
+            Thread logic = new Logic(bossBar, "Logic");
             Thread playerUpdater = new PlayerUpdater(bossBar, "playerUpdater");
-            timer.start();
+            logic.start();
             playerUpdater.start();
             WorldBorder worldBorder = Bukkit.getWorld("world").getWorldBorder();
             worldBorder.setCenter(0, 0);
@@ -40,20 +41,47 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             worldBorder.setSize(CommonVariables.zones.get(0), CommonVariables.times.get(0));
             CommonVariables.setZoneStage(1);
             BukkitScheduler scheduler = Bukkit.getScheduler();
+            GiveSuperPower.Execute();
+            for (World world : Bukkit.getWorlds()) {
+                world.setPVP(false);
+            }
             int task = scheduler.scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("BattleRoyale"), new Runnable() {
                 @Override
                 public void run() {
                     if (CommonVariables.getZoneStage() != CommonVariables.getExecutedZoneStage() && CommonVariables.getZoneStage() <= CommonVariables.zones.size()) {
                         CommonVariables.setExecutedZoneStage(CommonVariables.getZoneStage());
-                        Bukkit.getWorld("world").getWorldBorder().setSize(CommonVariables.zones.get(
-                                CommonVariables.getZoneStage() - 1), CommonVariables.times.get(CommonVariables.getZoneStage() - 1));
+                        for (World world : Bukkit.getWorlds()) {
+                            world.getWorldBorder().setSize(CommonVariables.zones.get(CommonVariables.getZoneStage() - 1)
+                                    , CommonVariables.times.get(CommonVariables.getZoneStage() - 1));
+                            if (CommonVariables.getZoneStage() == 2) {
+                                world.setPVP(true);
+                            }
+                        }
                     }
                     if (CommonVariables.getZoneStage() == CommonVariables.zones.size() + 1) {
-                        Bukkit.getWorld("world").getWorldBorder().setSize(2, CommonVariables.finalZoneTime);
+                        for (World world : Bukkit.getWorlds()) {
+                            double oldSize = world.getWorldBorder().getSize();
+                            world.getWorldBorder().setSize(Math.abs(CommonVariables.getFinalZoneCenter() + oldSize));
+                            world.getWorldBorder().setCenter(CommonVariables.getFinalZoneCenter(),
+                                    CommonVariables.getFinalZoneCenter());
+                            world.getWorldBorder().setSize(2, CommonVariables.finalZoneTime);
+                        }
                         scheduler.cancelTasks(Bukkit.getPluginManager().getPlugin("BattleRoyale"));
                     }
                 }
-            }, 60, 60);
+            }, 20, 20);
+        }
+
+        if (commandName.equals("stop")) {
+
+            Bukkit.getScheduler().cancelTasks(Bukkit.getPluginManager().getPlugin("BattleRoyale"));
+
+            for (World world : Bukkit.getWorlds()) {
+                world.getWorldBorder().setSize(1000000, 0);
+            }
+
+            //Вырубить поток
+            //Забрать Способности
         }
         return false;
     }
