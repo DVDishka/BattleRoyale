@@ -9,6 +9,7 @@ import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.security.spec.ECField;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -51,12 +52,14 @@ public class Logic extends Thread {
             double stage = 1;
             while (counter > 0) {
                 counter--;
-                if (counter % (time / 10) == 0) {
-                    stage -= 0.1;
-                    if (stage >= 0) {
-                        bossBar.setProgress(stage);
-                    } else {
-                        bossBar.setProgress(0);
+                if (time / 10 != 0) {
+                    if (counter % (time / 10) == 0) {
+                        stage -= 0.1;
+                        if (stage >= 0) {
+                            bossBar.setProgress(stage);
+                        } else {
+                            bossBar.setProgress(0);
+                        }
                     }
                 }
                 try {
@@ -66,16 +69,14 @@ public class Logic extends Thread {
                 }
             }
 
-            counter = CommonVariables.timeOut;
             if (i < CommonVariables.zones.size() - 1) {
                 bossBar.setTitle("Next zone " + -1 * (CommonVariables.zones.get(i + 1) / 2) + " to " +
                         (CommonVariables.zones.get(i + 1)) / 2);
             } else {
                 Random random = new Random();
                 int zoneCenter = random.nextInt(-1 * (CommonVariables.zones.get(CommonVariables.zones.size() - 1)) / 2,
-                        CommonVariables.zones.get(CommonVariables.zones.size() - 1));
+                        CommonVariables.zones.get(CommonVariables.zones.size() - 1) / 2);
                 CommonVariables.setFinalZoneCenter(zoneCenter);
-                CommonVariables.setZoneStage(CommonVariables.zones.size() + 1);
                 if (zoneCenter <= 0) {
                     bossBar.setTitle("Next zone " + zoneCenter + " to " + (zoneCenter + 1));
                 } else {
@@ -88,20 +89,22 @@ public class Logic extends Thread {
                 onlinePlayer.sendTitle(Title.builder().title(ChatColor.GOLD + "Break " + CommonVariables.timeOut
                         + " Seconds").build());
             }
-            counter--;
             try {
                 sleep(1000);
             } catch (Exception e) {
                 CommonVariables.logger.warning("Something went wrong in Logic Thread!");
             }
 
+            counter = CommonVariables.timeOut;
             try {
                 while (counter > 0) {
-                    if (counter % (CommonVariables.timeOut / 10) == 0) {
-                        breakStage -= 0.1;
-                        bossBar.setProgress(breakStage);
-                    }
                     counter--;
+                    try {
+                        if (counter % (CommonVariables.timeOut / 10) == 0) {
+                            breakStage -= 0.1;
+                            bossBar.setProgress(breakStage);
+                        }
+                    } catch (Exception ignored) {}
                     sleep(1000);
                 }
             } catch (Exception e) {
@@ -118,15 +121,18 @@ public class Logic extends Thread {
             bossBar.setTitle("Final Zone " + CommonVariables.getFinalZoneCenter() + " to " +
                     (CommonVariables.getFinalZoneCenter() - 1));
         }
+        CommonVariables.setZoneStage(CommonVariables.zones.size() + 1);
         bossBar.setProgress(1);
         int counter = CommonVariables.finalZoneTime;
         double stage = 1;
         while (counter > 0) {
             counter--;
-            if (counter % (CommonVariables.finalZoneTime / 10) == 0) {
-                stage -= 0.1;
-                bossBar.setProgress(stage);
-            }
+            try {
+                if (counter % (CommonVariables.finalZoneTime / 10) == 0) {
+                    stage -= 0.1;
+                    bossBar.setProgress(stage);
+                }
+            } catch (Exception ignored) {}
             try {
                 sleep(1000);
             } catch (Exception e) {

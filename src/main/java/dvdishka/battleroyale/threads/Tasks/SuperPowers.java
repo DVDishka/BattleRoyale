@@ -14,7 +14,7 @@ public enum SuperPowers {
     FireMan(List.of(PotionEffectType.FIRE_RESISTANCE), List.of(1), "Fireman"),
     AquaMan(List.of(PotionEffectType.WATER_BREATHING, PotionEffectType.DOLPHINS_GRACE), List.of(1, 2), "Aquaman"),
     Cat(List.of(PotionEffectType.NIGHT_VISION, PotionEffectType.INVISIBILITY), List.of(1, 1), "Cat"),
-    Husky(List.of(PotionEffectType.HEALTH_BOOST), List.of(3), "Husky"),
+    Husky(List.of(PotionEffectType.HEALTH_BOOST), List.of(1), "Husky"),
     Feather(List.of(PotionEffectType.SLOW_FALLING), List.of(3), "Feather"),
     Tank(List.of(PotionEffectType.DAMAGE_RESISTANCE, PotionEffectType.SLOW), List.of(1, 0), "Tank"),
     Healer(List.of(PotionEffectType.REGENERATION, PotionEffectType.HUNGER), List.of(1, 0), "Healer"),

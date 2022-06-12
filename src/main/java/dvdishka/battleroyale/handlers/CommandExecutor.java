@@ -61,7 +61,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                     if (CommonVariables.getZoneStage() == CommonVariables.zones.size() + 1) {
                         for (World world : Bukkit.getWorlds()) {
                             double oldSize = world.getWorldBorder().getSize();
-                            world.getWorldBorder().setSize(Math.abs(CommonVariables.getFinalZoneCenter() + oldSize));
+                            world.getWorldBorder().setSize(Math.abs(CommonVariables.getFinalZoneCenter() * 2) + oldSize);
                             world.getWorldBorder().setCenter(CommonVariables.getFinalZoneCenter(),
                                     CommonVariables.getFinalZoneCenter());
                             world.getWorldBorder().setSize(2, CommonVariables.finalZoneTime);
