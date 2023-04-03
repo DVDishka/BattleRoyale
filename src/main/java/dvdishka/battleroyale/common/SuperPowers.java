@@ -1,4 +1,4 @@
-package dvdishka.battleroyale.threads.Tasks;
+package dvdishka.battleroyale.common;
 
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;

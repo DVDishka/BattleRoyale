@@ -1,6 +1,7 @@
 package dvdishka.battleroyale;
 
 import dvdishka.battleroyale.common.CommonVariables;
+import dvdishka.battleroyale.handlers.EventHandler;
 import dvdishka.battleroyale.handlers.TabCompleter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -12,11 +13,15 @@ public final class BattleRoyale extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        CommonVariables.plugin = this;
+
         Bukkit.setSpawnRadius(0);
 
         PluginCommand battleRoyaleCommand = getCommand("battleroyale");
         CommandExecutor commandExecutor = new dvdishka.battleroyale.handlers.CommandExecutor();
         TabCompleter tabCompleter = new TabCompleter();
+
+        Bukkit.getPluginManager().registerEvents(new EventHandler(), this);
 
         battleRoyaleCommand.setExecutor(commandExecutor);
         battleRoyaleCommand.setTabCompleter(tabCompleter);

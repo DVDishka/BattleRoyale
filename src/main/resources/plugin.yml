@@ -1,11 +1,12 @@
 name: BattleRoyale
 version: '${project.version}'
 main: dvdishka.battleroyale.BattleRoyale
-api-version: 1.18
+api-version: 1.19
 prefix: BattleRoyale
 authors: [ dvdishka ]
 description: BattleRoyale plugin
 website: dvdcraft.ru
+folia-supported: true
 commands:
   battleroyale:
     permission: operator
