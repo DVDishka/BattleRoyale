@@ -2,11 +2,17 @@ package dvdishka.battleroyale.handlers;
 
 import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.common.ConfigVariables;
+import dvdishka.battleroyale.common.SuperPowers;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
@@ -42,7 +48,18 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
             for (Player player : Bukkit.getOnlinePlayers()) {
 
+                player.setHealth(player.getMaxHealth());
+
+                ArrayList<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
+                for (PotionEffect effect : effects) {
+                    player.removePotionEffect(effect.getType());
+                }
+
                 CommonVariables.timer.addPlayer(player);
+
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 10 , 1, false, false));
+                int powerNumber = new Random().nextInt(0, SuperPowers.values().length);
+                SuperPowers.values()[powerNumber].setToPlayer(player);
             }
 
             return true;

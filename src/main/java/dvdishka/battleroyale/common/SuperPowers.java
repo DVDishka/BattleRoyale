@@ -1,5 +1,7 @@
 package dvdishka.battleroyale.common;
 
+import net.kyori.adventure.title.TitlePart;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -31,9 +33,18 @@ public enum SuperPowers {
     private final String name;
 
     public void setToPlayer(Player player) {
+
+        String subTitle = "";
+
         for (int i = 0; i < effectType.size(); i++) {
-            player.addPotionEffect(new PotionEffect(this.effectType.get(i), 999999, this.amplifier.get(i)));
+
+            player.addPotionEffect(new PotionEffect(this.effectType.get(i), 999999, this.amplifier.get(i),
+                    false, false, true));
+
+            subTitle = subTitle.concat(effectType.get(i).getName());
         }
+
+        player.sendTitle(ChatColor.LIGHT_PURPLE + name, ChatColor.BLUE + subTitle);
     }
 
     public String getName() {
