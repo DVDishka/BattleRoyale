@@ -21,4 +21,5 @@ public class CommonVariables {
     public static int finalZoneX = 0;
     public static int finalZoneZ = 0;
     public static boolean isFinalZone = false;
+    public static boolean isZoneMove = false;
 }

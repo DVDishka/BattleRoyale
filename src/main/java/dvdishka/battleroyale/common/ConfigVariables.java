@@ -11,4 +11,9 @@ public class ConfigVariables {
     public static int timeOut = 1;
     public static int finalZoneDiametr = 100;
     public static int finalZoneTimeOut = 1;
+    public static int finalZoneDuration = 1;
+    public static int finalZoneMoveDuration = 60;
+    public static int minFinalZoneMove = 50;
+    public static int maxFinalZoneMove = 100;
+    public static int zoneMoveTimeout = 10;
 }

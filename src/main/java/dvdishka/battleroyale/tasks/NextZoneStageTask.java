@@ -16,7 +16,7 @@ public class NextZoneStageTask implements Runnable {
         for (World world : Bukkit.getWorlds()) {
 
             world.getWorldBorder().setSize(ConfigVariables.zones.get(CommonVariables.zoneStage),
-                    TimeUnit.MINUTES, ConfigVariables.times.get(CommonVariables.zoneStage));
+                    TimeUnit.SECONDS, ConfigVariables.times.get(CommonVariables.zoneStage));
         }
     }
 }

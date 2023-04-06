@@ -3,6 +3,7 @@ package dvdishka.battleroyale.handlers;
 import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.common.ConfigVariables;
 import dvdishka.battleroyale.common.SuperPowers;
+import dvdishka.battleroyale.common.UpdateEvent;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,10 +32,13 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
             CommonVariables.isGameStarted = true;
             CommonVariables.zoneStage = 0;
+            CommonVariables.isFinalZone = false;
+            CommonVariables.isZoneMove = false;
 
             for (World world : Bukkit.getWorlds()) {
 
                 world.setPVP(false);
+                world.getWorldBorder().setCenter(0, 0);
 
                 if (world.getWorldBorder().getSize()  != ConfigVariables.defaultWorldBorderDiametr) {
 
@@ -60,6 +64,8 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 10 , 1, false, false));
                 int powerNumber = new Random().nextInt(0, SuperPowers.values().length);
                 SuperPowers.values()[powerNumber].setToPlayer(player);
+
+                Bukkit.getPluginManager().callEvent(new UpdateEvent());
             }
 
             return true;
