@@ -7,6 +7,7 @@ import dvdishka.battleroyale.tasks.BossBarTimerTask;
 import dvdishka.battleroyale.tasks.NextZoneStageTask;
 import dvdishka.battleroyale.tasks.ZoneMovingTask;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
@@ -160,6 +161,21 @@ public class EventHandler implements Listener {
 
                 // BOARDERS TASK START
                 Bukkit.getGlobalRegionScheduler().runDelayed(CommonVariables.plugin, (task) -> {
+
+                    // SECOND ZONE LOGIC
+                    if (CommonVariables.zoneStage == 1) {
+
+                        for (World world : Bukkit.getWorlds()) {
+
+                            world.setPVP(true);
+                        }
+
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+
+                            player.sendTitle(ChatColor.RED + "PVP is now enabled!", "");
+                        }
+                    }
+
                     new NextZoneStageTask().run();
                     new BossBarTimerTask(CommonVariables.timer, ConfigVariables.times.get(CommonVariables.zoneStage),
                             "Borders are going from " + String.valueOf(previousZone / 2) + " to " +
@@ -167,15 +183,6 @@ public class EventHandler implements Listener {
 
                     CommonVariables.zoneStage++;
                 }, timeOut * 20);
-            }
-
-            // SECOND ZONE LOGIC
-            if (CommonVariables.zoneStage == 1) {
-
-                for (World world : Bukkit.getWorlds()) {
-
-                    world.setPVP(true);
-                }
             }
         }
     }

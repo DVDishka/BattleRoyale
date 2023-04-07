@@ -24,7 +24,7 @@ public class ZoneMovingTask implements Runnable {
 
         int step = duration * 20 / steps;
 
-        for (int i = step; i <= duration * 1200; i += step) {
+        for (int i = step; i <= duration * 20; i += step) {
 
             Bukkit.getGlobalRegionScheduler().runDelayed(CommonVariables.plugin, (task) -> {
                 for (World world : Bukkit.getWorlds()) {
