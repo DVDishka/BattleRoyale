@@ -97,11 +97,11 @@ public class EventHandler implements Listener {
 
             Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task -> {
                 new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneTimeOut, "Final zone - From " +
-                        String.valueOf(CommonVariables.finalZoneX - ConfigVariables.finalZoneDiametr / 2) +
-                        String.valueOf(CommonVariables.finalZoneZ - ConfigVariables.finalZoneDiametr / 2) +
+                        String.valueOf(CommonVariables.finalZoneX - ConfigVariables.finalZoneDiameter / 2) +
+                        String.valueOf(CommonVariables.finalZoneZ - ConfigVariables.finalZoneDiameter / 2) +
                         " To " +
-                        String.valueOf(CommonVariables.finalZoneX + ConfigVariables.finalZoneDiametr / 2) +
-                        String.valueOf(CommonVariables.finalZoneZ + ConfigVariables.finalZoneDiametr / 2),
+                        String.valueOf(CommonVariables.finalZoneX + ConfigVariables.finalZoneDiameter / 2) +
+                        String.valueOf(CommonVariables.finalZoneZ + ConfigVariables.finalZoneDiameter / 2),
                         BarColor.GREEN, false).run();
             }));
             Bukkit.getGlobalRegionScheduler().runDelayed(CommonVariables.plugin, (task) -> {
@@ -109,7 +109,7 @@ public class EventHandler implements Listener {
                 for (World world : Bukkit.getWorlds()) {
 
                     world.getWorldBorder().setCenter(CommonVariables.finalZoneX, CommonVariables.finalZoneZ);
-                    world.getWorldBorder().setSize(ConfigVariables.finalZoneDiametr);
+                    world.getWorldBorder().setSize(ConfigVariables.finalZoneDiameter);
 
                    if (!world.getName().equals("world")) {
                        for (Player player : world.getPlayers()) {
@@ -139,7 +139,7 @@ public class EventHandler implements Listener {
             // FIRST ZONE LOGIC
             if (CommonVariables.zoneStage == 0) {
 
-                previousZone = ConfigVariables.defaultWorldBorderDiametr;
+                previousZone = ConfigVariables.defaultWorldBorderDiameter;
 
                 // BOARDERS TASK START
                 Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task) -> {

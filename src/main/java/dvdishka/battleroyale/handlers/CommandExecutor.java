@@ -36,18 +36,20 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             CommonVariables.isFinalZone = false;
             CommonVariables.isZoneMove = false;
 
+            CommonVariables.timer.setVisible(true);
+
             for (World world : Bukkit.getWorlds()) {
 
                 world.setPVP(false);
                 world.getWorldBorder().setCenter(0, 0);
 
-                if (world.getWorldBorder().getSize()  != ConfigVariables.defaultWorldBorderDiametr) {
+                if (world.getWorldBorder().getSize()  != ConfigVariables.defaultWorldBorderDiameter) {
 
-                    world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiametr, 1);
+                    world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter, 1);
 
                 } else {
 
-                    world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiametr + 1, 1);
+                    world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter + 1, 1);
                 }
             }
 
@@ -81,6 +83,17 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
         }
 
         if (commandName.equals("stop")) {
+
+            Bukkit.getGlobalRegionScheduler().cancelTasks(CommonVariables.plugin);
+            Bukkit.getAsyncScheduler().cancelTasks(CommonVariables.plugin);
+
+            CommonVariables.timer.setVisible(false);
+
+            for (World world : Bukkit.getWorlds()) {
+                world.setPVP(true);
+                world.getWorldBorder().setCenter(0, 0);
+                world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter);
+            }
 
             return true;
         }
