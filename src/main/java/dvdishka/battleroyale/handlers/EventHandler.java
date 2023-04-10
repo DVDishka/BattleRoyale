@@ -6,6 +6,7 @@ import dvdishka.battleroyale.common.UpdateEvent;
 import dvdishka.battleroyale.tasks.BossBarTimerTask;
 import dvdishka.battleroyale.tasks.NextZoneStageTask;
 import dvdishka.battleroyale.tasks.ZoneMovingTask;
+import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -112,7 +113,10 @@ public class EventHandler implements Listener {
 
                    if (!world.getName().equals("world")) {
                        for (Player player : world.getPlayers()) {
-                           player.setHealth(0);
+                           EntityScheduler playerScheduler = player.getScheduler();
+                           playerScheduler.run(CommonVariables.plugin, (playerSchedulerTask) -> {
+                               player.setHealth(0);
+                           }, null);
                        }
                    }
                 }

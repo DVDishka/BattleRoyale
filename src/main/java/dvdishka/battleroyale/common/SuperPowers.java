@@ -1,11 +1,13 @@
 package dvdishka.battleroyale.common;
 
+import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
 import net.kyori.adventure.title.TitlePart;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public enum SuperPowers {
@@ -35,16 +37,22 @@ public enum SuperPowers {
     public void setToPlayer(Player player) {
 
         String subTitle = "";
+        EntityScheduler playerScheduler = player.getScheduler();
+        ArrayList<PotionEffect> potionEffects = new ArrayList<>();
 
         for (int i = 0; i < effectType.size(); i++) {
 
-            player.addPotionEffect(new PotionEffect(this.effectType.get(i), 999999, this.amplifier.get(i),
-                    false, false, true));
-
+            potionEffects.add(new PotionEffect(this.effectType.get(i), 999999999, this.amplifier.get(i), false, false));
             subTitle = subTitle.concat(effectType.get(i).getName());
         }
 
-        player.sendTitle(ChatColor.LIGHT_PURPLE + name, ChatColor.BLUE + subTitle);
+        playerScheduler.run(CommonVariables.plugin, (task) -> {
+            player.addPotionEffects(potionEffects);
+        }, null);
+
+        String title = subTitle;
+
+        player.sendTitle(ChatColor.LIGHT_PURPLE + name, ChatColor.BLUE + title);
     }
 
     public String getName() {
