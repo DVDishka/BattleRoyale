@@ -1,21 +1,27 @@
 package dvdishka.battleroyale.handlers;
 
+import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
 import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.common.ConfigVariables;
-import dvdishka.battleroyale.common.UpdateEvent;
+import dvdishka.battleroyale.classes.SuperPowers;
+import dvdishka.battleroyale.classes.UpdateEvent;
 import dvdishka.battleroyale.tasks.BossBarTimerTask;
 import dvdishka.battleroyale.tasks.NextZoneStageTask;
 import dvdishka.battleroyale.tasks.ZoneMovingTask;
 import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.potion.PotionEffect;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class EventHandler implements Listener {
@@ -24,12 +30,30 @@ public class EventHandler implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
 
         CommonVariables.timer.addPlayer(event.getPlayer());
+
+        Player player = event.getPlayer();
+        EntityScheduler playerScheduler = event.getPlayer().getScheduler();
+
+        playerScheduler.run(CommonVariables.plugin, (task) -> {
+
+            if (!CommonVariables.players.contains(player.getName()) && CommonVariables.isGameStarted) {
+
+                player.setGameMode(GameMode.SURVIVAL);
+
+                ArrayList<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
+                for (PotionEffect effect : effects) {
+                    player.removePotionEffect(effect.getType());
+                }
+
+                int powerNumber = new Random().nextInt(0, SuperPowers.values().length);
+                SuperPowers.values()[powerNumber].setToPlayer(player);
+            }
+        }, null);
     }
 
     @org.bukkit.event.EventHandler
     public void onBorder(UpdateEvent event) {
 
-        CommonVariables.logger.warning("1");
         Bukkit.getGlobalRegionScheduler().cancelTasks(CommonVariables.plugin);
 
         // ZONE MOVING LOGIC
@@ -43,38 +67,37 @@ public class EventHandler implements Listener {
             switch (side) {
 
                 // East
-                case 0:
+                case 0 -> {
                     x = 1;
                     z = 0;
                     sideName = "East";
-                    break;
+                }
 
                 // WEST
-                case 1:
+                case 1 -> {
                     x = -1;
                     z = 0;
                     sideName = "West";
-                    break;
+                }
 
                 // SOUTH
-                case 2:
+                case 2 -> {
                     z = 1;
                     x = 0;
                     sideName = "South";
-                    break;
+                }
 
                 // NORTH
-                case 3:
+                case 3 -> {
                     z = -1;
                     x = 0;
                     sideName = "North";
-                    break;
-
-                default:
+                }
+                default -> {
                     x = 0;
                     z = 0;
                     sideName = "";
-                    break;
+                }
             }
             Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task -> {
                 new BossBarTimerTask(CommonVariables.timer, ConfigVariables.zoneMoveTimeout, "Break zone will move " + sideName, BarColor.GREEN, false).run();
@@ -195,6 +218,39 @@ public class EventHandler implements Listener {
     public void onPortal(PlayerPortalEvent event) {
 
         if (CommonVariables.isFinalZone) {
+
+            event.setCancelled(true);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+
+        if (CommonVariables.isGameStarted) {
+
+            Player player = event.getPlayer();
+            EntityScheduler playerScheduler = event.getPlayer().getScheduler();
+
+            playerScheduler.run(CommonVariables.plugin, (task) -> {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.setSpectatorTarget(Bukkit.getPlayer("DVD1shka"));
+            }, null);
+        }
+
+        CommonVariables.deadPlayers.add(event.getPlayer().getName());
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onStopSpectating(PlayerStopSpectatingEntityEvent event) {
+
+        if (CommonVariables.deadPlayers.contains(event.getPlayer().getName())) {
+
+            Player player = event.getPlayer();
+            EntityScheduler playerScheduler = event.getPlayer().getScheduler();
+
+            playerScheduler.run(CommonVariables.plugin, (task) -> {
+                player.setSpectatorTarget(Bukkit.getPlayer("DVD1shka"));
+            }, null);
 
             event.setCancelled(true);
         }

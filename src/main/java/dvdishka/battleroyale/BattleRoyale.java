@@ -1,14 +1,18 @@
 package dvdishka.battleroyale;
 
+import dvdishka.battleroyale.classes.Team;
 import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.common.ConfigVariables;
 import dvdishka.battleroyale.handlers.EventHandler;
 import dvdishka.battleroyale.handlers.TabCompleter;
+import dvdishka.battleroyale.tasks.TeamActionBarTask;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.concurrent.TimeUnit;
 
 public final class BattleRoyale extends JavaPlugin {
 
@@ -28,6 +32,10 @@ public final class BattleRoyale extends JavaPlugin {
         battleRoyaleCommand.setTabCompleter(tabCompleter);
         CommonVariables.timer.setVisible(false);
 
+        Bukkit.getAsyncScheduler().runAtFixedRate(this, (task) -> {
+            new TeamActionBarTask().run();
+        }, 1, 1, TimeUnit.SECONDS);
+
         CommonVariables.logger.info("BattleRoyale plugin has been enabled!");
     }
 
@@ -43,7 +51,14 @@ public final class BattleRoyale extends JavaPlugin {
             world.setPVP(true);
             world.getWorldBorder().setCenter(0, 0);
             world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter);
-        }
+        };
+
+        CommonVariables.isGameStarted = true;
+        CommonVariables.zoneStage = 0;
+        CommonVariables.isFinalZone = false;
+        CommonVariables.isZoneMove = false;
+        CommonVariables.deadPlayers.clear();
+        CommonVariables.players.clear();
 
         CommonVariables.logger.info("BattleRoyale plugin has been disabled");
     }

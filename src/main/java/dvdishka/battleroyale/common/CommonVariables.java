@@ -7,6 +7,8 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -22,4 +24,8 @@ public class CommonVariables {
     public static int finalZoneZ = 0;
     public static boolean isFinalZone = false;
     public static boolean isZoneMove = false;
+
+    public static HashSet<String> deadPlayers = new HashSet<>();
+    public static HashSet<String> players = new HashSet<>();
+    public static HashMap<String, HashSet<String>> invites = new HashMap<>();
 }

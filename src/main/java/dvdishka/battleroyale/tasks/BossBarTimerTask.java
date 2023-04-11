@@ -1,12 +1,10 @@
 package dvdishka.battleroyale.tasks;
 
 import dvdishka.battleroyale.common.CommonVariables;
-import dvdishka.battleroyale.common.UpdateEvent;
+import dvdishka.battleroyale.classes.UpdateEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
-
-import java.util.concurrent.TimeUnit;
 
 public class BossBarTimerTask implements Runnable {
 
@@ -14,7 +12,7 @@ public class BossBarTimerTask implements Runnable {
     private final int time;
     private String barInfo;
     private BarColor barColor;
-    private boolean callEvent = false;
+    private boolean callEvent;
 
     public BossBarTimerTask(BossBar bossBar, int time, String barInfo, BarColor barColor, boolean callEvent) {
 

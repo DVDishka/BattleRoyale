@@ -1,5 +1,6 @@
-package dvdishka.battleroyale.common;
+package dvdishka.battleroyale.classes;
 
+import dvdishka.battleroyale.common.CommonVariables;
 import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
 import net.kyori.adventure.title.TitlePart;
 import org.bukkit.ChatColor;

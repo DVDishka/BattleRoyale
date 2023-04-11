@@ -1,4 +1,4 @@
-package dvdishka.battleroyale.common;
+package dvdishka.battleroyale.classes;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
