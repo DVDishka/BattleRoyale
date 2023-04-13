@@ -26,6 +26,18 @@ public class CommonVariables {
     public static boolean isZoneMove = false;
 
     public static HashSet<String> deadPlayers = new HashSet<>();
+    public static HashSet<String> deadTeams = new HashSet<>();
     public static HashSet<String> players = new HashSet<>();
     public static HashMap<String, HashSet<String>> invites = new HashMap<>();
+
+    public static void resetVariables() {
+
+        CommonVariables.isGameStarted = false;
+        CommonVariables.zoneStage = 0;
+        CommonVariables.isFinalZone = false;
+        CommonVariables.isZoneMove = false;
+        CommonVariables.deadPlayers.clear();
+        CommonVariables.players.clear();
+        CommonVariables.deadTeams.clear();
+    }
 }

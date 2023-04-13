@@ -53,12 +53,7 @@ public final class BattleRoyale extends JavaPlugin {
             world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter);
         };
 
-        CommonVariables.isGameStarted = true;
-        CommonVariables.zoneStage = 0;
-        CommonVariables.isFinalZone = false;
-        CommonVariables.isZoneMove = false;
-        CommonVariables.deadPlayers.clear();
-        CommonVariables.players.clear();
+        CommonVariables.resetVariables();
 
         CommonVariables.logger.info("BattleRoyale plugin has been disabled");
     }

@@ -22,7 +22,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         }
 
         if (args.length == 2) {
-            if (args[0].equals("team") && Team.get(sender.getName()) != null && Team.getTeam(sender.getName()).isLeader(sender.getName())) {
+            if (args[0].equals("team") && Team.getTeam(sender.getName()) != null && Team.getTeam(sender.getName()).isLeader(sender.getName())) {
                 return List.of("create", "leave", "invite");
             }
             if (args[0].equals("team")) {
@@ -35,7 +35,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         }
 
         if (args.length == 3) {
-            if (args[0].equals("team") && Team.get(sender.getName()) != null && Team.getTeam(sender.getName()).isLeader(sender.getName())) {
+            if (args[0].equals("team") && Team.getTeam(sender.getName()) != null && Team.getTeam(sender.getName()).isLeader(sender.getName())) {
                 return null;
             }
         }

@@ -1,14 +1,13 @@
 package dvdishka.battleroyale.handlers;
 
-import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
+import dvdishka.battleroyale.classes.*;
 import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.common.ConfigVariables;
-import dvdishka.battleroyale.classes.SuperPowers;
-import dvdishka.battleroyale.classes.UpdateEvent;
 import dvdishka.battleroyale.tasks.BossBarTimerTask;
 import dvdishka.battleroyale.tasks.NextZoneStageTask;
 import dvdishka.battleroyale.tasks.ZoneMovingTask;
 import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -28,6 +27,19 @@ public class EventHandler implements Listener {
 
     @org.bukkit.event.EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+
+        if (CommonVariables.isGameStarted) {
+            if (CommonVariables.deadPlayers.contains(event.getPlayer().getName()) &&
+                    Team.getTeam(event.getPlayer()) != null &&
+                    !CommonVariables.deadTeams.contains(Team.getTeam(event.getPlayer()).getName())) {
+
+                EntityScheduler playerScheduler = event.getPlayer().getScheduler();
+
+                playerScheduler.run(CommonVariables.plugin, (task) -> {
+                    event.getPlayer().kick(Component.text("You are out and your team is not yet!"));
+                }, null);
+            }
+        }
 
         CommonVariables.timer.addPlayer(event.getPlayer());
 
@@ -228,31 +240,62 @@ public class EventHandler implements Listener {
 
         if (CommonVariables.isGameStarted) {
 
-            Player player = event.getPlayer();
-            EntityScheduler playerScheduler = event.getPlayer().getScheduler();
+            if (CommonVariables.zoneStage < 2) {
 
-            playerScheduler.run(CommonVariables.plugin, (task) -> {
-                player.setGameMode(GameMode.SPECTATOR);
-                player.setSpectatorTarget(Bukkit.getPlayer("DVD1shka"));
-            }, null);
+                Bukkit.getPluginManager().callEvent(new FirstZoneDeathEvent(event.getPlayer()));
+            }
+            if (CommonVariables.zoneStage >= 2) {
+
+                Bukkit.getPluginManager().callEvent(new DeathEvent(event.getPlayer()));
+            }
         }
-
-        CommonVariables.deadPlayers.add(event.getPlayer().getName());
     }
 
     @org.bukkit.event.EventHandler
-    public void onStopSpectating(PlayerStopSpectatingEntityEvent event) {
+    public void onFirstZoneDeath(FirstZoneDeathEvent event) {}
 
-        if (CommonVariables.deadPlayers.contains(event.getPlayer().getName())) {
+    @org.bukkit.event.EventHandler
+    public void onGameDeath(DeathEvent event) {
 
-            Player player = event.getPlayer();
-            EntityScheduler playerScheduler = event.getPlayer().getScheduler();
+        Player player = event.getPlayer();
+        EntityScheduler playerScheduler = event.getPlayer().getScheduler();
+        Team playerTeam = Team.getTeam(event.getPlayer());
+        boolean isTeamDead = true;
 
+        CommonVariables.deadPlayers.add(event.getPlayer().getName());
+
+        if (playerTeam != null) {
+            for (String teamMate : playerTeam.getPlayers()) {
+                if (!CommonVariables.deadPlayers.contains(teamMate)) {
+                    isTeamDead = false;
+                    break;
+                }
+            }
+        }
+
+        playerScheduler.run(CommonVariables.plugin, (task) -> {
+            player.setGameMode(GameMode.SPECTATOR);
+        }, null);
+
+        if (isTeamDead) {
+
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+
+                EntityScheduler onlinePlayerScheduler = onlinePlayer.getScheduler();
+
+                onlinePlayerScheduler.run(CommonVariables.plugin, (task) -> {
+                    onlinePlayer.sendTitle(ChatColor.RED + "Team " + playerTeam.getName() + " is elemenated!", "");
+                }, null);
+            }
+
+            if (playerTeam != null) {
+                CommonVariables.deadTeams.add(playerTeam.getName());
+            }
+        }
+        if (!isTeamDead) {
             playerScheduler.run(CommonVariables.plugin, (task) -> {
-                player.setSpectatorTarget(Bukkit.getPlayer("DVD1shka"));
+                player.kick(Component.text("You are out and your team is not yet!"));
             }, null);
-
-            event.setCancelled(true);
         }
     }
 }

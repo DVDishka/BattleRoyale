@@ -106,17 +106,19 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter);
             }
 
-            CommonVariables.isGameStarted = true;
-            CommonVariables.zoneStage = 0;
-            CommonVariables.isFinalZone = false;
-            CommonVariables.isZoneMove = false;
-            CommonVariables.deadPlayers.clear();
-            CommonVariables.players.clear();
+            CommonVariables.resetVariables();
 
             return true;
         }
 
         if (commandName.equals("team") && args.length == 3 && args[1].equals("create")) {
+
+            if (CommonVariables.isGameStarted) {
+
+                sender.sendMessage(Component.text("You can not create team while the game is on!")
+                        .color(TextColor.color(222, 16, 23)));
+                return false;
+            }
 
             String teamName = args[2];
 
@@ -144,6 +146,13 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
         }
 
         if (commandName.equals("team") && args.length == 3 && args[1].equals("invite")) {
+
+            if (CommonVariables.isGameStarted) {
+
+                sender.sendMessage(Component.text("You can not invite while the game is on!")
+                        .color(TextColor.color(222, 16, 23)));
+                return false;
+            }
 
             Team playerTeam = Team.getTeam(sender.getName());
 
@@ -189,6 +198,13 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
         if (commandName.equals("accept") && args.length == 3 && CommonVariables.invites.get(args[2]).contains(args[1])) {
 
+            if (CommonVariables.isGameStarted) {
+
+                sender.sendMessage(Component.text("You can not accept an invitation while the game is on!")
+                        .color(TextColor.color(222, 16, 23)));
+                return false;
+            }
+
             CommonVariables.invites.get(args[2]).remove(args[1]);
             Player newMember = Bukkit.getPlayer(args[1]);
             Team oldTeam = Team.getTeam(args[1]);
@@ -222,6 +238,13 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
         }
 
         if (commandName.equals("team") && args.length == 2 && args[1].equals("leave")) {
+
+            if (CommonVariables.isGameStarted) {
+
+                sender.sendMessage(Component.text("You can not leave while the game is on!")
+                        .color(TextColor.color(222, 16, 23)));
+                return false;
+            }
 
             Team playerTeam = Team.getTeam(sender.getName());
 
