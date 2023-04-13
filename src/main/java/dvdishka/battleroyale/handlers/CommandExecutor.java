@@ -170,6 +170,13 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 return false;
             }
 
+            if (Team.getTeam(invitedPlayer) != null && Team.getTeam(invitedPlayer).getName().equals(playerTeam.getName())) {
+
+                sender.sendMessage(Component.text("This player is already in your team!")
+                        .color(TextColor.color(222, 16, 23)));
+                return false;
+            }
+
             CommonVariables.invites.get(playerTeam.getName()).add(invitedPlayer.getName());
 
             invitedPlayer.sendMessage(Component.text()
@@ -205,14 +212,18 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 return false;
             }
 
+            String newMemberName = args[1];
+            String newTeamName = args[2];
             CommonVariables.invites.get(args[2]).remove(args[1]);
             Player newMember = Bukkit.getPlayer(args[1]);
             Team oldTeam = Team.getTeam(args[1]);
-            Team.get(args[2]).addPlayer(args[1]);
+            Team newTeam = Team.get(args[2]);
+
+            newTeam.addPlayer(args[1]);
 
             if (oldTeam != null) {
 
-                oldTeam.removePlayer(args[1]);
+                oldTeam.removePlayer(newMemberName);
 
                 if (newMember != null) {
 
@@ -225,6 +236,13 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
                 newMember.sendMessage(Component.text("You has joined " + args[2])
                         .color(TextColor.color(0, 234, 53)));
+            }
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (!player.getName().equals(newMemberName)) {
+                    player.sendMessage(Component.text(newMemberName + " has joined " + newTeamName + "!")
+                            .color(newTeam.getColor()));
+                }
             }
 
             return true;
@@ -275,6 +293,36 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             }
 
             return true;
+        }
+
+        if (commandName.equals("team") && args.length == 2 && args[1].equals("list")) {
+
+            TextComponent.Builder fullMessage = Component.text();
+
+            fullMessage.append(Component.text("Teams:")
+                    .color(TextColor.color(187, 103, 97)));
+
+            for (Team team : Team.teams) {
+
+                fullMessage.appendNewline();
+                fullMessage.appendNewline();
+
+                Component teamMessagePart = Component.text("Team name: " + team.getName())
+                        .color(team.getColor())
+                        .appendNewline();
+                teamMessagePart = teamMessagePart.append(Component.text("Members number: " + team.getPlayers().size())
+                        .color(team.getColor())
+                        .appendNewline());
+                teamMessagePart = teamMessagePart.append(Component.text("Members: ")
+                        .color(team.getColor()));
+                for (String member : team.getPlayers()) {
+                    teamMessagePart = teamMessagePart.append(Component.text(member + " ")
+                            .color(team.getColor()));
+                }
+                fullMessage.append(teamMessagePart);
+            }
+
+            sender.sendMessage(fullMessage);
         }
 
         return false;

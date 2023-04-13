@@ -23,13 +23,13 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
         if (args.length == 2) {
             if (args[0].equals("team") && Team.getTeam(sender.getName()) != null && Team.getTeam(sender.getName()).isLeader(sender.getName())) {
-                return List.of("create", "leave", "invite");
+                return List.of("create", "leave", "invite", "list");
             }
             if (args[0].equals("team")) {
                 if (Team.getTeam(sender.getName()) != null) {
-                    return List.of("create", "leave");
+                    return List.of("create", "leave", "list");
                 } else {
-                    return List.of("create");
+                    return List.of("create", "list");
                 }
             }
         }

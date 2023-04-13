@@ -43,7 +43,7 @@ public enum SuperPowers {
 
         for (int i = 0; i < effectType.size(); i++) {
 
-            potionEffects.add(new PotionEffect(this.effectType.get(i), 999999999, this.amplifier.get(i), false, false));
+            potionEffects.add(new PotionEffect(this.effectType.get(i), 999999999, this.amplifier.get(i), false, false, true));
             subTitle = subTitle.concat(effectType.get(i).getName());
         }
 
