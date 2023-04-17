@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
-import org.yaml.snakeyaml.emitter.Emitter;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -300,12 +299,10 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             TextComponent.Builder fullMessage = Component.text();
 
             fullMessage.append(Component.text("Teams:")
-                    .color(TextColor.color(187, 103, 97)));
+                    .color(TextColor.color(187, 150, 0)));
+            fullMessage.appendNewline();
 
             for (Team team : Team.teams) {
-
-                fullMessage.appendNewline();
-                fullMessage.appendNewline();
 
                 Component teamMessagePart = Component.text("Team name: " + team.getName())
                         .color(team.getColor())
@@ -320,6 +317,18 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                             .color(team.getColor()));
                 }
                 fullMessage.append(teamMessagePart);
+                fullMessage.appendNewline();
+                fullMessage.appendNewline();
+            }
+
+            fullMessage.append(Component.text("Solo: ")
+                    .color(TextColor.color(187, 50, 0)));
+            fullMessage.appendNewline();
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (Team.getTeam(player) == null) {
+                    fullMessage.append(Component.text(player.getName() + " "));
+                }
             }
 
             sender.sendMessage(fullMessage);

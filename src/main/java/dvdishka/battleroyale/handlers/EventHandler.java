@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
@@ -236,6 +237,68 @@ public class EventHandler implements Listener {
     }
 
     @org.bukkit.event.EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+
+        ArrayList<String> aliveTeams = new ArrayList<>();
+        Player player = event.getPlayer();
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+
+            if (onlinePlayer.getGameMode().equals(GameMode.SURVIVAL) && !onlinePlayer.getName().equals(player.getName())) {
+                if (Team.getTeam(onlinePlayer) != null) {
+                    if (!aliveTeams.contains(onlinePlayer.getName())) {
+                        aliveTeams.add(Team.getTeam(onlinePlayer).getName());
+                    }                } else {
+                    aliveTeams.add(onlinePlayer.getName());
+                }
+            }
+        }
+
+        Team playerTeam = Team.getTeam(player);
+
+        if (aliveTeams.size() == 1) {
+
+            if (playerTeam == null || !aliveTeams.contains(playerTeam.getName())) {
+
+                EntityScheduler playerScheduler = player.getScheduler();
+
+                playerScheduler.run(CommonVariables.plugin, (task) -> {
+                    player.setGameMode(GameMode.SPECTATOR);
+                }, null);
+
+                CommonVariables.deadPlayers.add(player.getName());
+
+                if (playerTeam != null) {
+                    CommonVariables.deadTeams.add(playerTeam.getName());
+                }
+
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+
+                    EntityScheduler onlinePlayerScheduler = onlinePlayer.getScheduler();
+
+                    if (playerTeam != null) {
+                        onlinePlayerScheduler.run(CommonVariables.plugin, (task) -> {
+                            onlinePlayer.sendTitle(ChatColor.RED + "Team " + playerTeam.getName() + " is eliminated!", "");
+                        }, null);
+                    } else {
+                        onlinePlayerScheduler.run(CommonVariables.plugin, (task) -> {
+                            onlinePlayer.sendTitle(ChatColor.RED + "Team " + player.getName() + " is eliminated!", "");
+                        }, null);
+                    }
+                }
+
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    EntityScheduler onlinePlayerScheduler = onlinePlayer.getScheduler();
+
+                    onlinePlayerScheduler.run(CommonVariables.plugin, (task) -> {
+                        onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
+                    }, null);
+                }
+            }
+        }
+    }
+
+    @org.bukkit.event.EventHandler
     public void onDeath(PlayerDeathEvent event) {
 
         if (CommonVariables.isGameStarted) {
@@ -277,19 +340,48 @@ public class EventHandler implements Listener {
             player.setGameMode(GameMode.SPECTATOR);
         }, null);
 
+        ArrayList<String> aliveTeams = new ArrayList<>();
+
         if (isTeamDead) {
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
+                if (onlinePlayer.getGameMode().equals(GameMode.SURVIVAL) && !onlinePlayer.getName().equals(player.getName())) {
+                    if (Team.getTeam(onlinePlayer) != null) {
+                        if (!aliveTeams.contains(onlinePlayer.getName())) {
+                            aliveTeams.add(Team.getTeam(onlinePlayer).getName());
+                        }
+                    } else {
+                        aliveTeams.add(onlinePlayer.getName());
+                    }
+                }
+
                 EntityScheduler onlinePlayerScheduler = onlinePlayer.getScheduler();
 
-                onlinePlayerScheduler.run(CommonVariables.plugin, (task) -> {
-                    onlinePlayer.sendTitle(ChatColor.RED + "Team " + playerTeam.getName() + " is elemenated!", "");
-                }, null);
+                if (playerTeam != null) {
+                    onlinePlayerScheduler.run(CommonVariables.plugin, (task) -> {
+                        onlinePlayer.sendTitle(ChatColor.RED + "Team " + playerTeam.getName() + " is eliminated!", "");
+                    }, null);
+                } else {
+                    onlinePlayerScheduler.run(CommonVariables.plugin, (task) -> {
+                        onlinePlayer.sendTitle(ChatColor.RED + "Team " + player.getName() + " is eliminated!", "");
+                    }, null);
+                }
             }
 
             if (playerTeam != null) {
                 CommonVariables.deadTeams.add(playerTeam.getName());
+            }
+
+            if (aliveTeams.size() == 1) {
+
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    EntityScheduler onlinePlayerScheduler = onlinePlayer.getScheduler();
+
+                    onlinePlayerScheduler.run(CommonVariables.plugin, (task) -> {
+                        onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
+                    }, null);
+                }
             }
         }
         if (!isTeamDead) {
