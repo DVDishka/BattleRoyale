@@ -44,6 +44,10 @@ public class BossBarTimerTask implements Runnable {
 
             Bukkit.getGlobalRegionScheduler().runDelayed(CommonVariables.plugin, (task) -> {
 
+                if (!CommonVariables.isGameStarted) {
+                    return;
+                }
+
                 if (bossBar.getProgress() + 0.1 <= 1) {
                     bossBar.setProgress(bossBar.getProgress() + 0.1);
                 } else {

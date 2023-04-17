@@ -69,6 +69,11 @@ public class EventHandler implements Listener {
 
         Bukkit.getGlobalRegionScheduler().cancelTasks(CommonVariables.plugin);
 
+        if (!CommonVariables.isGameStarted) {
+
+            return;
+        }
+
         // ZONE MOVING LOGIC
         if (CommonVariables.zoneStage == ConfigVariables.zones.size()) {
 
@@ -248,7 +253,8 @@ public class EventHandler implements Listener {
                 if (Team.getTeam(onlinePlayer) != null) {
                     if (!aliveTeams.contains(onlinePlayer.getName())) {
                         aliveTeams.add(Team.getTeam(onlinePlayer).getName());
-                    }                } else {
+                    }
+                } else {
                     aliveTeams.add(onlinePlayer.getName());
                 }
             }
@@ -294,6 +300,8 @@ public class EventHandler implements Listener {
                         onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
                     }, null);
                 }
+
+                CommonVariables.isGameStarted = false;
             }
         }
     }
@@ -382,6 +390,12 @@ public class EventHandler implements Listener {
                         onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
                     }, null);
                 }
+
+                CommonVariables.isGameStarted = false;
+                CommonVariables.timer.setColor(BarColor.PINK);
+                CommonVariables.timer.setProgress(1);
+                CommonVariables.timer.setTitle("Team " + aliveTeams.get(0) + " wins!");
+                Bukkit.getConsoleSender().sendMessage("Team " + aliveTeams.get(0) + " wins!");
             }
         }
         if (!isTeamDead) {
