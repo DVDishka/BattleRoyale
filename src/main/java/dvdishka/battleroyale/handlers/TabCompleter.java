@@ -15,7 +15,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
         if (args.length == 1) {
             if (sender.isOp()) {
-                return List.of("start", "stop", "team");
+                return List.of("start", "stop", "team", "startBox");
             } else {
                 return List.of("team");
             }
@@ -31,6 +31,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                 } else {
                     return List.of("create", "list");
                 }
+            }
+            if (args[0].equals("startBox") && sender.isOp()) {
+                return List.of("create", "remove");
             }
         }
 

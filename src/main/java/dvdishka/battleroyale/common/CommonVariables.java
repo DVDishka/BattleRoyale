@@ -24,6 +24,7 @@ public class CommonVariables {
     public static int finalZoneZ = 0;
     public static boolean isFinalZone = false;
     public static boolean isZoneMove = false;
+    public static boolean isStartBox = false;
 
     public static HashSet<String> deadPlayers = new HashSet<>();
     public static HashSet<String> deadTeams = new HashSet<>();

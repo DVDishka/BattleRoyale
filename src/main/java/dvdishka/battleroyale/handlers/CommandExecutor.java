@@ -332,8 +332,122 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             }
 
             sender.sendMessage(fullMessage);
+
+            return true;
         }
 
+        if (commandName.equals("startBox") && args.length == 2 && args[1].equals("create") && sender.isOp()) {
+
+            CommonVariables.isStartBox = true;
+            Location startBoxLocation = new Location(Bukkit.getWorld("world"),
+                    ConfigVariables.startBoxX, ConfigVariables.startBoxY, ConfigVariables.startBoxZ);
+
+            Chunk startBoxChunk = startBoxLocation.getChunk();
+
+            int chunkX = startBoxChunk.getX() * 16;
+            int chunkZ = startBoxChunk.getZ() * 16;
+
+            Bukkit.getRegionScheduler().run(CommonVariables.plugin, startBoxLocation, (task) -> {
+
+                for (int x = chunkX; x < chunkX + 16; x++) {
+                    for (int z = chunkZ; z < chunkZ + 16; z++) {
+
+                        new Location(Bukkit.getWorld("world"), x, ConfigVariables.startBoxY, z).getBlock().setType(Material.BEDROCK);
+                    }
+                }
+
+                for (int y = ConfigVariables.startBoxY; y < ConfigVariables.startBoxY + 7; y++) {
+
+                    for (int x = chunkX; x < chunkX + 16; x++) {
+                        new Location(Bukkit.getWorld("world"), x, y, chunkZ).getBlock().setType(Material.BEDROCK);
+                    }
+
+                    for (int x = chunkX; x < chunkX + 16; x++) {
+                        new Location(Bukkit.getWorld("world"), x, y, chunkZ + 15).getBlock().setType(Material.BEDROCK);
+                    }
+
+                    for (int z = chunkZ; z < chunkZ + 16; z++) {
+                        new Location(Bukkit.getWorld("world"), chunkX, y, z).getBlock().setType(Material.BEDROCK);
+                    }
+
+                    for (int z = chunkZ; z < chunkZ + 16; z++) {
+                        new Location(Bukkit.getWorld("world"), chunkX + 15, y, z).getBlock().setType(Material.BEDROCK);
+                    }
+                }
+            });
+
+            Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task) -> {
+                Bukkit.getWorld("world").setSpawnLocation(chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8);
+                Bukkit.getWorld("world").setGameRule(GameRule.SPAWN_RADIUS, 1);
+            });
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                EntityScheduler playerScheduler = player.getScheduler();
+
+                playerScheduler.run(CommonVariables.plugin, (task) -> {
+                    player.teleportAsync(new Location(Bukkit.getWorld("world"), chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8));
+                }, null);
+            }
+
+            sender.sendMessage(Component.text("Start box has been created successfully!")
+                    .color(TextColor.color(0, 234, 53)));
+
+            return true;
+        }
+
+        if (commandName.equals("startBox") && args.length == 2 && args[1].equals("remove") && sender.isOp()) {
+
+            CommonVariables.isStartBox = false;
+            Location startBoxLocation = new Location(Bukkit.getWorld("world"),
+                    ConfigVariables.startBoxX, ConfigVariables.startBoxY, ConfigVariables.startBoxZ);
+
+            Bukkit.getRegionScheduler().run(CommonVariables.plugin, startBoxLocation, (task) -> {
+
+                Chunk startBoxChunk = startBoxLocation.getChunk();
+
+                int chunkX = startBoxChunk.getX() * 16;
+                int chunkZ = startBoxChunk.getZ() * 16;
+
+                for (int x = chunkX; x < chunkX + 16; x++) {
+                    for (int z = chunkZ; z < chunkZ + 16; z++) {
+
+                        new Location(Bukkit.getWorld("world"), x, ConfigVariables.startBoxY, z).getBlock().setType(Material.AIR);
+                    }
+                }
+
+                for (int y = ConfigVariables.startBoxY; y < ConfigVariables.startBoxY + 7; y++) {
+
+                    for (int x = chunkX; x < chunkX + 16; x++) {
+                        new Location(Bukkit.getWorld("world"), x, y, chunkZ).getBlock().setType(Material.AIR);
+                    }
+
+                    for (int x = chunkX; x < chunkX + 16; x++) {
+                        new Location(Bukkit.getWorld("world"), x, y, chunkZ + 15).getBlock().setType(Material.AIR);
+                    }
+
+                    for (int z = chunkZ; z < chunkZ + 16; z++) {
+                        new Location(Bukkit.getWorld("world"), chunkX, y, z).getBlock().setType(Material.AIR);
+                    }
+
+                    for (int z = chunkZ; z < chunkZ + 16; z++) {
+                        new Location(Bukkit.getWorld("world"), chunkX + 15, y, z).getBlock().setType(Material.AIR);
+                    }
+                }
+            });
+
+            Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task) -> {
+                Bukkit.getWorld("world").setSpawnLocation(0, 0, 0);
+                Bukkit.getWorld("world").setGameRule(GameRule.SPAWN_RADIUS, 0);
+            });
+
+            sender.sendMessage(Component.text("Start box has been removed successfully!")
+                    .color(TextColor.color(0, 234, 53)));
+
+            return true;
+        }
+
+        sender.sendMessage(Component.text("Unknown Command!")
+                .color(TextColor.color(222, 16, 23)));
         return false;
     }
 }
