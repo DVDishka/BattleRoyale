@@ -1,6 +1,5 @@
 package dvdishka.battleroyale;
 
-import dvdishka.battleroyale.classes.Team;
 import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.common.ConfigVariables;
 import dvdishka.battleroyale.handlers.EventHandler;

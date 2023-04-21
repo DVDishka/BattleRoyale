@@ -118,12 +118,12 @@ public class EventHandler implements Listener {
                 }
             }
             Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task -> {
-                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.zoneMoveTimeout, "Break zone will move " + sideName, BarColor.GREEN, false).run();
+                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.zoneMoveTimeout, ChatColor.YELLOW + "BREAK! The zone will move " + sideName, BarColor.GREEN, false).run();
             }));
 
             Bukkit.getGlobalRegionScheduler().runDelayed(CommonVariables.plugin, (task -> {
 
-                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneMoveDuration, "Zone is moving " + sideName, BarColor.RED, true).run();
+                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneMoveDuration, ChatColor.RED + "The zone moves " + sideName, BarColor.RED, true).run();
                 new ZoneMovingTask(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(length)).run();
             }), ConfigVariables.zoneMoveTimeout * 20L);
         }
@@ -137,7 +137,8 @@ public class EventHandler implements Listener {
                     ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2);
 
             Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task -> {
-                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneTimeOut, "Final zone - From " +
+                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneTimeOut, ChatColor.DARK_PURPLE +
+                        "BREAK! Final zone - From " +
                         String.valueOf(CommonVariables.finalZoneX - ConfigVariables.finalZoneDiameter / 2) +
                         String.valueOf(CommonVariables.finalZoneZ - ConfigVariables.finalZoneDiameter / 2) +
                         " To " +
@@ -162,7 +163,14 @@ public class EventHandler implements Listener {
                    }
                 }
 
-                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneDuration, "Final zone", BarColor.RED, true).run();
+                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneDuration, ChatColor.RED +
+                        "BREAK! Final zone - From " +
+                        String.valueOf(CommonVariables.finalZoneX - ConfigVariables.finalZoneDiameter / 2) +
+                        String.valueOf(CommonVariables.finalZoneZ - ConfigVariables.finalZoneDiameter / 2) +
+                        " To " +
+                        String.valueOf(CommonVariables.finalZoneX + ConfigVariables.finalZoneDiameter / 2) +
+                        String.valueOf(CommonVariables.finalZoneZ + ConfigVariables.finalZoneDiameter / 2),
+                        BarColor.RED, true).run();
 
                 CommonVariables.isFinalZone = true;
                 CommonVariables.isZoneMove = true;
@@ -186,7 +194,7 @@ public class EventHandler implements Listener {
                 Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task) -> {
                     new NextZoneStageTask().run();
                     new BossBarTimerTask(CommonVariables.timer, ConfigVariables.times.get(CommonVariables.zoneStage),
-                            "Borders are going from " + String.valueOf(previousZone / 2) + " to " +
+                            ChatColor.RED + "Zone moves From " + String.valueOf(previousZone / 2) + " To " +
                                     String.valueOf(ConfigVariables.zones.get(CommonVariables.zoneStage) / 2), BarColor.RED, true).run();
 
                     CommonVariables.zoneStage++;
@@ -198,9 +206,10 @@ public class EventHandler implements Listener {
 
                 // TIMER TASK START
                 Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task -> {
-                    new BossBarTimerTask(CommonVariables.timer, ConfigVariables.timeOut, "BREAK\nCurrent zone - " +
+                    new BossBarTimerTask(CommonVariables.timer, ConfigVariables.timeOut, ChatColor.YELLOW +
+                            "Current zone - " +
                             String.valueOf(previousZone / 2) +
-                            "Next zone - " + String.valueOf(ConfigVariables.zones.get(CommonVariables.zoneStage) / 2),
+                            "BREAK! Next zone - " + String.valueOf(ConfigVariables.zones.get(CommonVariables.zoneStage) / 2),
                             BarColor.GREEN, false).run();
                 }));
 
@@ -223,7 +232,7 @@ public class EventHandler implements Listener {
 
                     new NextZoneStageTask().run();
                     new BossBarTimerTask(CommonVariables.timer, ConfigVariables.times.get(CommonVariables.zoneStage),
-                            "Borders are going from " + String.valueOf(previousZone / 2) + " to " +
+                            ChatColor.RED + "Zone moves From " + String.valueOf(previousZone / 2) + " To " +
                                     String.valueOf(ConfigVariables.zones.get(CommonVariables.zoneStage) / 2), BarColor.RED, true).run();
 
                     CommonVariables.zoneStage++;
