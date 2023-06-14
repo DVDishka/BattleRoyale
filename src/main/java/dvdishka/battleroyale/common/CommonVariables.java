@@ -1,15 +1,15 @@
 package dvdishka.battleroyale.common;
 
+import dvdishka.battleroyale.classes.SuperPower;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class CommonVariables {
@@ -30,6 +30,7 @@ public class CommonVariables {
     public static HashSet<String> deadTeams = new HashSet<>();
     public static HashSet<String> players = new HashSet<>();
     public static HashMap<String, HashSet<String>> invites = new HashMap<>();
+    public static HashMap<String, SuperPower> playersPower = new HashMap<>();
 
     public static void resetVariables() {
 
@@ -40,5 +41,6 @@ public class CommonVariables {
         CommonVariables.deadPlayers.clear();
         CommonVariables.players.clear();
         CommonVariables.deadTeams.clear();
+        CommonVariables.playersPower.clear();
     }
 }

@@ -4,7 +4,8 @@ import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.common.ConfigVariables;
 import dvdishka.battleroyale.handlers.EventHandler;
 import dvdishka.battleroyale.handlers.TabCompleter;
-import dvdishka.battleroyale.tasks.TeamActionBarTask;
+import dvdishka.battleroyale.tasks.endless.EffectUpdateTask;
+import dvdishka.battleroyale.tasks.endless.TeamActionBarTask;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
@@ -33,7 +34,9 @@ public final class BattleRoyale extends JavaPlugin {
 
         Bukkit.getAsyncScheduler().runAtFixedRate(this, (task) -> {
             new TeamActionBarTask().run();
+            new EffectUpdateTask().run();
         }, 1, 1, TimeUnit.SECONDS);
+
 
         CommonVariables.logger.info("BattleRoyale plugin has been enabled!");
     }

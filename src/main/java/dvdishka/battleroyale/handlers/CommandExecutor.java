@@ -3,8 +3,9 @@ package dvdishka.battleroyale.handlers;
 import dvdishka.battleroyale.classes.Team;
 import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.common.ConfigVariables;
-import dvdishka.battleroyale.classes.SuperPowers;
+import dvdishka.battleroyale.classes.SuperPower;
 import dvdishka.battleroyale.classes.UpdateEvent;
+import dvdishka.battleroyale.tasks.endless.EffectUpdateTask;
 import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
@@ -83,11 +85,10 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 playerScheduler.run(CommonVariables.plugin, (task) -> {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 10 , 1, false, false));
                 }, null);
-                int powerNumber = new Random().nextInt(0, SuperPowers.values().length);
-                SuperPowers.values()[powerNumber].setToPlayer(player);
-
-                Bukkit.getPluginManager().callEvent(new UpdateEvent());
+                int powerNumber = new Random().nextInt(0, SuperPower.values().length);
+                SuperPower.values()[powerNumber].setToPlayer(player);
             }
+            Bukkit.getPluginManager().callEvent(new UpdateEvent());
 
             return true;
         }
@@ -200,6 +201,8 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                             )
                     .build()
             );
+
+            return true;
         }
 
         if (commandName.equals("accept") && args.length == 3 && CommonVariables.invites.get(args[2]).contains(args[1])) {

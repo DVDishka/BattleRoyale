@@ -9,4 +9,3 @@ website: dvdcraft.ru
 folia-supported: true
 commands:
   battleroyale:
-    permission: operator

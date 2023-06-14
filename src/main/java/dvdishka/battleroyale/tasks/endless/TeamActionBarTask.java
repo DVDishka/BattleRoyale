@@ -1,4 +1,4 @@
-package dvdishka.battleroyale.tasks;
+package dvdishka.battleroyale.tasks.endless;
 
 import dvdishka.battleroyale.classes.Team;
 import dvdishka.battleroyale.common.CommonVariables;
