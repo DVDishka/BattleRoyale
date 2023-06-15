@@ -13,6 +13,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -70,7 +71,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 EntityScheduler playerScheduler = player.getScheduler();
 
                 playerScheduler.run(CommonVariables.plugin, (task) -> {
-                        player.setHealth(player.getMaxHealth());
+                        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
                 }, null);
 
                 ArrayList<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
@@ -83,7 +84,8 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 CommonVariables.timer.addPlayer(player);
 
                 playerScheduler.run(CommonVariables.plugin, (task) -> {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 10 , 1, false, false));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 200 , 1, false, false));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 1200, 9, false, false));
                 }, null);
                 int powerNumber = new Random().nextInt(0, SuperPower.values().length);
                 SuperPower.values()[powerNumber].setToPlayer(player);
