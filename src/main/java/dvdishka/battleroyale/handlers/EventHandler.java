@@ -135,7 +135,7 @@ public class EventHandler implements Listener {
             CommonVariables.finalZoneZ = new Random().nextInt(-1 * ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2,
                     ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2);
 
-            Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task -> {
+            Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task) -> {
                 new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneTimeOut, ChatColor.DARK_PURPLE +
                         "BREAK! Final zone - From " +
                         String.valueOf(CommonVariables.finalZoneX - ConfigVariables.finalZoneDiameter / 2) + " " +
@@ -144,13 +144,17 @@ public class EventHandler implements Listener {
                         String.valueOf(CommonVariables.finalZoneX + ConfigVariables.finalZoneDiameter / 2) + " " +
                         String.valueOf(CommonVariables.finalZoneZ + ConfigVariables.finalZoneDiameter / 2),
                         BarColor.GREEN, false).run();
-            }));
+            });
+            for (World world : Bukkit.getWorlds()) {
+
+                world.getWorldBorder().setSize(ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) * 2);
+                world.getWorldBorder().setCenter(CommonVariables.finalZoneX, CommonVariables.finalZoneZ);
+            }
             Bukkit.getGlobalRegionScheduler().runDelayed(CommonVariables.plugin, (task) -> {
 
                 for (World world : Bukkit.getWorlds()) {
 
-                    world.getWorldBorder().setCenter(CommonVariables.finalZoneX, CommonVariables.finalZoneZ);
-                    world.getWorldBorder().setSize(ConfigVariables.finalZoneDiameter);
+                    world.getWorldBorder().setSize(ConfigVariables.finalZoneDiameter, ConfigVariables.finalZoneDuration);
 
                    if (!world.getName().equals("world")) {
                        for (Player player : world.getPlayers()) {
@@ -163,7 +167,7 @@ public class EventHandler implements Listener {
                 }
 
                 new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneDuration, ChatColor.RED +
-                        "BREAK! Final zone - From " +
+                        "Final zone - From " +
                         String.valueOf(CommonVariables.finalZoneX - ConfigVariables.finalZoneDiameter / 2) + " " +
                         String.valueOf(CommonVariables.finalZoneZ - ConfigVariables.finalZoneDiameter / 2) +
                         " To " +
