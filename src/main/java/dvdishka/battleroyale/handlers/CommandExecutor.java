@@ -5,11 +5,12 @@ import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.common.ConfigVariables;
 import dvdishka.battleroyale.classes.SuperPower;
 import dvdishka.battleroyale.classes.UpdateEvent;
+import dvdishka.battleroyale.common.Scheduler;
 import dvdishka.battleroyale.tasks.endless.EffectUpdateTask;
-import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
@@ -23,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
@@ -49,6 +49,10 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
             CommonVariables.timer.setVisible(true);
 
+            Scheduler.getScheduler().runAsyncRepeatingTask(CommonVariables.plugin, () -> {
+                new EffectUpdateTask().run();
+            }, 20, 20);
+
             for (World world : Bukkit.getWorlds()) {
 
                 world.setPVP(false);
@@ -68,25 +72,24 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
                 CommonVariables.players.add(player.getName());
 
-                EntityScheduler playerScheduler = player.getScheduler();
 
-                playerScheduler.run(CommonVariables.plugin, (task) -> {
+                Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
                         player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
-                }, null);
+                });
 
                 ArrayList<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
                 for (PotionEffect effect : effects) {
-                    playerScheduler.run(CommonVariables.plugin, (task) -> {
+                    Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
                         player.removePotionEffect(effect.getType());
-                    }, null);
+                    });
                 }
 
                 CommonVariables.timer.addPlayer(player);
 
-                playerScheduler.run(CommonVariables.plugin, (task) -> {
+                Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 200 , 1, false, false));
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 1200, 9, false, false));
-                }, null);
+                });
                 int powerNumber = new Random().nextInt(0, SuperPower.values().length);
                 SuperPower.values()[powerNumber].setToPlayer(player);
             }
@@ -97,8 +100,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
         if (commandName.equals("stop")) {
 
-            Bukkit.getGlobalRegionScheduler().cancelTasks(CommonVariables.plugin);
-            Bukkit.getAsyncScheduler().cancelTasks(CommonVariables.plugin);
+            Scheduler.cancelTasks(CommonVariables.plugin);
 
             CommonVariables.timer.setVisible(false);
 
@@ -139,6 +141,11 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             }
 
             Team newTeam = new Team(args[2], sender.getName());
+            org.bukkit.scoreboard.Team newTeamScoreboard = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(args[2]);
+            newTeamScoreboard.setPrefix(args[2] + " ");
+            newTeamScoreboard.color(NamedTextColor.nearestTo(newTeam.getColor()));
+            newTeamScoreboard.setAllowFriendlyFire(false);
+            newTeamScoreboard.addPlayer((Player) sender);
 
             newTeam.addPlayer(sender.getName());
 
@@ -224,10 +231,12 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             Team newTeam = Team.get(args[2]);
 
             newTeam.addPlayer(args[1]);
+            Bukkit.getScoreboardManager().getMainScoreboard().getTeam(newTeam.getName()).addPlayer(Bukkit.getOfflinePlayer(newMemberName));
 
             if (oldTeam != null) {
 
                 oldTeam.removePlayer(newMemberName);
+                Bukkit.getScoreboardManager().getMainScoreboard().getTeam(oldTeam.getName()).removePlayer(Bukkit.getOfflinePlayer(newMemberName));
 
                 if (newMember != null) {
 
@@ -281,19 +290,21 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 for (String member : playerTeam.getPlayers()) {
 
                     Player player = Bukkit.getPlayer(member);
-                    EntityScheduler playerScheduler = player.getScheduler();
 
-                    playerScheduler.run(CommonVariables.plugin, (task) -> {
+                    Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
                         player.displayName(null);
-                    }, null);
+                    });
                 }
 
                 playerTeam.setPlayers(new ArrayList<>());
 
                 Team.teams.remove(playerTeam);
+
+                Bukkit.getScoreboardManager().getMainScoreboard().getTeam(playerTeam.getName()).unregister();
             }
             else {
                 playerTeam.removePlayer(sender.getName());
+                Bukkit.getScoreboardManager().getMainScoreboard().getTeam(playerTeam.getName()).removePlayer(Bukkit.getOfflinePlayer(sender.getName()));
             }
 
             return true;
@@ -352,7 +363,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             int chunkX = startBoxChunk.getX() * 16;
             int chunkZ = startBoxChunk.getZ() * 16;
 
-            Bukkit.getRegionScheduler().run(CommonVariables.plugin, startBoxLocation, (task) -> {
+            Scheduler.getScheduler().runRegionTask(CommonVariables.plugin, startBoxLocation, () -> {
 
                 for (int x = chunkX; x < chunkX + 16; x++) {
                     for (int z = chunkZ; z < chunkZ + 16; z++) {
@@ -381,17 +392,16 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 }
             });
 
-            Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task) -> {
+            Scheduler.getScheduler().runSync(CommonVariables.plugin, () -> {
                 Bukkit.getWorld("world").setSpawnLocation(chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8);
                 Bukkit.getWorld("world").setGameRule(GameRule.SPAWN_RADIUS, 1);
             });
 
             for (Player player : Bukkit.getOnlinePlayers()) {
-                EntityScheduler playerScheduler = player.getScheduler();
 
-                playerScheduler.run(CommonVariables.plugin, (task) -> {
+                Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
                     player.teleportAsync(new Location(Bukkit.getWorld("world"), chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8));
-                }, null);
+                });
             }
 
             sender.sendMessage(Component.text("Start box has been created successfully!")
@@ -406,7 +416,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             Location startBoxLocation = new Location(Bukkit.getWorld("world"),
                     ConfigVariables.startBoxX, ConfigVariables.startBoxY, ConfigVariables.startBoxZ);
 
-            Bukkit.getRegionScheduler().run(CommonVariables.plugin, startBoxLocation, (task) -> {
+            Scheduler.getScheduler().runRegionTask(CommonVariables.plugin, startBoxLocation, () -> {
 
                 Chunk startBoxChunk = startBoxLocation.getChunk();
 
@@ -440,7 +450,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 }
             });
 
-            Bukkit.getGlobalRegionScheduler().run(CommonVariables.plugin, (task) -> {
+            Scheduler.getScheduler().runSync(CommonVariables.plugin, () -> {
                 Bukkit.getWorld("world").setSpawnLocation(0, 0, 0);
                 Bukkit.getWorld("world").setGameRule(GameRule.SPAWN_RADIUS, 0);
             });

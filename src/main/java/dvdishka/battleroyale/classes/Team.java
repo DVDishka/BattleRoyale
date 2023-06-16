@@ -1,7 +1,7 @@
 package dvdishka.battleroyale.classes;
 
 import dvdishka.battleroyale.common.CommonVariables;
-import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
+import dvdishka.battleroyale.common.Scheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
@@ -100,11 +100,10 @@ public class Team {
     public void removePlayer(String name) {
 
         Player player = Bukkit.getPlayer(name);
-        EntityScheduler playerScheduler = player.getScheduler();
 
-        playerScheduler.run(CommonVariables.plugin, (task) -> {
+        Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
             player.displayName(null);
-            }, null);
+        });
 
         players.remove(name);
     }

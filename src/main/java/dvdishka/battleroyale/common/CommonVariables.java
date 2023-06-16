@@ -6,8 +6,8 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scoreboard.Team;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Logger;
@@ -16,6 +16,8 @@ public class CommonVariables {
 
     public static Plugin plugin;
     public static final Logger logger = Bukkit.getLogger();
+
+    public static boolean isFolia = false;
 
     public static boolean isGameStarted = false;
     public static int zoneStage = 0;
@@ -42,5 +44,9 @@ public class CommonVariables {
         CommonVariables.players.clear();
         CommonVariables.deadTeams.clear();
         CommonVariables.playersPower.clear();
+
+        for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+            team.unregister();
+        }
     }
 }

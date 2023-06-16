@@ -2,7 +2,7 @@ package dvdishka.battleroyale.tasks.endless;
 
 import dvdishka.battleroyale.classes.Team;
 import dvdishka.battleroyale.common.CommonVariables;
-import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
+import dvdishka.battleroyale.common.Scheduler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,11 +18,9 @@ public class TeamActionBarTask implements Runnable {
                 Player player = Bukkit.getPlayer(playerName);
                 if (player != null) {
 
-                    EntityScheduler playerScheduler = player.getScheduler();
-
-                    playerScheduler.run(CommonVariables.plugin, (task) -> {
+                    Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
                         player.sendActionBar(Component.text(team.getName()).color(team.getColor()));
-                    }, null);
+                    });
                 }
             }
         }

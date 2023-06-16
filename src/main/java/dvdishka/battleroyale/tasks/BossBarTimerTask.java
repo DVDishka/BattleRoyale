@@ -2,6 +2,7 @@ package dvdishka.battleroyale.tasks;
 
 import dvdishka.battleroyale.common.CommonVariables;
 import dvdishka.battleroyale.classes.UpdateEvent;
+import dvdishka.battleroyale.common.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
@@ -34,15 +35,15 @@ public class BossBarTimerTask implements Runnable {
 
         if (callEvent) {
 
-            Bukkit.getGlobalRegionScheduler().runDelayed(CommonVariables.plugin, (task -> {
+            Scheduler.getScheduler().runSyncDelayed(CommonVariables.plugin, () -> {
 
                 Bukkit.getPluginManager().callEvent(new UpdateEvent());
-            }), time);
+            }, time);
         }
 
         for (int i = changePeriod; i <= time; i += changePeriod) {
 
-            Bukkit.getGlobalRegionScheduler().runDelayed(CommonVariables.plugin, (task) -> {
+            Scheduler.getScheduler().runSyncDelayed(CommonVariables.plugin, () -> {
 
                 if (!CommonVariables.isGameStarted) {
                     return;

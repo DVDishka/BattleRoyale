@@ -2,7 +2,7 @@ package dvdishka.battleroyale.tasks.endless;
 
 import dvdishka.battleroyale.classes.SuperPower;
 import dvdishka.battleroyale.common.CommonVariables;
-import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
+import dvdishka.battleroyale.common.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -21,16 +21,15 @@ public class EffectUpdateTask implements Runnable {
 
                 Player player = Bukkit.getPlayer(playerPower.getKey());
                 assert player != null;
-                EntityScheduler playerScheduler = player.getScheduler();
 
                 List<PotionEffectType> effectTypes = playerPower.getValue().getEffects();
                 List<Integer> amplifiers = playerPower.getValue().getAmplifiers();
 
-                playerScheduler.run(CommonVariables.plugin, (task) -> {
+                Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
                     for (int i = 0; i < effectTypes.size(); i++) {
                         player.addPotionEffect(new PotionEffect(effectTypes.get(i), 240, amplifiers.get(i), false, false, true));
                     }
-                }, null);
+                });
             }
         }
     }
