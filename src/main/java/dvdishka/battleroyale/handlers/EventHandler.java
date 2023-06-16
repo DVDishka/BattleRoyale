@@ -223,7 +223,7 @@ public class EventHandler implements Listener {
 
                         for (Player player : Bukkit.getOnlinePlayers()) {
 
-                            player.sendTitle(ChatColor.RED + "PVP has been enabled!", "");
+                            player.sendTitle(ChatColor.RED + "PVP is now enabled!", "");
                         }
                     }
 

@@ -27,7 +27,10 @@ public class EffectUpdateTask implements Runnable {
 
                 Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
                     for (int i = 0; i < effectTypes.size(); i++) {
-                        player.addPotionEffect(new PotionEffect(effectTypes.get(i), 240, amplifiers.get(i), false, false, true));
+                        if (!player.hasPotionEffect(effectTypes.get(i)) || player.getPotionEffect(effectTypes.get(i)) != null
+                                && player.getPotionEffect(effectTypes.get(i)).getAmplifier() < amplifiers.get(i)) {
+                            player.addPotionEffect(new PotionEffect(effectTypes.get(i), 99999999, amplifiers.get(i), false, false, true));
+                        }
                     }
                 });
             }
