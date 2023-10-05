@@ -247,13 +247,14 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
             if (newMember != null) {
 
-                newMember.sendMessage(Component.text("You has joined " + args[2])
+                newMember.sendMessage(Component.text("You joined " + args[2])
                         .color(TextColor.color(0, 234, 53)));
+
             }
 
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.getName().equals(newMemberName)) {
-                    player.sendMessage(Component.text(newMemberName + " has joined " + newTeamName + "!")
+                    player.sendMessage(Component.text(newMemberName + " joined " + newTeamName + "!")
                             .color(newTeam.getColor()));
                 }
             }
@@ -457,6 +458,22 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
             sender.sendMessage(Component.text("Start box has been removed successfully!")
                     .color(TextColor.color(0, 234, 53)));
+
+            return true;
+        }
+
+        if (commandName.equals("revive") && args.length == 2) {
+
+            if (!sender.isOp()) {
+                return false;
+            }
+
+            CommonVariables.deadPlayers.remove(args[1]);
+            try {
+                CommonVariables.deadTeams.remove(Team.getTeam(args[1]).getName());
+
+                sender.sendMessage(args[1] + " has been revived!");
+            } catch (Exception ignored) {}
 
             return true;
         }

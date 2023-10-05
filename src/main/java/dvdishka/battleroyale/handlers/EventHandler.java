@@ -113,13 +113,13 @@ public class EventHandler implements Listener {
                 }
             }
             Scheduler.getScheduler().runSync(CommonVariables.plugin, () -> {
-                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.zoneMoveTimeout, ChatColor.YELLOW + "BREAK! The zone will move " + sideName, BarColor.GREEN, false).run();
+                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.zoneMoveTimeOut, ChatColor.YELLOW + "BREAK! The zone will move " + sideName, BarColor.GREEN, false).run();
             });
 
             Scheduler.getScheduler().runSyncDelayed(CommonVariables.plugin, () -> {
                 new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneMoveDuration, ChatColor.RED + "The zone moves " + sideName, BarColor.RED, true).run();
                 new ZoneMovingTask(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(length)).run();
-            }, ConfigVariables.zoneMoveTimeout * 20L);
+            }, ConfigVariables.zoneMoveTimeOut * 20L);
         }
 
         // FINAL ZONE LOGIC

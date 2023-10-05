@@ -1,0 +1,19 @@
+defaultWorldBorderDiameter: 10000
+# Zone diameter (blocks)
+zones: [2000, 1500, 1000, 700, 500, 200]
+# Zone duration (seconds)
+times: [1500, 1200, 900, 600, 300, 200]
+# Timeout between zones
+timeOut: 600
+# Final zone time (Seconds)
+finalZoneDuration: 60
+finalZoneDiameter: 100
+finalZoneTimeOut: 200
+finalZoneMoveDuration: 120
+minFinalZoneMove: 50
+maxFinalZoneMove: 100
+zoneMoveTimeOut: 10
+startBoxX: 100
+startBoxY: 200
+startBoxZ: 60
+betterLogging: false
