@@ -1,14 +1,17 @@
-package dvdishka.battleroyale;
+package ru.dvdishka.battleroyale;
 
 import dvdishka.battleroyale.common.*;
-import dvdishka.battleroyale.handlers.EventHandler;
-import dvdishka.battleroyale.handlers.TabCompleter;
-import dvdishka.battleroyale.tasks.endless.EffectUpdateTask;
+import ru.dvdishka.battleroyale.handlers.EventHandler;
+import ru.dvdishka.battleroyale.handlers.TabCompleter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.ConfigVariables;
+import ru.dvdishka.battleroyale.common.Initialization;
+import ru.dvdishka.battleroyale.common.Scheduler;
 
 import java.io.File;
 
@@ -22,7 +25,7 @@ public final class BattleRoyale extends JavaPlugin {
         Bukkit.setSpawnRadius(0);
 
         PluginCommand battleRoyaleCommand = getCommand("battleroyale");
-        CommandExecutor commandExecutor = new dvdishka.battleroyale.handlers.CommandExecutor();
+        CommandExecutor commandExecutor = new ru.dvdishka.battleroyale.handlers.CommandExecutor();
         TabCompleter tabCompleter = new TabCompleter();
         Bukkit.getPluginManager().registerEvents(new EventHandler(), this);
 

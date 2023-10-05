@@ -1,7 +1,7 @@
-package dvdishka.battleroyale.tasks;
+package ru.dvdishka.battleroyale.tasks;
 
-import dvdishka.battleroyale.common.CommonVariables;
-import dvdishka.battleroyale.common.Scheduler;
+import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 

@@ -1,4 +1,4 @@
-package dvdishka.battleroyale.common;
+package ru.dvdishka.battleroyale.common;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

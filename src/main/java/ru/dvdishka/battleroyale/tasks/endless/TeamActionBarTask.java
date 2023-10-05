@@ -1,8 +1,8 @@
-package dvdishka.battleroyale.tasks.endless;
+package ru.dvdishka.battleroyale.tasks.endless;
 
-import dvdishka.battleroyale.classes.Team;
-import dvdishka.battleroyale.common.CommonVariables;
-import dvdishka.battleroyale.common.Scheduler;
+import ru.dvdishka.battleroyale.classes.Team;
+import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.Scheduler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

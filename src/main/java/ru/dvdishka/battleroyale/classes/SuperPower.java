@@ -1,6 +1,6 @@
-package dvdishka.battleroyale.classes;
+package ru.dvdishka.battleroyale.classes;
 
-import dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.CommonVariables;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;

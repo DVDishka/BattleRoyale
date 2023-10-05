@@ -1,12 +1,12 @@
-package dvdishka.battleroyale.handlers;
+package ru.dvdishka.battleroyale.handlers;
 
-import dvdishka.battleroyale.classes.Team;
-import dvdishka.battleroyale.common.CommonVariables;
-import dvdishka.battleroyale.common.ConfigVariables;
-import dvdishka.battleroyale.classes.SuperPower;
-import dvdishka.battleroyale.classes.UpdateEvent;
-import dvdishka.battleroyale.common.Scheduler;
-import dvdishka.battleroyale.tasks.endless.EffectUpdateTask;
+import ru.dvdishka.battleroyale.classes.Team;
+import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.ConfigVariables;
+import ru.dvdishka.battleroyale.classes.SuperPower;
+import ru.dvdishka.battleroyale.classes.UpdateEvent;
+import ru.dvdishka.battleroyale.common.Scheduler;
+import ru.dvdishka.battleroyale.tasks.endless.EffectUpdateTask;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;

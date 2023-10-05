@@ -1,6 +1,6 @@
-package dvdishka.battleroyale.handlers;
+package ru.dvdishka.battleroyale.handlers;
 
-import dvdishka.battleroyale.classes.Team;
+import ru.dvdishka.battleroyale.classes.Team;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;

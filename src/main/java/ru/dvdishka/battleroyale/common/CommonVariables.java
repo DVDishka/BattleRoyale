@@ -1,6 +1,6 @@
-package dvdishka.battleroyale.common;
+package ru.dvdishka.battleroyale.common;
 
-import dvdishka.battleroyale.classes.SuperPower;
+import ru.dvdishka.battleroyale.classes.SuperPower;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -8,7 +8,6 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 
 import java.util.HashMap;

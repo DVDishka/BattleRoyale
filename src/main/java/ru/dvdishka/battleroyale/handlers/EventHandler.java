@@ -1,12 +1,13 @@
-package dvdishka.battleroyale.handlers;
+package ru.dvdishka.battleroyale.handlers;
 
 import dvdishka.battleroyale.classes.*;
-import dvdishka.battleroyale.common.CommonVariables;
-import dvdishka.battleroyale.common.ConfigVariables;
-import dvdishka.battleroyale.common.Scheduler;
-import dvdishka.battleroyale.tasks.BossBarTimerTask;
-import dvdishka.battleroyale.tasks.NextZoneStageTask;
-import dvdishka.battleroyale.tasks.ZoneMovingTask;
+import ru.dvdishka.battleroyale.classes.*;
+import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.ConfigVariables;
+import ru.dvdishka.battleroyale.common.Scheduler;
+import ru.dvdishka.battleroyale.tasks.BossBarTimerTask;
+import ru.dvdishka.battleroyale.tasks.NextZoneStageTask;
+import ru.dvdishka.battleroyale.tasks.ZoneMovingTask;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

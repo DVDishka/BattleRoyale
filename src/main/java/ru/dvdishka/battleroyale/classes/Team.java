@@ -1,7 +1,7 @@
-package dvdishka.battleroyale.classes;
+package ru.dvdishka.battleroyale.classes;
 
-import dvdishka.battleroyale.common.CommonVariables;
-import dvdishka.battleroyale.common.Scheduler;
+import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.Scheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
