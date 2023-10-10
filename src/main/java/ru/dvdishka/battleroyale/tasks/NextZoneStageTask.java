@@ -1,6 +1,6 @@
 package ru.dvdishka.battleroyale.tasks;
 
-import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.ConfigVariables;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -15,8 +15,8 @@ public class NextZoneStageTask implements Runnable {
 
         for (World world : Bukkit.getWorlds()) {
 
-            world.getWorldBorder().setSize(ConfigVariables.zones.get(CommonVariables.zoneStage),
-                    TimeUnit.SECONDS, ConfigVariables.times.get(CommonVariables.zoneStage));
+            world.getWorldBorder().setSize(ConfigVariables.zones.get(Common.zoneStage),
+                    TimeUnit.SECONDS, ConfigVariables.times.get(Common.zoneStage));
         }
     }
 }

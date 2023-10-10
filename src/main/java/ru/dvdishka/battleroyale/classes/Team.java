@@ -1,6 +1,6 @@
 package ru.dvdishka.battleroyale.classes;
 
-import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.Scheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -25,7 +25,7 @@ public class Team {
         this.leader = leader;
         this.color = TextColor.color(new Random().nextInt(0, 255), new Random().nextInt(0, 255), new Random().nextInt(0, 255));
         teams.add(this);
-        CommonVariables.invites.put(name, new HashSet<>());
+        Common.invites.put(name, new HashSet<>());
     }
 
     public static Team get(String teamName) {
@@ -101,7 +101,7 @@ public class Team {
 
         Player player = Bukkit.getPlayer(name);
 
-        Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
+        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
             player.displayName(null);
         });
 

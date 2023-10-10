@@ -1,8 +1,7 @@
 package ru.dvdishka.battleroyale.handlers;
 
-import dvdishka.battleroyale.classes.*;
 import ru.dvdishka.battleroyale.classes.*;
-import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.ConfigVariables;
 import ru.dvdishka.battleroyale.common.Scheduler;
 import ru.dvdishka.battleroyale.tasks.BossBarTimerTask;
@@ -30,24 +29,24 @@ public class EventHandler implements Listener {
     @org.bukkit.event.EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
 
-        if (CommonVariables.isGameStarted) {
-            if (CommonVariables.deadPlayers.contains(event.getPlayer().getName()) &&
+        if (Common.isGameStarted) {
+            if (Common.deadPlayers.contains(event.getPlayer().getName()) &&
                     Team.getTeam(event.getPlayer()) != null &&
-                    !CommonVariables.deadTeams.contains(Team.getTeam(event.getPlayer()).getName())) {
+                    !Common.deadTeams.contains(Team.getTeam(event.getPlayer()).getName())) {
 
-                Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, event.getPlayer(), () -> {
+                Scheduler.getScheduler().runPlayerTask(Common.plugin, event.getPlayer(), () -> {
                     event.getPlayer().kick(Component.text("You are out and your team is not yet!"));
                 });
             }
         }
 
-        CommonVariables.timer.addPlayer(event.getPlayer());
+        Common.timer.addPlayer(event.getPlayer());
 
         Player player = event.getPlayer();
 
-        Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
+        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
 
-            if (!CommonVariables.players.contains(player.getName()) && CommonVariables.isGameStarted) {
+            if (!Common.players.contains(player.getName()) && Common.isGameStarted) {
 
                 player.setGameMode(GameMode.SURVIVAL);
 
@@ -65,13 +64,13 @@ public class EventHandler implements Listener {
     @org.bukkit.event.EventHandler
     public void onBorder(UpdateEvent event) {
 
-        if (!CommonVariables.isGameStarted) {
+        if (!Common.isGameStarted) {
 
             return;
         }
 
         // ZONE MOVING LOGIC
-        if (CommonVariables.zoneStage == ConfigVariables.zones.size()) {
+        if (Common.zoneStage == ConfigVariables.zones.size()) {
 
             int side = new Random().nextInt(0, 4);
             int length = new Random().nextInt(ConfigVariables.minFinalZoneMove, ConfigVariables.maxFinalZoneMove) / 10 * 10;
@@ -113,40 +112,40 @@ public class EventHandler implements Listener {
                     sideName = "";
                 }
             }
-            Scheduler.getScheduler().runSync(CommonVariables.plugin, () -> {
-                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.zoneMoveTimeOut, ChatColor.YELLOW + "BREAK! The zone will move " + sideName, BarColor.GREEN, false).run();
+            Scheduler.getScheduler().runSync(Common.plugin, () -> {
+                new BossBarTimerTask(Common.timer, ConfigVariables.zoneMoveTimeOut, ChatColor.YELLOW + "BREAK! The zone will move " + sideName, BarColor.GREEN, false).run();
             });
 
-            Scheduler.getScheduler().runSyncDelayed(CommonVariables.plugin, () -> {
-                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneMoveDuration, ChatColor.RED + "The zone moves " + sideName, BarColor.RED, true).run();
+            Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
+                new BossBarTimerTask(Common.timer, ConfigVariables.finalZoneMoveDuration, ChatColor.RED + "The zone moves " + sideName, BarColor.RED, true).run();
                 new ZoneMovingTask(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(length)).run();
             }, ConfigVariables.zoneMoveTimeOut * 20L);
         }
 
         // FINAL ZONE LOGIC
-        if (CommonVariables.zoneStage == ConfigVariables.zones.size() - 1) {
+        if (Common.zoneStage == ConfigVariables.zones.size() - 1) {
 
-            CommonVariables.finalZoneX = new Random().nextInt(-1 * ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2,
+            Common.finalZoneX = new Random().nextInt(-1 * ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2,
                     ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2);
-            CommonVariables.finalZoneZ = new Random().nextInt(-1 * ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2,
+            Common.finalZoneZ = new Random().nextInt(-1 * ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2,
                     ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2);
 
-            Scheduler.getScheduler().runSync(CommonVariables.plugin, () -> {
-                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneTimeOut, ChatColor.DARK_PURPLE +
+            Scheduler.getScheduler().runSync(Common.plugin, () -> {
+                new BossBarTimerTask(Common.timer, ConfigVariables.finalZoneTimeOut, ChatColor.DARK_PURPLE +
                         "BREAK! Final zone - From " +
-                        String.valueOf(CommonVariables.finalZoneX - ConfigVariables.finalZoneDiameter / 2) + " " +
-                        String.valueOf(CommonVariables.finalZoneZ - ConfigVariables.finalZoneDiameter / 2) +
+                        String.valueOf(Common.finalZoneX - ConfigVariables.finalZoneDiameter / 2) + " " +
+                        String.valueOf(Common.finalZoneZ - ConfigVariables.finalZoneDiameter / 2) +
                         " To " +
-                        String.valueOf(CommonVariables.finalZoneX + ConfigVariables.finalZoneDiameter / 2) + " " +
-                        String.valueOf(CommonVariables.finalZoneZ + ConfigVariables.finalZoneDiameter / 2),
+                        String.valueOf(Common.finalZoneX + ConfigVariables.finalZoneDiameter / 2) + " " +
+                        String.valueOf(Common.finalZoneZ + ConfigVariables.finalZoneDiameter / 2),
                         BarColor.GREEN, false).run();
             });
             for (World world : Bukkit.getWorlds()) {
 
                 world.getWorldBorder().setSize(ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) * 4);
-                world.getWorldBorder().setCenter(CommonVariables.finalZoneX, CommonVariables.finalZoneZ);
+                world.getWorldBorder().setCenter(Common.finalZoneX, Common.finalZoneZ);
             }
-            Scheduler.getScheduler().runSyncDelayed(CommonVariables.plugin, () -> {
+            Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
 
                 for (World world : Bukkit.getWorlds()) {
 
@@ -154,68 +153,68 @@ public class EventHandler implements Listener {
 
                    if (!world.getName().equals("world")) {
                        for (Player player : world.getPlayers()) {
-                           Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
+                           Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
                                player.setHealth(0);
                            });
                        }
                    }
                 }
 
-                new BossBarTimerTask(CommonVariables.timer, ConfigVariables.finalZoneDuration, ChatColor.RED +
+                new BossBarTimerTask(Common.timer, ConfigVariables.finalZoneDuration, ChatColor.RED +
                         "Final zone - From " +
-                        String.valueOf(CommonVariables.finalZoneX - ConfigVariables.finalZoneDiameter / 2) + " " +
-                        String.valueOf(CommonVariables.finalZoneZ - ConfigVariables.finalZoneDiameter / 2) +
+                        String.valueOf(Common.finalZoneX - ConfigVariables.finalZoneDiameter / 2) + " " +
+                        String.valueOf(Common.finalZoneZ - ConfigVariables.finalZoneDiameter / 2) +
                         " To " +
-                        String.valueOf(CommonVariables.finalZoneX + ConfigVariables.finalZoneDiameter / 2) + " " +
-                        String.valueOf(CommonVariables.finalZoneZ + ConfigVariables.finalZoneDiameter / 2),
+                        String.valueOf(Common.finalZoneX + ConfigVariables.finalZoneDiameter / 2) + " " +
+                        String.valueOf(Common.finalZoneZ + ConfigVariables.finalZoneDiameter / 2),
                         BarColor.RED, true).run();
 
-                CommonVariables.isFinalZone = true;
-                CommonVariables.isZoneMove = true;
+                Common.isFinalZone = true;
+                Common.isZoneMove = true;
 
-                CommonVariables.zoneStage++;
+                Common.zoneStage++;
             }, (long) ConfigVariables.finalZoneTimeOut * 20);
         }
 
         // NEW ZONE START LOGIC
-        if (CommonVariables.zoneStage < ConfigVariables.zones.size() - 1) {
+        if (Common.zoneStage < ConfigVariables.zones.size() - 1) {
 
             long timeOut = ConfigVariables.timeOut;
             int previousZone;
 
             // FIRST ZONE LOGIC
-            if (CommonVariables.zoneStage == 0) {
+            if (Common.zoneStage == 0) {
 
                 previousZone = ConfigVariables.defaultWorldBorderDiameter;
 
                 // BOARDERS TASK START
-                Scheduler.getScheduler().runSync(CommonVariables.plugin, () -> {
+                Scheduler.getScheduler().runSync(Common.plugin, () -> {
                     new NextZoneStageTask().run();
-                    new BossBarTimerTask(CommonVariables.timer, ConfigVariables.times.get(CommonVariables.zoneStage),
+                    new BossBarTimerTask(Common.timer, ConfigVariables.times.get(Common.zoneStage),
                             ChatColor.RED + "Zone moves From " + String.valueOf(previousZone / 2) + " To " +
-                                    String.valueOf(ConfigVariables.zones.get(CommonVariables.zoneStage) / 2), BarColor.RED, true).run();
+                                    String.valueOf(ConfigVariables.zones.get(Common.zoneStage) / 2), BarColor.RED, true).run();
 
-                    CommonVariables.zoneStage++;
+                    Common.zoneStage++;
                 });
 
             } else {
 
-                previousZone = ConfigVariables.zones.get(CommonVariables.zoneStage - 1);
+                previousZone = ConfigVariables.zones.get(Common.zoneStage - 1);
 
                 // TIMER TASK START
-                Scheduler.getScheduler().runSync(CommonVariables.plugin, () -> {
-                    new BossBarTimerTask(CommonVariables.timer, ConfigVariables.timeOut, ChatColor.YELLOW +
+                Scheduler.getScheduler().runSync(Common.plugin, () -> {
+                    new BossBarTimerTask(Common.timer, ConfigVariables.timeOut, ChatColor.YELLOW +
                             "Current zone - " +
                             String.valueOf(previousZone / 2) +
-                            " ! Next zone - " + String.valueOf(ConfigVariables.zones.get(CommonVariables.zoneStage) / 2),
+                            " ! Next zone - " + String.valueOf(ConfigVariables.zones.get(Common.zoneStage) / 2),
                             BarColor.GREEN, false).run();
                 });
 
                 // BOARDERS TASK START
-                Scheduler.getScheduler().runSyncDelayed(CommonVariables.plugin, () -> {
+                Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
 
                     // SECOND ZONE LOGIC
-                    if (CommonVariables.zoneStage == 1) {
+                    if (Common.zoneStage == 1) {
 
                         for (World world : Bukkit.getWorlds()) {
 
@@ -229,11 +228,11 @@ public class EventHandler implements Listener {
                     }
 
                     new NextZoneStageTask().run();
-                    new BossBarTimerTask(CommonVariables.timer, ConfigVariables.times.get(CommonVariables.zoneStage),
+                    new BossBarTimerTask(Common.timer, ConfigVariables.times.get(Common.zoneStage),
                             ChatColor.RED + "Zone moves From " + String.valueOf(previousZone / 2) + " To " +
-                                    String.valueOf(ConfigVariables.zones.get(CommonVariables.zoneStage) / 2), BarColor.RED, true).run();
+                                    String.valueOf(ConfigVariables.zones.get(Common.zoneStage) / 2), BarColor.RED, true).run();
 
-                    CommonVariables.zoneStage++;
+                    Common.zoneStage++;
                 }, timeOut * 20);
             }
         }
@@ -242,7 +241,7 @@ public class EventHandler implements Listener {
     @org.bukkit.event.EventHandler
     public void onPortal(PlayerPortalEvent event) {
 
-        if (CommonVariables.isFinalZone) {
+        if (Common.isFinalZone) {
 
             event.setCancelled(true);
         }
@@ -273,24 +272,24 @@ public class EventHandler implements Listener {
 
             if (playerTeam == null || !aliveTeams.contains(playerTeam.getName())) {
 
-                Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
+                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
                     player.setGameMode(GameMode.SPECTATOR);
                 });
 
-                CommonVariables.deadPlayers.add(player.getName());
+                Common.deadPlayers.add(player.getName());
 
                 if (playerTeam != null) {
-                    CommonVariables.deadTeams.add(playerTeam.getName());
+                    Common.deadTeams.add(playerTeam.getName());
                 }
 
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
                     if (playerTeam != null) {
-                        Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, onlinePlayer, () -> {
+                        Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, () -> {
                             onlinePlayer.sendTitle(ChatColor.RED + "Team " + playerTeam.getName() + " is eliminated!", "");
                         });
                     } else {
-                        Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, onlinePlayer, () -> {
+                        Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, () -> {
                             onlinePlayer.sendTitle(ChatColor.RED + "Team " + player.getName() + " is eliminated!", "");
                         });
                     }
@@ -298,12 +297,12 @@ public class EventHandler implements Listener {
 
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
-                    Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, onlinePlayer, () -> {
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, () -> {
                         onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
                     });
                 }
 
-                CommonVariables.isGameStarted = false;
+                Common.isGameStarted = false;
             }
         }
     }
@@ -311,13 +310,13 @@ public class EventHandler implements Listener {
     @org.bukkit.event.EventHandler
     public void onDeath(PlayerDeathEvent event) {
 
-        if (CommonVariables.isGameStarted) {
+        if (Common.isGameStarted) {
 
-            if (CommonVariables.zoneStage < 2) {
+            if (Common.zoneStage < 2) {
 
                 Bukkit.getPluginManager().callEvent(new FirstZoneDeathEvent(event.getPlayer()));
             }
-            if (CommonVariables.zoneStage >= 2) {
+            if (Common.zoneStage >= 2) {
 
                 Bukkit.getPluginManager().callEvent(new DeathEvent(event.getPlayer()));
             }
@@ -334,18 +333,18 @@ public class EventHandler implements Listener {
         Team playerTeam = Team.getTeam(event.getPlayer());
         boolean isTeamDead = true;
 
-        CommonVariables.deadPlayers.add(event.getPlayer().getName());
+        Common.deadPlayers.add(event.getPlayer().getName());
 
         if (playerTeam != null) {
             for (String teamMate : playerTeam.getPlayers()) {
-                if (!CommonVariables.deadPlayers.contains(teamMate)) {
+                if (!Common.deadPlayers.contains(teamMate)) {
                     isTeamDead = false;
                     break;
                 }
             }
         }
 
-        Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
+        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
             player.setGameMode(GameMode.SPECTATOR);
         });
 
@@ -366,38 +365,38 @@ public class EventHandler implements Listener {
                 }
 
                 if (playerTeam != null) {
-                    Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, onlinePlayer, () -> {
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, () -> {
                         onlinePlayer.sendTitle(ChatColor.RED + "Team " + playerTeam.getName() + " is eliminated!", "");
                     });
                 } else {
-                    Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
                         onlinePlayer.sendTitle(ChatColor.RED + "Team " + player.getName() + " is eliminated!", "");
                     });
                 }
             }
 
             if (playerTeam != null) {
-                CommonVariables.deadTeams.add(playerTeam.getName());
+                Common.deadTeams.add(playerTeam.getName());
             }
 
             if (aliveTeams.size() == 1) {
 
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
-                    Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, onlinePlayer, () -> {
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, () -> {
                         onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
                     });
                 }
 
-                CommonVariables.isGameStarted = false;
-                CommonVariables.timer.setColor(BarColor.PINK);
-                CommonVariables.timer.setProgress(1);
-                CommonVariables.timer.setTitle("Team " + aliveTeams.get(0) + " wins!");
+                Common.isGameStarted = false;
+                Common.timer.setColor(BarColor.PINK);
+                Common.timer.setProgress(1);
+                Common.timer.setTitle("Team " + aliveTeams.get(0) + " wins!");
                 Bukkit.getConsoleSender().sendMessage("Team " + aliveTeams.get(0) + " wins!");
             }
         }
         if (!isTeamDead) {
-            Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
+            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
                 player.kick(Component.text("You are out and your team is not yet!"));
             });
         }

@@ -1,6 +1,6 @@
 package ru.dvdishka.battleroyale.tasks;
 
-import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.classes.UpdateEvent;
 import ru.dvdishka.battleroyale.common.Scheduler;
 import org.bukkit.Bukkit;
@@ -35,7 +35,7 @@ public class BossBarTimerTask implements Runnable {
 
         if (callEvent) {
 
-            Scheduler.getScheduler().runSyncDelayed(CommonVariables.plugin, () -> {
+            Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
 
                 Bukkit.getPluginManager().callEvent(new UpdateEvent());
             }, time);
@@ -43,9 +43,9 @@ public class BossBarTimerTask implements Runnable {
 
         for (int i = changePeriod; i <= time; i += changePeriod) {
 
-            Scheduler.getScheduler().runSyncDelayed(CommonVariables.plugin, () -> {
+            Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
 
-                if (!CommonVariables.isGameStarted) {
+                if (!Common.isGameStarted) {
                     return;
                 }
 

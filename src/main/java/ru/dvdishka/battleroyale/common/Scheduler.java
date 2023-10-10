@@ -14,7 +14,7 @@ public class Scheduler {
     }
 
     public void runSync(Plugin plugin, Runnable task) {
-        if (CommonVariables.isFolia) {
+        if (Common.isFolia) {
             Bukkit.getGlobalRegionScheduler().run(plugin, (scheduledTask) -> task.run());
         } else {
             Bukkit.getScheduler().runTask(plugin, task);
@@ -22,7 +22,7 @@ public class Scheduler {
     }
 
     public void runSyncDelayed(Plugin plugin, Runnable task, long delayTicks) {
-        if (CommonVariables.isFolia) {
+        if (Common.isFolia) {
             Bukkit.getGlobalRegionScheduler().runDelayed(plugin, (scheduledTask) -> task.run(), delayTicks);
         } else {
             Bukkit.getScheduler().runTaskLater(plugin, task, delayTicks);
@@ -30,7 +30,7 @@ public class Scheduler {
     }
 
     public void runSyncRepeatingTask(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
-        if (CommonVariables.isFolia) {
+        if (Common.isFolia) {
             Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, (scheduledTask) -> task.run(), delayTicks, periodTicks);
         } else {
             Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, delayTicks, periodTicks);
@@ -38,7 +38,7 @@ public class Scheduler {
     }
 
     public void runAsync(Plugin plugin, Runnable task) {
-        if (CommonVariables.isFolia) {
+        if (Common.isFolia) {
             Bukkit.getAsyncScheduler().runNow(plugin, (scheduledTask) -> task.run());
         } else {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, task);
@@ -46,7 +46,7 @@ public class Scheduler {
     }
 
     public void runAsyncDelayed(Plugin plugin, Runnable task, long delayTicks) {
-        if (CommonVariables.isFolia) {
+        if (Common.isFolia) {
             Bukkit.getAsyncScheduler().runDelayed(plugin, (scheduledTask) -> task.run(), delayTicks * 20, TimeUnit.SECONDS);
         } else {
             Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, task, delayTicks);
@@ -54,7 +54,7 @@ public class Scheduler {
     }
 
     public void runAsyncRepeatingTask(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
-        if (CommonVariables.isFolia) {
+        if (Common.isFolia) {
             Bukkit.getAsyncScheduler().runAtFixedRate(plugin, (scheduledTask) -> task.run(), delayTicks * 20, periodTicks * 20, TimeUnit.SECONDS);
         } else {
             Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, task, delayTicks, periodTicks);
@@ -62,7 +62,7 @@ public class Scheduler {
     }
 
     public void runPlayerTask(Plugin plugin, Player player, Runnable task) {
-        if (CommonVariables.isFolia) {
+        if (Common.isFolia) {
             player.getScheduler().run(plugin, (scheduledTask) -> task.run(), null);
         } else {
             Bukkit.getScheduler().runTask(plugin, task);
@@ -70,7 +70,7 @@ public class Scheduler {
     }
 
     public void runRegionTask(Plugin plugin, Location location, Runnable task) {
-        if (CommonVariables.isFolia) {
+        if (Common.isFolia) {
             Bukkit.getRegionScheduler().run(plugin, location, (scheduledTask) -> task.run());
         } else {
             Bukkit.getScheduler().runTask(plugin, task);
@@ -78,7 +78,7 @@ public class Scheduler {
     }
 
     public static void cancelTasks(Plugin plugin) {
-        if (CommonVariables.isFolia) {
+        if (Common.isFolia) {
             Bukkit.getAsyncScheduler().cancelTasks(plugin);
             Bukkit.getGlobalRegionScheduler().cancelTasks(plugin);
         } else {

@@ -1,7 +1,7 @@
 package ru.dvdishka.battleroyale.tasks.endless;
 
 import ru.dvdishka.battleroyale.classes.SuperPower;
-import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ public class EffectUpdateTask implements Runnable {
     @Override
     public void run() {
 
-        for (Map.Entry<String, SuperPower> playerPower : CommonVariables.playersPower.entrySet()) {
+        for (Map.Entry<String, SuperPower> playerPower : Common.playersPower.entrySet()) {
             if (Bukkit.getOfflinePlayer(playerPower.getKey()).isOnline()) {
 
                 Player player = Bukkit.getPlayer(playerPower.getKey());
@@ -25,7 +25,7 @@ public class EffectUpdateTask implements Runnable {
                 List<PotionEffectType> effectTypes = playerPower.getValue().getEffects();
                 List<Integer> amplifiers = playerPower.getValue().getAmplifiers();
 
-                Scheduler.getScheduler().runPlayerTask(CommonVariables.plugin, player, () -> {
+                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
                     for (int i = 0; i < effectTypes.size(); i++) {
                         if (!player.hasPotionEffect(effectTypes.get(i)) || player.getPotionEffect(effectTypes.get(i)) != null
                                 && player.getPotionEffect(effectTypes.get(i)).getAmplifier() < amplifiers.get(i)) {

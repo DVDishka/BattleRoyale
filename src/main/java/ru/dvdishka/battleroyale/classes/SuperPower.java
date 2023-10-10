@@ -1,6 +1,6 @@
 package ru.dvdishka.battleroyale.classes;
 
-import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.Common;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
@@ -41,7 +41,7 @@ public enum SuperPower {
 
         String title = subTitle;
 
-        CommonVariables.playersPower.put(player.getName(), this);
+        Common.playersPower.put(player.getName(), this);
         player.sendTitle(ChatColor.LIGHT_PURPLE + name, ChatColor.BLUE + title);
     }
 

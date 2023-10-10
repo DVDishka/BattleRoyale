@@ -1,6 +1,6 @@
 package ru.dvdishka.battleroyale.tasks;
 
-import ru.dvdishka.battleroyale.common.CommonVariables;
+import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -27,9 +27,9 @@ public class ZoneMovingTask implements Runnable {
 
         for (int i = step; i <= duration * 20; i += step) {
 
-            Scheduler.getScheduler().runSyncDelayed(CommonVariables.plugin, () -> {
+            Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
 
-                if (!CommonVariables.isGameStarted) {
+                if (!Common.isGameStarted) {
                     return;
                 }
 
