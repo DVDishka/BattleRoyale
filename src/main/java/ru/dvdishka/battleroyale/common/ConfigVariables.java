@@ -16,9 +16,9 @@ public class ConfigVariables {
     public static int minFinalZoneMove = 50;
     public static int maxFinalZoneMove = 100;
     public static int zoneMoveTimeOut = 10;
-    public static int startBoxX = 100;
+    public static int startBoxX = 0;
     public static int startBoxY = 200;
-    public static int startBoxZ = 60;
+    public static int startBoxZ = 0;
 
     public static boolean betterLogging = false;
 }

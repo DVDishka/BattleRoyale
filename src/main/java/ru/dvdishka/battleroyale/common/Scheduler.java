@@ -55,7 +55,7 @@ public class Scheduler {
 
     public void runAsyncRepeatingTask(Plugin plugin, Runnable task, long delayTicks, long periodTicks) {
         if (Common.isFolia) {
-            Bukkit.getAsyncScheduler().runAtFixedRate(plugin, (scheduledTask) -> task.run(), delayTicks * 20, periodTicks * 20, TimeUnit.SECONDS);
+            Bukkit.getAsyncScheduler().runAtFixedRate(plugin, (scheduledTask) -> task.run(), delayTicks / 20, periodTicks / 20, TimeUnit.SECONDS);
         } else {
             Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, task, delayTicks, periodTicks);
         }

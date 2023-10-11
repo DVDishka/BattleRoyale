@@ -73,7 +73,7 @@ public class EventHandler implements Listener {
         if (Common.zoneStage == ConfigVariables.zones.size()) {
 
             int side = new Random().nextInt(0, 4);
-            int length = new Random().nextInt(ConfigVariables.minFinalZoneMove, ConfigVariables.maxFinalZoneMove) / 10 * 10;
+            int length = new Random().nextInt(ConfigVariables.minFinalZoneMove, ConfigVariables.maxFinalZoneMove + 1) / 10 * 10;
             String sideName;
             int x, z;
 

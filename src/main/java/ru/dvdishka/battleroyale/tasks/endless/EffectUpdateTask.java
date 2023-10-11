@@ -2,6 +2,7 @@ package ru.dvdishka.battleroyale.tasks.endless;
 
 import ru.dvdishka.battleroyale.classes.SuperPower;
 import ru.dvdishka.battleroyale.common.Common;
+import ru.dvdishka.battleroyale.common.Logger;
 import ru.dvdishka.battleroyale.common.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

@@ -14,6 +14,8 @@ import ru.dvdishka.battleroyale.commands.team.Invite;
 import ru.dvdishka.battleroyale.commands.team.Leave;
 import ru.dvdishka.battleroyale.commands.team.List;
 
+import java.util.Arrays;
+
 public class Initialization {
 
     public static void checkDependencies() {
@@ -32,20 +34,24 @@ public class Initialization {
 
         FileConfiguration config = Common.plugin.getConfig();
 
-        ConfigVariables.defaultWorldBorderDiameter = config.getInt("defaultWorldBorderDiameter");
+        ConfigVariables.defaultWorldBorderDiameter = config.getInt("defaultWorldBorderDiameter", 10000);
         ConfigVariables.zones = config.getIntegerList("zones");
         ConfigVariables.times = config.getIntegerList("times");
-        ConfigVariables.timeOut = config.getInt("timeOut");
-        ConfigVariables.finalZoneDuration = config.getInt("finalZoneDuration");
-        ConfigVariables.finalZoneDiameter = config.getInt("finalZoneDiameter");
-        ConfigVariables.finalZoneTimeOut = config.getInt("finalZoneTimeOut");
-        ConfigVariables.finalZoneMoveDuration = config.getInt("finalZoneMoveDuration");
-        ConfigVariables.minFinalZoneMove = config.getInt("minFinalZoneMove");
-        ConfigVariables.maxFinalZoneMove = config.getInt("minFinalZoneMove");
-        ConfigVariables.zoneMoveTimeOut = config.getInt("zoneMoveTimeOut");
-        ConfigVariables.startBoxX = config.getInt("startBoxX");
-        ConfigVariables.startBoxY = config.getInt("startBoxY");
-        ConfigVariables.startBoxZ = config.getInt("startBoxZ");
+        ConfigVariables.timeOut = config.getInt("timeOut", 600);
+        ConfigVariables.finalZoneDiameter = config.getInt("finalZoneDiameter", 100);
+        ConfigVariables.finalZoneTimeOut = config.getInt("finalZoneTimeOut", 200);
+        ConfigVariables.finalZoneDuration = config.getInt("finalZoneDuration", 120);
+        ConfigVariables.finalZoneMoveDuration = config.getInt("finalZoneMoveDuration", 120);
+        if (config.getInt("minFinalZoneMove", 50) < config.getInt("maxFinalZoneMove", 100)) {
+            ConfigVariables.minFinalZoneMove = config.getInt("minFinalZoneMove", 50);
+            ConfigVariables.maxFinalZoneMove = config.getInt("maxFinalZoneMove", 100);
+        } else {
+            Logger.getLogger().warn("Config exception! maxFinalZoneMove can not be less than maxFinalZoneMove");
+        }
+        ConfigVariables.zoneMoveTimeOut = config.getInt("zoneMoveTimeOut", 10);
+        ConfigVariables.startBoxX = config.getInt("startBoxX", 0);
+        ConfigVariables.startBoxY = config.getInt("startBoxY", 200);
+        ConfigVariables.startBoxZ = config.getInt("startBoxZ", 0);
         ConfigVariables.betterLogging = config.getBoolean("betterLogging");
     }
 
