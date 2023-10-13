@@ -2,7 +2,6 @@ package ru.dvdishka.battleroyale;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
-import ru.dvdishka.battleroyale.handlers.EventHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,8 +21,6 @@ public final class BattleRoyale extends JavaPlugin {
 
         Bukkit.setSpawnRadius(0);
 
-        Bukkit.getPluginManager().registerEvents(new EventHandler(), this);
-
         Common.timer.setVisible(false);
 
         if (!new File("plugins/BattleRoyale").exists()) {
@@ -36,6 +33,7 @@ public final class BattleRoyale extends JavaPlugin {
         Initialization.checkDependencies();
         Initialization.initConfig();
         Initialization.initCommands();
+        Initialization.initEventHandlers(this);
 
         CommandAPI.onEnable();
 

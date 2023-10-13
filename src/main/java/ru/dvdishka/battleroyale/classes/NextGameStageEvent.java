@@ -3,7 +3,7 @@ package ru.dvdishka.battleroyale.classes;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class UpdateEvent extends Event {
+public class NextGameStageEvent extends Event {
 
     public static final HandlerList handlerList = new HandlerList();
 
@@ -15,5 +15,5 @@ public class UpdateEvent extends Event {
         return handlerList;
     }
 
-    public UpdateEvent() {}
+    public NextGameStageEvent() {}
 }

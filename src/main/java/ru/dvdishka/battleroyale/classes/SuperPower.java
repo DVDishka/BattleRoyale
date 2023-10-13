@@ -36,7 +36,7 @@ public enum SuperPower {
 
         for (int i = 0; i < effectType.size(); i++) {
 
-            subTitle = subTitle.concat(effectType.get(i).getName());
+            subTitle = subTitle.concat(effectType.get(i).getName()).concat(" ");
         }
 
         String title = subTitle;

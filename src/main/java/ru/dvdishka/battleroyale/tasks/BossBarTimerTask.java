@@ -1,7 +1,7 @@
 package ru.dvdishka.battleroyale.tasks;
 
 import ru.dvdishka.battleroyale.common.Common;
-import ru.dvdishka.battleroyale.classes.UpdateEvent;
+import ru.dvdishka.battleroyale.classes.NextGameStageEvent;
 import ru.dvdishka.battleroyale.common.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -37,7 +37,7 @@ public class BossBarTimerTask implements Runnable {
 
             Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
 
-                Bukkit.getPluginManager().callEvent(new UpdateEvent());
+                Bukkit.getPluginManager().callEvent(new NextGameStageEvent());
             }, time);
         }
 

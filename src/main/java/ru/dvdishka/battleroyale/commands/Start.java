@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import ru.dvdishka.battleroyale.classes.SuperPower;
-import ru.dvdishka.battleroyale.classes.UpdateEvent;
+import ru.dvdishka.battleroyale.classes.NextGameStageEvent;
 import ru.dvdishka.battleroyale.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.ConfigVariables;
@@ -78,6 +78,6 @@ public class Start implements CommandInterface {
             SuperPower.values()[powerNumber].setToPlayer(player);
         }
 
-        Bukkit.getPluginManager().callEvent(new UpdateEvent());
+        Bukkit.getPluginManager().callEvent(new NextGameStageEvent());
     }
 }

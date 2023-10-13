@@ -4,7 +4,9 @@ import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.LiteralArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 import ru.dvdishka.battleroyale.classes.Team;
 import ru.dvdishka.battleroyale.commands.*;
 import ru.dvdishka.battleroyale.commands.common.Permission;
@@ -13,6 +15,8 @@ import ru.dvdishka.battleroyale.commands.startbox.Remove;
 import ru.dvdishka.battleroyale.commands.team.Invite;
 import ru.dvdishka.battleroyale.commands.team.Leave;
 import ru.dvdishka.battleroyale.commands.team.List;
+import ru.dvdishka.battleroyale.handlers.EventHandler;
+import ru.dvdishka.battleroyale.handlers.ZonesHandler;
 
 import java.util.Arrays;
 
@@ -189,5 +193,11 @@ public class Initialization {
         }
 
         commandTree.register();
+    }
+
+    public static void initEventHandlers(Plugin plugin) {
+
+        Bukkit.getPluginManager().registerEvents(new EventHandler(), plugin);
+        Bukkit.getPluginManager().registerEvents(new ZonesHandler(), plugin);
     }
 }
