@@ -43,11 +43,9 @@ public class Start implements CommandInterface {
             world.getWorldBorder().setCenter(0, 0);
 
             if (world.getWorldBorder().getSize()  != ConfigVariables.defaultWorldBorderDiameter) {
-
                 world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter, 1);
 
             } else {
-
                 world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter + 1, 1);
             }
         }

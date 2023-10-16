@@ -9,12 +9,13 @@ import org.bukkit.event.Listener;
 import ru.dvdishka.battleroyale.classes.NextGameStageEvent;
 import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.ConfigVariables;
+import ru.dvdishka.battleroyale.common.Logger;
 import ru.dvdishka.battleroyale.common.Scheduler;
 import ru.dvdishka.battleroyale.tasks.BossBarTimerTask;
+import ru.dvdishka.battleroyale.tasks.ZoneBordersChangeTask;
 import ru.dvdishka.battleroyale.tasks.ZoneMovingTask;
 
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class ZonesHandler implements Listener  {
 
@@ -30,37 +31,51 @@ public class ZonesHandler implements Listener  {
         }
 
         // ZONE MOVING STAGE LOGIC
-        else if (Common.zoneStage == ConfigVariables.zones.size()) {
+        else if (Common.zoneStage == ConfigVariables.zones.size() + 1) {
             zoneMovingStage();
         }
 
         // FINAL ZONE LOGIC
-        else if (Common.zoneStage == ConfigVariables.zones.size() - 1) {
+        else if (Common.zoneStage == ConfigVariables.zones.size()) {
             finalZoneStage();
         }
 
         // NEW ZONE START LOGIC
-        else if (Common.zoneStage < ConfigVariables.zones.size() - 1) {
+        else if (Common.zoneStage < ConfigVariables.zones.size()) {
             mainNextStageLogic();
         }
     }
 
     private void firstZoneStage() {
 
-        int previousZoneDiameter = ConfigVariables.defaultWorldBorderDiameter;
+        final int oldZoneCenterX = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockX();
+        final int oldZoneCenterZ = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockZ();
 
-        // ACTIVE BOARDERS TASK START
+        final int nextZoneCenterX = generateRandomZoneCenterX(
+                ConfigVariables.defaultWorldBorderDiameter / 2,
+                ConfigVariables.zones.get(Common.zoneStage) / 2,
+                oldZoneCenterX);
+        final int nextZoneCenterZ = generateRandomZoneCenterZ(
+                ConfigVariables.defaultWorldBorderDiameter / 2,
+                ConfigVariables.zones.get(Common.zoneStage) / 2,
+                oldZoneCenterZ);
+
+        // ACTIVE BORDERS TASK START
         Scheduler.getScheduler().runSync(Common.plugin, () -> {
 
-            // CHANGE WORLD BOARDER
-            for (World world : Bukkit.getWorlds()) {
-                world.getWorldBorder().setSize(ConfigVariables.zones.get(Common.zoneStage),
-                        TimeUnit.SECONDS, ConfigVariables.times.get(Common.zoneStage));
-            }
+            // CHANGE WORLD BORDER
+            new ZoneBordersChangeTask(
+                    ConfigVariables.defaultWorldBorderDiameter,
+                    ConfigVariables.zones.get(Common.zoneStage),
+                    ConfigVariables.times.get(Common.zoneStage),
+                    oldZoneCenterX,
+                    oldZoneCenterZ,
+                    nextZoneCenterX,
+                    nextZoneCenterZ).run();
 
             // ACTIVE BOSS BAR TIMER TASK START
             new BossBarTimerTask(Common.timer, ConfigVariables.times.get(Common.zoneStage),
-                    ChatColor.RED + "Zone moves From " + String.valueOf(previousZoneDiameter / 2) + " To " +
+                    ChatColor.RED + "Zone moves From " + String.valueOf(ConfigVariables.defaultWorldBorderDiameter / 2) + " To " +
                             String.valueOf(ConfigVariables.zones.get(Common.zoneStage) / 2), BarColor.RED, true).run();
 
             Common.zoneStage++;
@@ -72,6 +87,18 @@ public class ZonesHandler implements Listener  {
         long timeOut = ConfigVariables.timeOut;
         int previousZoneDiameter = ConfigVariables.zones.get(Common.zoneStage - 1);
 
+        final int oldZoneCenterX = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockX();
+        final int oldZoneCenterZ = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockZ();
+
+        final int nextZoneCenterX = generateRandomZoneCenterX(
+                previousZoneDiameter / 2,
+                ConfigVariables.zones.get(Common.zoneStage) / 2,
+                oldZoneCenterX);
+        final int nextZoneCenterZ = generateRandomZoneCenterZ(
+                previousZoneDiameter / 2,
+                ConfigVariables.zones.get(Common.zoneStage) / 2,
+                oldZoneCenterZ);
+
         // BREAK BOSS BAR TIMER TASK START
         Scheduler.getScheduler().runSync(Common.plugin, () -> {
             new BossBarTimerTask(Common.timer, ConfigVariables.timeOut, ChatColor.YELLOW +
@@ -81,7 +108,7 @@ public class ZonesHandler implements Listener  {
                     BarColor.GREEN, false).run();
         });
 
-        // ACTIVE BOARDERS TASK START
+        // ACTIVE BORDERS TASK START
         Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
 
             // PVP ENABLE LOGIC
@@ -96,11 +123,15 @@ public class ZonesHandler implements Listener  {
                 }
             }
 
-            // CHANGE WORLD BOARDER
-            for (World world : Bukkit.getWorlds()) {
-                world.getWorldBorder().setSize(ConfigVariables.zones.get(Common.zoneStage),
-                        TimeUnit.SECONDS, ConfigVariables.times.get(Common.zoneStage));
-            }
+            // CHANGE WORLD BORDER
+            new ZoneBordersChangeTask(
+                    ConfigVariables.zones.get(Common.zoneStage - 1),
+                    ConfigVariables.zones.get(Common.zoneStage),
+                    ConfigVariables.times.get(Common.zoneStage),
+                    oldZoneCenterX,
+                    oldZoneCenterZ,
+                    nextZoneCenterX,
+                    nextZoneCenterZ).run();
 
             // ACTIVE BOSS BAR TIMER TASK START
             new BossBarTimerTask(Common.timer, ConfigVariables.times.get(Common.zoneStage),
@@ -113,11 +144,18 @@ public class ZonesHandler implements Listener  {
 
     private void finalZoneStage() {
 
+        final int oldZoneCenterX = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockX();
+        final int oldZoneCenterZ = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockZ();
+
         // RANDOMIZE FINAL ZONE CENTER
-        Common.finalZoneX = new Random().nextInt(-1 * ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2,
-                ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2);
-        Common.finalZoneZ = new Random().nextInt(-1 * ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2,
-                ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2);
+        Common.finalZoneX = generateRandomZoneCenterX(
+                ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2,
+                ConfigVariables.finalZoneDiameter / 2,
+                oldZoneCenterX);
+        Common.finalZoneZ = generateRandomZoneCenterZ(
+                ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) / 2,
+                ConfigVariables.finalZoneDiameter / 2,
+                oldZoneCenterZ);
 
         // BREAK BOSS BAR TIMER TASK START
         Scheduler.getScheduler().runSync(Common.plugin, () -> {
@@ -131,18 +169,20 @@ public class ZonesHandler implements Listener  {
                     BarColor.GREEN, false).run();
         });
 
-        // CHANGE CENTER OF WORLD BOARDER
-        for (World world : Bukkit.getWorlds()) {
-            world.getWorldBorder().setSize(ConfigVariables.zones.get(ConfigVariables.zones.size() - 1) * 4);
-            world.getWorldBorder().setCenter(Common.finalZoneX, Common.finalZoneZ);
-        }
-
         // ACTIVE FINAL ZONE LOGIC
         Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
 
             for (World world : Bukkit.getWorlds()) {
 
-                world.getWorldBorder().setSize(ConfigVariables.finalZoneDiameter, ConfigVariables.finalZoneDuration);
+                // CHANGE WORLD BORDER
+                new ZoneBordersChangeTask(
+                        ConfigVariables.zones.get(ConfigVariables.zones.size() - 1),
+                        ConfigVariables.finalZoneDiameter,
+                        ConfigVariables.finalZoneDuration,
+                        oldZoneCenterX,
+                        oldZoneCenterZ,
+                        Common.finalZoneX,
+                        Common.finalZoneZ).run();
 
                 // KILL PLAYER IF NOT IN OVERWORLD
                 if (!world.getName().equals("world")) {
@@ -220,10 +260,32 @@ public class ZonesHandler implements Listener  {
             new BossBarTimerTask(Common.timer, ConfigVariables.zoneMoveTimeOut, ChatColor.YELLOW + "BREAK! The zone will move " + sideName, BarColor.GREEN, false).run();
         });
 
-        // ACTIVE BOARDERS MOVING TASK START
+        // ACTIVE BORDERS MOVING TASK START
         Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
             new BossBarTimerTask(Common.timer, ConfigVariables.finalZoneMoveDuration, ChatColor.RED + "The zone moves " + sideName, BarColor.RED, true).run();
             new ZoneMovingTask(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(moveLength)).run();
         }, ConfigVariables.zoneMoveTimeOut * 20L);
+    }
+
+    private int generateRandomZoneCenterX(int previousZoneRadius, int nextZoneRadius, int currentZoneCenterX) {
+
+        int nextZoneCenterX = new Random().nextInt(currentZoneCenterX - previousZoneRadius + nextZoneRadius,
+                currentZoneCenterX + previousZoneRadius - nextZoneRadius + 1);
+        Logger.getLogger().devWarn("X: " + String.valueOf((currentZoneCenterX - previousZoneRadius + nextZoneRadius)) + " - " +
+                String.valueOf(currentZoneCenterX + previousZoneRadius - nextZoneRadius + 1));
+        Logger.getLogger().devWarn(String.valueOf(nextZoneCenterX));
+
+        return nextZoneCenterX;
+    }
+
+    private int generateRandomZoneCenterZ(int previousZoneRadius, int nextZoneRadius, int currentZoneCenterZ) {
+
+        int nextZoneCenterZ= new Random().nextInt(currentZoneCenterZ - previousZoneRadius + nextZoneRadius,
+                currentZoneCenterZ + previousZoneRadius - nextZoneRadius + 1);
+        Logger.getLogger().devWarn("Z: " + String.valueOf((currentZoneCenterZ - previousZoneRadius + nextZoneRadius)) + " - " +
+                String.valueOf(currentZoneCenterZ + previousZoneRadius - nextZoneRadius + 1));
+        Logger.getLogger().devWarn(String.valueOf(nextZoneCenterZ));
+
+        return nextZoneCenterZ;
     }
 }
