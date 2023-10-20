@@ -4,8 +4,14 @@ import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.LiteralArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
+import me.catcoder.sidebar.ProtocolSidebar;
+import me.catcoder.sidebar.Sidebar;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import ru.dvdishka.battleroyale.classes.Team;
 import ru.dvdishka.battleroyale.commands.*;
@@ -16,9 +22,10 @@ import ru.dvdishka.battleroyale.commands.team.Invite;
 import ru.dvdishka.battleroyale.commands.team.Leave;
 import ru.dvdishka.battleroyale.commands.team.List;
 import ru.dvdishka.battleroyale.handlers.EventHandler;
-import ru.dvdishka.battleroyale.handlers.ZonesHandler;
+import ru.dvdishka.battleroyale.handlers.Radar;
+import ru.dvdishka.battleroyale.handlers.ZoneStageHandler;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Initialization {
 
@@ -38,11 +45,17 @@ public class Initialization {
 
         FileConfiguration config = Common.plugin.getConfig();
 
-        ConfigVariables.defaultWorldBorderDiameter = config.getInt("defaultWorldBorderDiameter", 10000);
-        ConfigVariables.zones = config.getIntegerList("zones");
+        ConfigVariables.defaultWorldBorderDiameter = config.getInt("defaultWorldBorderRadius", 5000) * 2;
+
+        ArrayList<Integer> zones = new ArrayList<>();
+        for (int zoneRadius : config.getIntegerList("zones")) {
+            zones.add(zoneRadius * 2);
+        }
+        ConfigVariables.zones = zones;
+
         ConfigVariables.times = config.getIntegerList("times");
         ConfigVariables.timeOut = config.getInt("timeOut", 600);
-        ConfigVariables.finalZoneDiameter = config.getInt("finalZoneDiameter", 100);
+        ConfigVariables.finalZoneDiameter = config.getInt("finalZoneRadius", 50) * 2;
         ConfigVariables.finalZoneTimeOut = config.getInt("finalZoneTimeOut", 200);
         ConfigVariables.finalZoneDuration = config.getInt("finalZoneDuration", 120);
         ConfigVariables.finalZoneMoveDuration = config.getInt("finalZoneMoveDuration", 120);
@@ -198,6 +211,10 @@ public class Initialization {
     public static void initEventHandlers(Plugin plugin) {
 
         Bukkit.getPluginManager().registerEvents(new EventHandler(), plugin);
-        Bukkit.getPluginManager().registerEvents(new ZonesHandler(), plugin);
+        Bukkit.getPluginManager().registerEvents(new ZoneStageHandler(), plugin);
+    }
+
+    public static void initRadar() {
+        Radar.getInstance();
     }
 }

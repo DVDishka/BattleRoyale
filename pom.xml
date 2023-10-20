@@ -70,6 +70,10 @@
             <id>sonatype</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -82,6 +86,11 @@
             <groupId>dev.jorel</groupId>
             <artifactId>commandapi-bukkit-shade</artifactId>
             <version>9.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>me.catcoder</groupId>
+            <artifactId>bukkit-sidebar</artifactId>
+            <version>6.2.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

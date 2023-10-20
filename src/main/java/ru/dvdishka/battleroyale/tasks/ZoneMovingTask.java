@@ -7,10 +7,10 @@ import org.bukkit.World;
 
 public class ZoneMovingTask implements Runnable {
 
-    private int xMove;
-    private int zMove;
-    private int duration;
-    private int steps;
+    private final int xMove;
+    private final int zMove;
+    private final int duration;
+    private final int steps;
 
     public ZoneMovingTask(int xMove, int zMove, int duration, int steps) {
 

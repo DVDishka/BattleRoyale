@@ -34,6 +34,7 @@ public final class BattleRoyale extends JavaPlugin {
         Initialization.initConfig();
         Initialization.initCommands();
         Initialization.initEventHandlers(this);
+        Initialization.initRadar();
 
         CommandAPI.onEnable();
 

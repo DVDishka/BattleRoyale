@@ -24,6 +24,8 @@ public class EventHandler implements Listener {
     @org.bukkit.event.EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
 
+        Radar.getInstance().addViewer(event.getPlayer());
+
         if (Common.isGameStarted) {
             if (Common.deadPlayers.contains(event.getPlayer().getName()) &&
                     Team.getTeam(event.getPlayer()) != null &&
