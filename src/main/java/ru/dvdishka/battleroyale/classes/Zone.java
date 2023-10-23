@@ -180,6 +180,34 @@ public class Zone {
         return Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockZ() + (((int) Bukkit.getWorld("world").getWorldBorder().getSize()) / 2);
     }
 
+    public double getCurrentZoneFloatDiameter() {
+        return Bukkit.getWorld("world").getWorldBorder().getSize();
+    }
+
+    public double getCurrentZoneFloatCenterX() {
+        return Bukkit.getWorld("world").getWorldBorder().getCenter().getX();
+    }
+
+    public double getCurrentZoneFloatCenterZ() {
+        return Bukkit.getWorld("world").getWorldBorder().getCenter().getZ();
+    }
+
+    public double getCurrentLeftFloatBorder() {
+        return Bukkit.getWorld("world").getWorldBorder().getCenter().getX() - ((Bukkit.getWorld("world").getWorldBorder().getSize()) / 2);
+    }
+
+    public double getCurrentRightFloatBorder() {
+        return Bukkit.getWorld("world").getWorldBorder().getCenter().getX() + ((Bukkit.getWorld("world").getWorldBorder().getSize()) / 2);
+    }
+
+    public double getCurrentLowerFloatBorder() {
+        return Bukkit.getWorld("world").getWorldBorder().getCenter().getZ() - ((Bukkit.getWorld("world").getWorldBorder().getSize()) / 2);
+    }
+
+    public double getCurrentUpperFloatBorder() {
+        return Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockZ() + ((Bukkit.getWorld("world").getWorldBorder().getSize()) / 2);
+    }
+
     public int getOldZoneDiameter() {
         return oldZoneDiameter;
     }

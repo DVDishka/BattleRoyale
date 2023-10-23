@@ -17,8 +17,7 @@ public class Radar {
     private static Radar instance = null;
 
     private final TextColor safeZoneColor = NamedTextColor.DARK_GREEN;
-    private final TextColor oldZoneColor = NamedTextColor.BLUE;
-    private final TextColor movingZoneColor = NamedTextColor.RED;
+    private volatile TextColor movingZoneColor = NamedTextColor.RED;
 
     private Radar() {
 
@@ -28,7 +27,10 @@ public class Radar {
                         .decorate(TextDecoration.BOLD),
                 Common.plugin);
 
-        radar.addUpdatableLine(player -> updateRadar(player, 0));
+        radar.addUpdatableLine(player -> {
+            updateMovingZoneColor();
+            return updateRadar(player, 0);
+        });
 
         radar.addUpdatableLine(player -> updateRadar(player, 1));
 
@@ -62,6 +64,20 @@ public class Radar {
 
     public void addViewer(Player player) {
         radar.addViewer(player);
+    }
+
+    public void updateMovingZoneColor() {
+
+        if (!Zone.getInstance().isZoneMoving()) {
+            movingZoneColor = NamedTextColor.RED;
+        }
+        else {
+            if (movingZoneColor == NamedTextColor.DARK_RED) {
+                movingZoneColor = NamedTextColor.RED;
+            } else {
+                movingZoneColor = NamedTextColor.DARK_RED;
+            }
+        }
     }
 
     private Component updateRadar(Player player, int lineNumber) {
@@ -412,28 +428,30 @@ public class Radar {
             }
         }
 
-        return component;
+        return component.decorate(TextDecoration.BOLD);
     }
 
     private int getPlayerRadarPositionX(Player player) {
 
         int playerX = player.getLocation().getBlockX();
+        double playerFloatX = player.getLocation().getX();
         int playerZ = player.getLocation().getBlockZ();
+        double playerFloatZ = player.getLocation().getZ();
         Zone zone = Zone.getInstance();
 
-        if (playerX - zone.getOldLeftBorder() < 0) {
+        if (playerFloatX - zone.getCurrentLeftFloatBorder() < 0) {
             return 0;
         }
 
-        if (playerX - zone.getOldRightBorder() >= 0) {
+        if (playerFloatX - zone.getCurrentRightFloatBorder() >= 0) {
             return 10;
         }
 
-        if (playerZ < zone.getOldLowerBorder() || playerZ >= zone.getOldUpperBorder()) {
+        if (playerFloatZ < zone.getCurrentLowerFloatBorder() || playerFloatZ >= zone.getCurrentUpperFloatBorder()) {
 
-            int segment = (zone.getOldRightBorder() - zone.getOldLeftBorder()) / 9 + 1;
+            int segment = (int) ((zone.getCurrentRightFloatBorder() - zone.getCurrentLeftFloatBorder()) / 9 + 1);
 
-            return (playerX - zone.getOldLeftBorder()) / segment + 1;
+            return (int) ((playerFloatX - zone.getCurrentLeftFloatBorder()) / segment + 1);
         }
 
         else {
@@ -465,22 +483,25 @@ public class Radar {
     private int getPlayerRadarPositionZ(Player player) {
 
         int playerX = player.getLocation().getBlockX();
+        double playerFloatX = player.getLocation().getX();
         int playerZ = player.getLocation().getBlockZ();
+        double playerFloatZ = player.getLocation().getZ();
+
         Zone zone = Zone.getInstance();
 
-        if (playerZ - zone.getOldLowerBorder() < 0) {
+        if (playerFloatZ - zone.getCurrentLowerBorder() < 0) {
             return 10;
         }
 
-        if (playerZ - zone.getOldUpperBorder() >= 0) {
+        if (playerFloatZ - zone.getCurrentUpperBorder() >= 0) {
             return 0;
         }
 
-        if (playerX < zone.getOldLeftBorder() || playerX >= zone.getOldRightBorder()) {
+        if (playerFloatX < zone.getCurrentLeftFloatBorder() || playerFloatX >= zone.getCurrentRightFloatBorder()) {
 
-            int segment = (zone.getOldUpperBorder() - zone.getOldLowerBorder()) / 9 + 1;
+            int segment = (int) ((zone.getCurrentUpperFloatBorder() - zone.getCurrentLowerFloatBorder()) / 9 + 1);
 
-            return 10 - ((playerZ - zone.getOldLowerBorder()) / segment + 1);
+            return 10 - (int) ((playerFloatZ - zone.getCurrentLowerFloatBorder()) / segment + 1);
         }
 
         else {
