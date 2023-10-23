@@ -61,7 +61,7 @@ public class EventHandler implements Listener {
     @org.bukkit.event.EventHandler
     public void onPortal(PlayerPortalEvent event) {
 
-        if (Common.isFinalZone) {
+        if (Common.isPortalsLocked) {
 
             event.setCancelled(true);
         }

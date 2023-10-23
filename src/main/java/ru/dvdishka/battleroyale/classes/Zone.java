@@ -18,7 +18,7 @@ public class Zone {
     private int newZoneCenterX;
     private int newZoneCenterZ;
 
-    private boolean isZoneMoving = false;
+    private volatile boolean isZoneMoving = false;
 
     private static Zone instance = null;
 
@@ -44,6 +44,16 @@ public class Zone {
                     0);
         }
         return instance;
+    }
+
+    public void setVariables(int oldZoneDiameter, int newZoneDiameter, int oldZoneCenterX, int oldZoneCenterZ, int newZoneCenterX, int newZoneCenterZ) {
+
+        this.oldZoneDiameter = oldZoneDiameter;
+        this.newZoneDiameter = newZoneDiameter;
+        this.oldZoneCenterX = oldZoneCenterX;
+        this.oldZoneCenterZ = oldZoneCenterZ;
+        this.newZoneCenterX = newZoneCenterX;
+        this.newZoneCenterZ = newZoneCenterZ;
     }
 
     public void changeBorders(int oldZoneDiameter, int newZoneDiameter, long timeSeconds, int oldZoneCenterX, int oldZoneCenterZ, int newZoneCenterX, int newZoneCenterZ) {
@@ -128,11 +138,11 @@ public class Zone {
         return newZoneDiameter;
     }
 
-    public double getNewZoneCenterX() {
+    public int getNewZoneCenterX() {
         return newZoneCenterX;
     }
 
-    public double getNewZoneCenterZ() {
+    public int getNewZoneCenterZ() {
         return newZoneCenterZ;
     }
 

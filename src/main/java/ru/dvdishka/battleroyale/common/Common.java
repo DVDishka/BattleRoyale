@@ -29,11 +29,8 @@ public class Common {
     public static boolean isGameStarted = false;
     public static int zoneStage = 0;
     public static BossBar timer = Bukkit.createBossBar("", BarColor.RED, BarStyle.SEGMENTED_10);
-    public static int finalZoneX = 0;
-    public static int finalZoneZ = 0;
-    public static boolean isFinalZone = false;
-    public static boolean isZoneMove = false;
     public static boolean isStartBox = false;
+    public static volatile boolean isPortalsLocked = false;
 
     public static HashSet<String> deadPlayers = new HashSet<>();
     public static HashSet<String> deadTeams = new HashSet<>();
@@ -45,12 +42,11 @@ public class Common {
 
         Common.isGameStarted = false;
         Common.zoneStage = 0;
-        Common.isFinalZone = false;
-        Common.isZoneMove = false;
         Common.deadPlayers.clear();
         Common.players.clear();
         Common.deadTeams.clear();
         Common.playersPower.clear();
+        Common.isPortalsLocked = false;
 
         for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
             team.unregister();

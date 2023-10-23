@@ -24,12 +24,8 @@ public class Start implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
+        Common.resetVariables();
         Common.isGameStarted = true;
-        Common.zoneStage = 0;
-        Common.isFinalZone = false;
-        Common.isZoneMove = false;
-        Common.deadPlayers.clear();
-        Common.players.clear();
 
         Common.timer.setVisible(true);
 

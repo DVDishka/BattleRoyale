@@ -55,9 +55,6 @@ public class Initialization {
 
         ConfigVariables.times = config.getIntegerList("times");
         ConfigVariables.timeOut = config.getInt("timeOut", 600);
-        ConfigVariables.finalZoneDiameter = config.getInt("finalZoneRadius", 50) * 2;
-        ConfigVariables.finalZoneTimeOut = config.getInt("finalZoneTimeOut", 200);
-        ConfigVariables.finalZoneDuration = config.getInt("finalZoneDuration", 120);
         ConfigVariables.finalZoneMoveDuration = config.getInt("finalZoneMoveDuration", 120);
         if (config.getInt("minFinalZoneMove", 50) < config.getInt("maxFinalZoneMove", 100)) {
             ConfigVariables.minFinalZoneMove = config.getInt("minFinalZoneMove", 50);

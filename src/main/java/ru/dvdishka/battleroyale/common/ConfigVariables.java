@@ -9,9 +9,6 @@ public class ConfigVariables {
     public static List<Integer> times = Arrays.asList(1500, 1200, 900, 600, 300, 200);
     public static int defaultWorldBorderDiameter = 10000;
     public static int timeOut = 600;
-    public static int finalZoneDiameter = 100;
-    public static int finalZoneTimeOut = 200;
-    public static int finalZoneDuration = 120;
     public static int finalZoneMoveDuration = 120;
     public static int minFinalZoneMove = 50;
     public static int maxFinalZoneMove = 100;

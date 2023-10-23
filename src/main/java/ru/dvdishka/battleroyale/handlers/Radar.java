@@ -16,8 +16,11 @@ public class Radar {
 
     private static Radar instance = null;
 
-    private final TextColor safeZoneColor = NamedTextColor.DARK_GREEN;
-    private volatile TextColor movingZoneColor = NamedTextColor.RED;
+    private final TextColor safeZoneColor = NamedTextColor.AQUA;
+    private final TextColor stableZoneColor = NamedTextColor.YELLOW;
+    private final TextColor movingZoneFirstColor = NamedTextColor.RED;
+    private final TextColor movingZoneSecondColor = NamedTextColor.DARK_RED;
+    private volatile TextColor movingZoneColor = movingZoneFirstColor;
 
     private Radar() {
 
@@ -69,13 +72,13 @@ public class Radar {
     public void updateMovingZoneColor() {
 
         if (!Zone.getInstance().isZoneMoving()) {
-            movingZoneColor = NamedTextColor.RED;
+            movingZoneColor = stableZoneColor;
         }
         else {
-            if (movingZoneColor == NamedTextColor.DARK_RED) {
-                movingZoneColor = NamedTextColor.RED;
+            if (movingZoneColor == movingZoneFirstColor) {
+                movingZoneColor = movingZoneSecondColor;
             } else {
-                movingZoneColor = NamedTextColor.DARK_RED;
+                movingZoneColor = movingZoneFirstColor;
             }
         }
     }
@@ -490,42 +493,42 @@ public class Radar {
         Zone zone = Zone.getInstance();
 
         if (playerFloatZ - zone.getCurrentLowerBorder() < 0) {
-            return 10;
+            return 0;
         }
 
         if (playerFloatZ - zone.getCurrentUpperBorder() >= 0) {
-            return 0;
+            return 10;
         }
 
         if (playerFloatX < zone.getCurrentLeftFloatBorder() || playerFloatX >= zone.getCurrentRightFloatBorder()) {
 
             int segment = (int) ((zone.getCurrentUpperFloatBorder() - zone.getCurrentLowerFloatBorder()) / 9 + 1);
 
-            return 10 - (int) ((playerFloatZ - zone.getCurrentLowerFloatBorder()) / segment + 1);
+            return (int) ((playerFloatZ - zone.getCurrentLowerFloatBorder()) / segment + 1);
         }
 
         else {
 
             if (playerZ - zone.getNewLowerBorder() < 0) {
-                return 8;
+                return 2;
             }
 
             if (playerZ - zone.getNewUpperBorder() >= 0) {
-                return 2;
+                return 8;
             }
 
             if (playerX < zone.getNewLeftBorder() || playerX >= zone.getNewRightBorder()) {
 
                 int segment = (zone.getNewUpperBorder() - zone.getNewLowerBorder()) / 5 + 1;
 
-                return 8 - ((playerZ - zone.getNewLowerBorder()) / segment + 1);
+                return (playerZ - zone.getNewLowerBorder()) / segment + 3;
             }
 
             else {
 
                 int segment = (zone.getNewUpperBorder() - zone.getNewLowerBorder()) / 3 + 1;
 
-                return 7 - ((playerZ - zone.getNewLowerBorder()) / segment + 1);
+                return (playerZ - zone.getNewLowerBorder()) / segment + 4;
             }
         }
     }
@@ -538,13 +541,13 @@ public class Radar {
             return '>';
         }
         else if (side >= -45 && side < 45) {
-            return 'A';
+            return 'V';
         }
         else if (side >= 45 && side < 135) {
             return '<';
         }
         else if (side >= 135 || side < -135) {
-            return 'V';
+            return 'A';
         }
 
         return 'O';
