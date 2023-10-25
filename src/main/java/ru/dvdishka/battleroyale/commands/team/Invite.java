@@ -22,9 +22,9 @@ public class Invite implements CommandInterface {
             return;
         }
 
-        Team playerTeam = Team.getTeam(sender.getName());
+        Team inviterTeam = Team.getTeam(sender.getName());
 
-        if (playerTeam == null || !playerTeam.isLeader(sender.getName())) {
+        if (inviterTeam == null || !inviterTeam.isLeader(sender.getName())) {
             returnFailure("You are not in the team or you are not the leader!", sender);
             return;
         }
@@ -36,35 +36,33 @@ public class Invite implements CommandInterface {
             return;
         }
 
-        if (Team.getTeam(invitedPlayer) != null && Team.getTeam(invitedPlayer).getName().equals(playerTeam.getName())) {
-
+        if (Team.getTeam(invitedPlayer) != null && Team.getTeam(invitedPlayer).getName().equals(inviterTeam.getName())) {
             returnFailure("This player is already in your team!", sender);
             return;
         }
 
-        Common.invites.get(playerTeam.getName()).add(invitedPlayer.getName());
+        Team.invites.get(inviterTeam.getName()).add(invitedPlayer.getName());
 
-        returnSuccess(invitedPlayer.getName() + " has benn invited to your team successfully!", sender);
+        returnSuccess(invitedPlayer.getName() + " has benn invited to your team!", sender);
 
         invitedPlayer.sendMessage(Component.text()
                 .append(Component.text("You has been invited to ")
                         .color(TextColor.color(0, 143, 234))
                 )
-                .append(Component.text(playerTeam.getName())
-                        .decorate(TextDecoration.BOLD)
-                        .color(TextColor.color(201, 0, 238))
+                .append(Component.text(inviterTeam.getName())
+                        .color(inviterTeam.getColor())
                 )
                 .appendNewline()
                 .append(Component.text("[ACCEPT]")
                         .color(TextColor.color(0, 234, 53))
                         .decorate(TextDecoration.BOLD)
-                        .clickEvent(ClickEvent.runCommand("/battleroyale accept " + playerTeam.getName()))
+                        .clickEvent(ClickEvent.runCommand("/battleroyale accept " + inviterTeam.getName()))
                 )
                 .appendSpace()
                 .append(Component.text("[DECLINE]")
                         .color(TextColor.color(222, 16, 23))
                         .decorate(TextDecoration.BOLD)
-                        .clickEvent(ClickEvent.runCommand("/battleroyale cancel " + playerTeam.getName()))
+                        .clickEvent(ClickEvent.runCommand("/battleroyale cancel " + inviterTeam.getName()))
                 )
                 .build()
         );

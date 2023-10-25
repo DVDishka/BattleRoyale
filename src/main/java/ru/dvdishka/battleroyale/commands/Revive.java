@@ -20,7 +20,7 @@ public class Revive implements CommandInterface {
 
         Common.deadPlayers.remove(revivePlayer.getName());
         try {
-            Common.deadTeams.remove(Team.getTeam(revivePlayer.getName()).getName());
+            Team.deadTeams.remove(Team.getTeam(revivePlayer.getName()).getName());
 
             returnSuccess(revivePlayer.getName() + " has been revived!", sender);
         } catch (Exception ignored) {}

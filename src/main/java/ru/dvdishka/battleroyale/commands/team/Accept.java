@@ -1,6 +1,9 @@
-package ru.dvdishka.battleroyale.commands;
+package ru.dvdishka.battleroyale.commands.team;
 
 import dev.jorel.commandapi.executors.CommandArguments;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.TitlePart;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,7 +17,6 @@ public class Accept implements CommandInterface {
     public void execute(CommandSender sender, CommandArguments args) {
 
         if (Common.isGameStarted) {
-
             returnFailure("You can not accept an invitation while the game is on!", sender);
             return;
         }
@@ -28,20 +30,17 @@ public class Accept implements CommandInterface {
         Team newTeam = Team.get(newTeamName);
 
         if (newTeam == null) {
-
             returnFailure("Wrong team name!", sender);
             return;
         }
 
-        Common.invites.get(newTeamName).remove(newMemberName);
+        Team.invites.get(newTeamName).remove(newMemberName);
 
-        newTeam.addPlayer(newMemberName);
-        Bukkit.getScoreboardManager().getMainScoreboard().getTeam(newTeam.getName()).addPlayer(Bukkit.getOfflinePlayer(newMemberName));
+        newTeam.addMember(newMemberName);
 
         if (oldTeam != null) {
 
-            oldTeam.removePlayer(newMemberName);
-            Bukkit.getScoreboardManager().getMainScoreboard().getTeam(oldTeam.getName()).removePlayer(Bukkit.getOfflinePlayer(newMemberName));
+            oldTeam.removeMember(newMemberName);
 
             if (newMember != null) {
 
@@ -55,9 +54,21 @@ public class Accept implements CommandInterface {
 
         }
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (!player.getName().equals(newMemberName)) {
-                returnSuccess(newMemberName + " joined " + newTeamName + "!", player);
+        for (String memberName : newTeam.getMembers()) {
+            if (!memberName.equals(newMemberName)) {
+                try {
+                    Player memberPlayer = Bukkit.getPlayer(memberName);
+                    memberPlayer.sendTitlePart(TitlePart.TITLE, Component
+                            .text("Join")
+                            .color(NamedTextColor.LIGHT_PURPLE));
+                    memberPlayer.sendTitlePart(TitlePart.SUBTITLE, Component
+                            .text(newMemberName)
+                            .append(Component.space())
+                            .append(Component.text("joined"))
+                            .append(Component.space())
+                            .append(Component.text(newTeamName)
+                                    .color(newTeam.getColor())));
+                } catch (Exception ignored) {}
             }
         }
     }

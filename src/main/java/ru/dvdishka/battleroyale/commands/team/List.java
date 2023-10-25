@@ -26,12 +26,12 @@ public class List implements CommandInterface {
             Component teamMessagePart = Component.text("Team name: " + team.getName())
                     .color(team.getColor())
                     .appendNewline();
-            teamMessagePart = teamMessagePart.append(Component.text("Members number: " + team.getPlayers().size())
+            teamMessagePart = teamMessagePart.append(Component.text("Members number: " + team.getMembers().size())
                     .color(team.getColor())
                     .appendNewline());
             teamMessagePart = teamMessagePart.append(Component.text("Members: ")
                     .color(team.getColor()));
-            for (String member : team.getPlayers()) {
+            for (String member : team.getMembers()) {
                 teamMessagePart = teamMessagePart.append(Component.text(member + " ")
                         .color(team.getColor()));
             }

@@ -10,10 +10,8 @@ import ru.dvdishka.battleroyale.classes.NextGameStageEvent;
 import ru.dvdishka.battleroyale.classes.Zone;
 import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.ConfigVariables;
-import ru.dvdishka.battleroyale.common.Logger;
 import ru.dvdishka.battleroyale.common.Scheduler;
 import ru.dvdishka.battleroyale.tasks.BossBarTimerTask;
-import ru.dvdishka.battleroyale.tasks.ZoneMovingTask;
 
 import java.util.Random;
 
@@ -146,15 +144,10 @@ public class ZoneStageHandler implements Listener  {
 
     private void zoneMovingStage() {
 
-        int side = new Random().nextInt(0, 4);
-        int moveLength = new Random().nextInt(ConfigVariables.minFinalZoneMove, ConfigVariables.maxFinalZoneMove + 1) / 10 * 10;
-        String sideName;
-        int x, z;
-
         // KILL PLAYER IF NOT IN OVERWORLD AND LOCK PORTALS
         for (World world : Bukkit.getWorlds()) {
 
-            Common.isPortalsLocked = true;
+            Common.isPortalLocked = true;
 
             if (!world.getName().equals("world")) {
                 for (Player player : world.getPlayers()) {
@@ -162,6 +155,11 @@ public class ZoneStageHandler implements Listener  {
                 }
             }
         }
+
+        int side = new Random().nextInt(0, 4);
+        int moveLength = new Random().nextInt(ConfigVariables.minFinalZoneMove, ConfigVariables.maxFinalZoneMove + 1) / 10 * 10;
+        String sideName;
+        int x, z;
 
         switch (side) {
 
@@ -208,7 +206,7 @@ public class ZoneStageHandler implements Listener  {
         // ACTIVE BORDERS MOVING TASK START
         Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
             new BossBarTimerTask(Common.timer, ConfigVariables.finalZoneMoveDuration, ChatColor.RED + "The zone moves " + sideName, BarColor.RED, true).run();
-            new ZoneMovingTask(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(moveLength)).run();
+            Zone.getInstance().moveZone(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(moveLength));
         }, ConfigVariables.zoneMoveTimeOut * 20L);
     }
 }

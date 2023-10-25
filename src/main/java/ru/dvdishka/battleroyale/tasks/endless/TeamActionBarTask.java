@@ -13,7 +13,7 @@ public class TeamActionBarTask implements Runnable {
     public void run() {
 
         for (Team team : Team.teams) {
-            for (String playerName : team.getPlayers()) {
+            for (String playerName : team.getMembers()) {
 
                 Player player = Bukkit.getPlayer(playerName);
                 if (player != null) {

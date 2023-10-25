@@ -1,11 +1,10 @@
-package ru.dvdishka.battleroyale.commands;
+package ru.dvdishka.battleroyale.commands.team;
 
 import dev.jorel.commandapi.executors.CommandArguments;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.classes.Team;
 import ru.dvdishka.battleroyale.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.common.Common;
 
 public class Cancel implements CommandInterface {
 
@@ -18,7 +17,7 @@ public class Cancel implements CommandInterface {
             return;
         }
 
-        Common.invites.get((String) args.get("team")).remove(sender.getName());
+        Team.invites.get((String) args.get("team")).remove(sender.getName());
 
         try {
             returnFailure(sender.getName() + " declined your offer", Bukkit.getPlayer(Team.get((String) args.get("team")).getLeader()));

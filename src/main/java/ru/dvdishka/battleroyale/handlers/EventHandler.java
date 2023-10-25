@@ -29,7 +29,7 @@ public class EventHandler implements Listener {
         if (Common.isGameStarted) {
             if (Common.deadPlayers.contains(event.getPlayer().getName()) &&
                     Team.getTeam(event.getPlayer()) != null &&
-                    !Common.deadTeams.contains(Team.getTeam(event.getPlayer()).getName())) {
+                    !Team.deadTeams.contains(Team.getTeam(event.getPlayer()).getName())) {
 
                 Scheduler.getScheduler().runPlayerTask(Common.plugin, event.getPlayer(), () -> {
                     event.getPlayer().kick(Component.text("You are out and your team is not yet!"));
@@ -54,6 +54,8 @@ public class EventHandler implements Listener {
 
                 int powerNumber = new Random().nextInt(0, SuperPower.values().length);
                 SuperPower.values()[powerNumber].setToPlayer(player);
+
+                Common.players.add(player.getName());
             }
         });
     }
@@ -61,7 +63,7 @@ public class EventHandler implements Listener {
     @org.bukkit.event.EventHandler
     public void onPortal(PlayerPortalEvent event) {
 
-        if (Common.isPortalsLocked) {
+        if (Common.isPortalLocked) {
 
             event.setCancelled(true);
         }
@@ -99,7 +101,7 @@ public class EventHandler implements Listener {
                 Common.deadPlayers.add(player.getName());
 
                 if (playerTeam != null) {
-                    Common.deadTeams.add(playerTeam.getName());
+                    Team.deadTeams.add(playerTeam.getName());
                 }
 
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
@@ -156,7 +158,7 @@ public class EventHandler implements Listener {
         Common.deadPlayers.add(event.getPlayer().getName());
 
         if (playerTeam != null) {
-            for (String teamMate : playerTeam.getPlayers()) {
+            for (String teamMate : playerTeam.getMembers()) {
                 if (!Common.deadPlayers.contains(teamMate)) {
                     isTeamDead = false;
                     break;
@@ -196,7 +198,7 @@ public class EventHandler implements Listener {
             }
 
             if (playerTeam != null) {
-                Common.deadTeams.add(playerTeam.getName());
+                Team.deadTeams.add(playerTeam.getName());
             }
 
             if (aliveTeams.size() == 1) {

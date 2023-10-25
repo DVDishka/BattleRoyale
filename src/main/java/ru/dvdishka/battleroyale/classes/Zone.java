@@ -130,6 +130,35 @@ public class Zone {
         return nextZoneCenterZ;
     }
 
+    public void moveZone(int xMove, int zMove, int duration, int steps) {
+
+        int step = duration * 20 / steps;
+
+        for (int i = step; i <= duration * 20; i += step) {
+
+            Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
+
+                if (!Common.isGameStarted) {
+                    return;
+                }
+
+                for (World world : Bukkit.getWorlds()) {
+
+                    int x = 0, z = 0;
+                    if (xMove != 0) {
+                        x = xMove;
+                    }
+                    if (zMove != 0) {
+                        z = zMove;
+                    }
+
+                    world.getWorldBorder().setCenter(world.getWorldBorder().getCenter().x() + x,
+                            world.getWorldBorder().getCenter().z() + z);
+                }
+            }, i);
+        }
+    }
+
     public boolean isZoneMoving() {
         return isZoneMoving;
     }

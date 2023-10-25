@@ -1,13 +1,14 @@
 package ru.dvdishka.battleroyale.classes;
 
-import ru.dvdishka.battleroyale.common.Common;
-import ru.dvdishka.battleroyale.common.Scheduler;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.OfflinePlayer;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -15,17 +16,28 @@ public class Team {
 
     private String name;
     private String leader;
-    private TextColor color;
-    private ArrayList<String> players = new ArrayList<>();
+    private NamedTextColor color;
+    private ArrayList<String> members = new ArrayList<>();
+    private org.bukkit.scoreboard.Team scoreboardTeam;
+
     public static ArrayList<Team> teams = new ArrayList<>();
+    public static HashSet<String> deadTeams = new HashSet<>();
+    public static HashMap<String, HashSet<String>> invites = new HashMap<>();
 
     public Team(String name, String leader) {
 
         this.name = name;
         this.leader = leader;
-        this.color = TextColor.color(new Random().nextInt(0, 255), new Random().nextInt(0, 255), new Random().nextInt(0, 255));
+        this.color = NamedTextColor.nearestTo(TextColor.color(new Random().nextInt(0, 255), new Random().nextInt(0, 255), new Random().nextInt(0, 255)));
         teams.add(this);
-        Common.invites.put(name, new HashSet<>());
+        this.scoreboardTeam = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(name);
+
+        scoreboardTeam.prefix(Component.text(name + " "));
+        scoreboardTeam.color(this.color);
+        scoreboardTeam.setAllowFriendlyFire(false);
+        scoreboardTeam.addPlayer(Bukkit.getOfflinePlayer(leader));
+
+        invites.put(name, new HashSet<>());
     }
 
     public static Team get(String teamName) {
@@ -44,7 +56,7 @@ public class Team {
 
         for (Team team : teams) {
 
-            if (team.getPlayers().contains(player.getName())) {
+            if (team.getMembers().contains(player.getName())) {
                 return team;
             }
         }
@@ -55,7 +67,7 @@ public class Team {
 
         for (Team team : teams) {
 
-            if (team.getPlayers().contains(name)) {
+            if (team.getMembers().contains(name)) {
                 return team;
             }
         }
@@ -66,7 +78,7 @@ public class Team {
         return this.color;
     }
 
-    public void setColor(TextColor color) {
+    public void setColor(NamedTextColor color) {
         this.color = color;
     }
 
@@ -86,34 +98,33 @@ public class Team {
         this.name = name;
     }
 
-    public void setPlayers(ArrayList<String> players) {
-
-        this.players = players;
+    public void setMembers(ArrayList<String> members) {
+        this.members = members;
     }
 
-    public void addPlayer(String name) {
-        Player player = Bukkit.getPlayer(name);
-        player.displayName(Component.text(this.getName() + " " + name).color(this.color));
-        players.add(name);
+    public void addMember(String name) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+        try {
+            scoreboardTeam.addPlayer(player);
+            members.add(name);
+        } catch (Exception ignored) {}
     }
 
-    public void removePlayer(String name) {
+    public void removeMember(String name) {
 
-        Player player = Bukkit.getPlayer(name);
-
-        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
-            player.displayName(null);
-        });
-
-        players.remove(name);
+        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+        try {
+            scoreboardTeam.removePlayer(player);
+            members.remove(name);
+        } catch (Exception ignored) {}
     }
 
     public boolean isMember(String name) {
-        return players.contains(name);
+        return members.contains(name);
     }
 
     public boolean isMember(Player player) {
-        return players.contains(player.getName());
+        return members.contains(player.getName());
     }
 
     public boolean isLeader(String name) {
@@ -124,7 +135,18 @@ public class Team {
         return this.leader.equals(player.getName());
     }
 
-    public ArrayList<String> getPlayers() {
-        return players;
+    public ArrayList<String> getMembers() {
+        return members;
+    }
+
+    public org.bukkit.scoreboard.Team getScoreboardTeam() {
+        return scoreboardTeam;
+    }
+
+    public void unregister() {
+
+        this.scoreboardTeam.unregister();
+        this.members.clear();
+        teams.remove(this);
     }
 }

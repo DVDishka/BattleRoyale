@@ -30,12 +30,10 @@ public class Common {
     public static int zoneStage = 0;
     public static BossBar timer = Bukkit.createBossBar("", BarColor.RED, BarStyle.SEGMENTED_10);
     public static boolean isStartBox = false;
-    public static volatile boolean isPortalsLocked = false;
+    public static volatile boolean isPortalLocked = false;
 
     public static HashSet<String> deadPlayers = new HashSet<>();
-    public static HashSet<String> deadTeams = new HashSet<>();
     public static HashSet<String> players = new HashSet<>();
-    public static HashMap<String, HashSet<String>> invites = new HashMap<>();
     public static HashMap<String, SuperPower> playersPower = new HashMap<>();
 
     public static void resetVariables() {
@@ -44,9 +42,9 @@ public class Common {
         Common.zoneStage = 0;
         Common.deadPlayers.clear();
         Common.players.clear();
-        Common.deadTeams.clear();
+        ru.dvdishka.battleroyale.classes.Team.deadTeams.clear();
         Common.playersPower.clear();
-        Common.isPortalsLocked = false;
+        Common.isPortalLocked = false;
 
         for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
             team.unregister();
