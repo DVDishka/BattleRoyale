@@ -9,6 +9,7 @@ import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.ConfigVariables;
 import ru.dvdishka.battleroyale.common.Initialization;
 import ru.dvdishka.battleroyale.common.Scheduler;
+import ru.dvdishka.battleroyale.handlers.Timer;
 
 import java.io.File;
 
@@ -21,7 +22,7 @@ public final class BattleRoyale extends JavaPlugin {
 
         Bukkit.setSpawnRadius(0);
 
-        Common.timer.setVisible(false);
+        Timer.getInstance().unregister();
 
         if (!new File("plugins/BattleRoyale").exists()) {
             new File("plugins/BattleRoyale").mkdir();
@@ -51,7 +52,7 @@ public final class BattleRoyale extends JavaPlugin {
 
         Scheduler.cancelTasks(this);
 
-        Common.timer.setVisible(false);
+        Timer.getInstance().unregister();
 
         for (World world : Bukkit.getWorlds()) {
             world.setPVP(true);

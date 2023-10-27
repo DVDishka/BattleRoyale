@@ -25,7 +25,7 @@ public class Create implements CommandInterface {
         int chunkX = startBoxChunk.getX() * 16;
         int chunkZ = startBoxChunk.getZ() * 16;
 
-        Scheduler.getScheduler().runRegionTask(Common.plugin, startBoxLocation, () -> {
+        Scheduler.getScheduler().runRegionTask(Common.plugin, startBoxLocation, (scheduledTask) -> {
 
             for (int x = chunkX; x < chunkX + 16; x++) {
                 for (int z = chunkZ; z < chunkZ + 16; z++) {
@@ -54,14 +54,14 @@ public class Create implements CommandInterface {
             }
         });
 
-        Scheduler.getScheduler().runSync(Common.plugin, () -> {
+        Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
             Bukkit.getWorld("world").setSpawnLocation(chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8);
             Bukkit.getWorld("world").setGameRule(GameRule.SPAWN_RADIUS, 1);
         });
 
         for (Player player : Bukkit.getOnlinePlayers()) {
 
-            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
+            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
                 player.teleportAsync(new Location(Bukkit.getWorld("world"), chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8));
             });
         }

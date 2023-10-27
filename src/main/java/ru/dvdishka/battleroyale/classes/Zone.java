@@ -91,7 +91,7 @@ public class Zone {
                 delay = 1;
             }
 
-            Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
+            Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
                 if (delay / 10 != timeSeconds * 2 - 1) {
                     for (World world : Bukkit.getWorlds()) {
                         world.getWorldBorder().setSize(borderSize);
@@ -136,7 +136,7 @@ public class Zone {
 
         for (int i = step; i <= duration * 20; i += step) {
 
-            Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
+            Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
 
                 if (!Common.isGameStarted) {
                     return;

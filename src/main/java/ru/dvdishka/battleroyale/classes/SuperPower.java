@@ -17,7 +17,7 @@ public enum SuperPower {
     Cat(List.of(PotionEffectType.NIGHT_VISION, PotionEffectType.INVISIBILITY, PotionEffectType.LUCK), List.of(0, 0, 4), "Cat"),
     Husky(List.of(PotionEffectType.HEALTH_BOOST), List.of(2), "Husky"),
     Tank(List.of(PotionEffectType.DAMAGE_RESISTANCE, PotionEffectType.SLOW), List.of(1, 0), "Tank"),
-    Healer(List.of(PotionEffectType.REGENERATION, PotionEffectType.DARKNESS), List.of(3, 0), "Healer"),
+    Healer(List.of(PotionEffectType.REGENERATION), List.of(2, 0), "Healer"),
     BountyHunter(List.of(PotionEffectType.INCREASE_DAMAGE, PotionEffectType.GLOWING), List.of(1, 0), "BountyHunter");
 
     SuperPower(List<PotionEffectType> effectType, List<Integer> amplifier, String name) {

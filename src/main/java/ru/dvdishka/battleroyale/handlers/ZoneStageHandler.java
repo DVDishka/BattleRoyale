@@ -11,7 +11,6 @@ import ru.dvdishka.battleroyale.classes.Zone;
 import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.ConfigVariables;
 import ru.dvdishka.battleroyale.common.Scheduler;
-import ru.dvdishka.battleroyale.tasks.BossBarTimerTask;
 
 import java.util.Random;
 
@@ -41,8 +40,10 @@ public class ZoneStageHandler implements Listener  {
 
     private void firstZoneStage() {
 
+        int timeOut = ConfigVariables.timeOuts.get(0);
         final int oldZoneCenterX = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockX();
         final int oldZoneCenterZ = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockZ();
+        int previousZoneDiameter = ConfigVariables.defaultWorldBorderDiameter;
 
         final int nextZoneCenterX = Zone.getInstance().generateRandomZoneCenterX(
                 ConfigVariables.defaultWorldBorderDiameter / 2,
@@ -53,8 +54,27 @@ public class ZoneStageHandler implements Listener  {
                 ConfigVariables.zones.get(Common.zoneStage) / 2,
                 oldZoneCenterZ);
 
+        Zone.getInstance().setVariables(ConfigVariables.defaultWorldBorderDiameter,
+                ConfigVariables.zones.get(Common.zoneStage),
+                oldZoneCenterX,
+                oldZoneCenterZ,
+                nextZoneCenterX,
+                nextZoneCenterZ);
+
+        // BREAK BOSS BAR TIMER TASK START
+        Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
+            Common.isBreak = true;
+            Timer.getInstance().startTimer(timeOut, ChatColor.YELLOW +
+                    "Current zone - " +
+                    String.valueOf(previousZoneDiameter / 2) +
+                    " ! Next zone - " + String.valueOf(ConfigVariables.zones.get(Common.zoneStage) / 2),
+                    BarColor.GREEN, false);
+        });
+
         // ACTIVE BORDERS TASK START
-        Scheduler.getScheduler().runSync(Common.plugin, () -> {
+        Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+
+            Common.isBreak = false;
 
             // CHANGE WORLD BORDER
             Zone.getInstance().changeBorders(
@@ -67,17 +87,17 @@ public class ZoneStageHandler implements Listener  {
                     nextZoneCenterZ);
 
             // ACTIVE BOSS BAR TIMER TASK START
-            new BossBarTimerTask(Common.timer, ConfigVariables.times.get(Common.zoneStage),
+            Timer.getInstance().startTimer(ConfigVariables.times.get(Common.zoneStage),
                     ChatColor.RED + "Zone moves From " + String.valueOf(ConfigVariables.defaultWorldBorderDiameter / 2) + " To " +
-                            String.valueOf(ConfigVariables.zones.get(Common.zoneStage) / 2), BarColor.RED, true).run();
+                            String.valueOf(ConfigVariables.zones.get(Common.zoneStage) / 2), BarColor.RED, true);
 
             Common.zoneStage++;
-        });
+        }, timeOut * 20L);
     }
 
     public void mainNextStageLogic() {
 
-        int timeOut = ConfigVariables.timeOut;
+        int timeOut = ConfigVariables.timeOuts.get(Common.zoneStage + 1);
         int previousZoneDiameter = ConfigVariables.zones.get(Common.zoneStage - 1);
 
         final int oldZoneCenterX = Zone.getInstance().getNewZoneCenterX();
@@ -100,16 +120,21 @@ public class ZoneStageHandler implements Listener  {
                 nextZoneCenterZ);
 
         // BREAK BOSS BAR TIMER TASK START
-        Scheduler.getScheduler().runSync(Common.plugin, () -> {
-            new BossBarTimerTask(Common.timer, timeOut, ChatColor.YELLOW +
+        Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
+
+            Common.isBreak = true;
+
+            Timer.getInstance().startTimer(timeOut, ChatColor.YELLOW +
                     "Current zone - " +
                     String.valueOf(previousZoneDiameter / 2) +
                     " ! Next zone - " + String.valueOf(ConfigVariables.zones.get(Common.zoneStage) / 2),
-                    BarColor.GREEN, false).run();
+                    BarColor.GREEN, false);
         });
 
         // ACTIVE BORDERS TASK START
-        Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
+        Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+
+            Common.isBreak = false;
 
             // PVP ENABLE LOGIC
             if (Common.zoneStage == 1) {
@@ -134,9 +159,9 @@ public class ZoneStageHandler implements Listener  {
                     nextZoneCenterZ);
 
             // ACTIVE BOSS BAR TIMER TASK START
-            new BossBarTimerTask(Common.timer, ConfigVariables.times.get(Common.zoneStage),
+            Timer.getInstance().startTimer(ConfigVariables.times.get(Common.zoneStage),
                     ChatColor.RED + "Zone moves From " + String.valueOf(previousZoneDiameter / 2) + " To " +
-                            String.valueOf(ConfigVariables.zones.get(Common.zoneStage) / 2), BarColor.RED, true).run();
+                            String.valueOf(ConfigVariables.zones.get(Common.zoneStage) / 2), BarColor.RED, true);
 
             Common.zoneStage++;
         }, timeOut * 20L);
@@ -151,7 +176,7 @@ public class ZoneStageHandler implements Listener  {
 
             if (!world.getName().equals("world")) {
                 for (Player player : world.getPlayers()) {
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> player.setHealth(0));
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> player.setHealth(0));
                 }
             }
         }
@@ -199,13 +224,15 @@ public class ZoneStageHandler implements Listener  {
         }
 
         // BREAK BOSS BAR TIMER TASK START
-        Scheduler.getScheduler().runSync(Common.plugin, () -> {
-            new BossBarTimerTask(Common.timer, ConfigVariables.zoneMoveTimeOut, ChatColor.YELLOW + "BREAK! The zone will move " + sideName, BarColor.GREEN, false).run();
+        Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
+            Common.isBreak = true;
+            Timer.getInstance().startTimer(ConfigVariables.zoneMoveTimeOut, ChatColor.YELLOW + "BREAK! The zone will move " + sideName, BarColor.GREEN, false);
         });
 
         // ACTIVE BORDERS MOVING TASK START
-        Scheduler.getScheduler().runSyncDelayed(Common.plugin, () -> {
-            new BossBarTimerTask(Common.timer, ConfigVariables.finalZoneMoveDuration, ChatColor.RED + "The zone moves " + sideName, BarColor.RED, true).run();
+        Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+            Common.isBreak = false;
+            Timer.getInstance().startTimer(ConfigVariables.finalZoneMoveDuration, ChatColor.RED + "The zone moves " + sideName, BarColor.RED, true);
             Zone.getInstance().moveZone(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(moveLength));
         }, ConfigVariables.zoneMoveTimeOut * 20L);
     }

@@ -18,7 +18,7 @@ public class TeamActionBarTask implements Runnable {
                 Player player = Bukkit.getPlayer(playerName);
                 if (player != null) {
 
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
                         player.sendActionBar(Component.text(team.getName()).color(team.getColor()));
                     });
                 }

@@ -26,9 +26,10 @@ public class Common {
 
     public static boolean isFolia = false;
 
-    public static boolean isGameStarted = false;
+    public static volatile boolean isGameStarted = false;
+    public static volatile boolean isBreak = false;
+
     public static int zoneStage = 0;
-    public static BossBar timer = Bukkit.createBossBar("", BarColor.RED, BarStyle.SEGMENTED_10);
     public static boolean isStartBox = false;
     public static volatile boolean isPortalLocked = false;
 

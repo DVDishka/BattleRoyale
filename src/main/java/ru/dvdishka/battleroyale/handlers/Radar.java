@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.classes.Zone;
 import ru.dvdishka.battleroyale.common.Common;
@@ -26,7 +27,7 @@ public class Radar {
 
         radar = ProtocolSidebar.newAdventureSidebar(
                 Component.text("Radar")
-                        .color(NamedTextColor.YELLOW)
+                        .color(NamedTextColor.GOLD)
                         .decorate(TextDecoration.BOLD),
                 Common.plugin);
 
@@ -54,6 +55,63 @@ public class Radar {
         radar.addUpdatableLine(player -> updateRadar(player, 9));
 
         radar.addUpdatableLine(player -> updateRadar(player, 10));
+
+        radar.addConditionalLine((player) -> Component.text("-----------")
+                .color(NamedTextColor.GOLD)
+                .decorate(TextDecoration.BOLD), (player) -> Common.isGameStarted);
+
+        radar.addConditionalLine((player) -> {
+
+            Component component = Component
+                    .text("PVP:")
+                    .append(Component.space());
+
+            if (!Bukkit.getWorld("world").getPVP()) {
+                component = component
+                        .append(Component.text("DISABLED")
+                                .color(NamedTextColor.DARK_GREEN)
+                                .decorate(TextDecoration.BOLD));
+            } else {
+                component = component
+                        .append(Component.text("ENABLED")
+                                .color(NamedTextColor.RED)
+                                .decorate(TextDecoration.BOLD));
+            }
+
+            return component;
+        }, player -> Common.isGameStarted);
+
+        radar.addConditionalLine((player) -> Component.text("-----------")
+                .color(NamedTextColor.GOLD)
+                .decorate(TextDecoration.BOLD), (player) -> Common.isBreak || Zone.getInstance().isZoneMoving());
+
+        radar.addConditionalLine((player) -> {
+
+            Component component = Component.empty();
+
+            if (Common.isBreak) {
+                component = component
+                        .append(Component.text("Break:"))
+                        .append(Component.space());
+            } else {
+                component = component
+                        .append(Component.text("Narrowing:"))
+                        .append(Component.space());
+            }
+
+            component = component
+                    .append(Component.text(Timer.getInstance().getTime() / 3600 / 10))
+                    .append(Component.text(Timer.getInstance().getTime() / 3600 % 10))
+                    .append(Component.text(":"))
+                    .append(Component.text(Timer.getInstance().getTime() / 60 % 60 / 10))
+                    .append(Component.text(Timer.getInstance().getTime() / 60 % 10))
+                    .append(Component.text(":"))
+                    .append(Component.text(Timer.getInstance().getTime() % 60 / 10))
+                    .append(Component.text(Timer.getInstance().getTime() % 10));
+
+            return component;
+
+        }, (player) -> Common.isBreak || Zone.getInstance().isZoneMoving());
 
         radar.updateLinesPeriodically(10, 10);
     }

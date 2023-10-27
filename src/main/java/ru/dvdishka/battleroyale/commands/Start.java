@@ -10,10 +10,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import ru.dvdishka.battleroyale.classes.SuperPower;
 import ru.dvdishka.battleroyale.classes.NextGameStageEvent;
+import ru.dvdishka.battleroyale.classes.Zone;
 import ru.dvdishka.battleroyale.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.ConfigVariables;
 import ru.dvdishka.battleroyale.common.Scheduler;
+import ru.dvdishka.battleroyale.handlers.Timer;
 import ru.dvdishka.battleroyale.tasks.endless.EffectUpdateTask;
 
 import java.util.ArrayList;
@@ -27,9 +29,9 @@ public class Start implements CommandInterface {
         Common.resetVariables();
         Common.isGameStarted = true;
 
-        Common.timer.setVisible(true);
+        Timer.getInstance().register();
 
-        Scheduler.getScheduler().runAsyncRepeatingTask(Common.plugin, () -> {
+        Scheduler.getScheduler().runAsyncRepeatingTask(Common.plugin, (scheduledTask) -> {
             new EffectUpdateTask().run();
         }, 20, 20);
 
@@ -51,20 +53,20 @@ public class Start implements CommandInterface {
             Common.players.add(player.getName());
 
 
-            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
+            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
                 player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
             });
 
             ArrayList<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
             for (PotionEffect effect : effects) {
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
+                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
                     player.removePotionEffect(effect.getType());
                 });
             }
 
-            Common.timer.addPlayer(player);
+            Timer.getInstance().addViewer(player);
 
-            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
+            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 200 , 1, false, false));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 1200, 9, false, false));
             });

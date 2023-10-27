@@ -1,8 +1,6 @@
 package ru.dvdishka.battleroyale.commands.startbox;
 
 import dev.jorel.commandapi.executors.CommandArguments;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.commands.common.CommandInterface;
@@ -19,7 +17,7 @@ public class Remove implements CommandInterface {
         Location startBoxLocation = new Location(Bukkit.getWorld("world"),
                 ConfigVariables.startBoxX, ConfigVariables.startBoxY, ConfigVariables.startBoxZ);
 
-        Scheduler.getScheduler().runRegionTask(Common.plugin, startBoxLocation, () -> {
+        Scheduler.getScheduler().runRegionTask(Common.plugin, startBoxLocation, (scheduledTask) -> {
 
             Chunk startBoxChunk = startBoxLocation.getChunk();
 
@@ -53,7 +51,7 @@ public class Remove implements CommandInterface {
             }
         });
 
-        Scheduler.getScheduler().runSync(Common.plugin, () -> {
+        Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
             Bukkit.getWorld("world").setSpawnLocation(0, 0, 0);
             Bukkit.getWorld("world").setGameRule(GameRule.SPAWN_RADIUS, 0);
         });

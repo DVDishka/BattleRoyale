@@ -1,5 +1,7 @@
 package ru.dvdishka.battleroyale.handlers;
 
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import ru.dvdishka.battleroyale.classes.*;
 import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.Scheduler;
@@ -31,17 +33,19 @@ public class EventHandler implements Listener {
                     Team.getTeam(event.getPlayer()) != null &&
                     !Team.deadTeams.contains(Team.getTeam(event.getPlayer()).getName())) {
 
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, event.getPlayer(), () -> {
+                Scheduler.getScheduler().runPlayerTask(Common.plugin, event.getPlayer(), (scheduledTask) -> {
                     event.getPlayer().kick(Component.text("You are out and your team is not yet!"));
                 });
             }
         }
 
-        Common.timer.addPlayer(event.getPlayer());
+        if (Common.isGameStarted) {
+            Timer.getInstance().addViewer(event.getPlayer());
+        }
 
         Player player = event.getPlayer();
 
-        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
+        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
 
             if (!Common.players.contains(player.getName()) && Common.isGameStarted) {
 
@@ -94,7 +98,7 @@ public class EventHandler implements Listener {
 
             if (playerTeam == null || !aliveTeams.contains(playerTeam.getName())) {
 
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
+                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
                     player.setGameMode(GameMode.SPECTATOR);
                 });
 
@@ -107,11 +111,11 @@ public class EventHandler implements Listener {
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
                     if (playerTeam != null) {
-                        Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, () -> {
+                        Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
                             onlinePlayer.sendTitle(ChatColor.RED + "Team " + playerTeam.getName() + " is eliminated!", "");
                         });
                     } else {
-                        Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, () -> {
+                        Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
                             onlinePlayer.sendTitle(ChatColor.RED + "Team " + player.getName() + " is eliminated!", "");
                         });
                     }
@@ -119,7 +123,7 @@ public class EventHandler implements Listener {
 
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, () -> {
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
                         onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
                     });
                 }
@@ -166,7 +170,7 @@ public class EventHandler implements Listener {
             }
         }
 
-        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
+        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
             player.setGameMode(GameMode.SPECTATOR);
         });
 
@@ -187,11 +191,11 @@ public class EventHandler implements Listener {
                 }
 
                 if (playerTeam != null) {
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, () -> {
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
                         onlinePlayer.sendTitle(ChatColor.RED + "Team " + playerTeam.getName() + " is eliminated!", "");
                     });
                 } else {
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
                         onlinePlayer.sendTitle(ChatColor.RED + "Team " + player.getName() + " is eliminated!", "");
                     });
                 }
@@ -205,20 +209,22 @@ public class EventHandler implements Listener {
 
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, () -> {
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
                         onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
                     });
                 }
 
                 Common.isGameStarted = false;
-                Common.timer.setColor(BarColor.PINK);
-                Common.timer.setProgress(1);
-                Common.timer.setTitle("Team " + aliveTeams.get(0) + " wins!");
+
+                Timer.getInstance().unregister();
+
+                BossBar bossBar = Bukkit.createBossBar("Team " + aliveTeams.get(0) + " wins!", BarColor.PINK, BarStyle.SOLID);
+
                 Bukkit.getConsoleSender().sendMessage("Team " + aliveTeams.get(0) + " wins!");
             }
         }
         if (!isTeamDead) {
-            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, () -> {
+            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
                 player.kick(Component.text("You are out and your team is not yet!"));
             });
         }

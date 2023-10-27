@@ -8,6 +8,7 @@ import ru.dvdishka.battleroyale.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.common.Common;
 import ru.dvdishka.battleroyale.common.ConfigVariables;
 import ru.dvdishka.battleroyale.common.Scheduler;
+import ru.dvdishka.battleroyale.handlers.Timer;
 
 public class Stop implements CommandInterface {
 
@@ -16,7 +17,7 @@ public class Stop implements CommandInterface {
 
         Scheduler.cancelTasks(Common.plugin);
 
-        Common.timer.setVisible(false);
+        Timer.getInstance().unregister();
 
         for (World world : Bukkit.getWorlds()) {
             world.setPVP(true);

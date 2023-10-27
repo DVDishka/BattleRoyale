@@ -18,6 +18,7 @@ import ru.dvdishka.battleroyale.handlers.Radar;
 import ru.dvdishka.battleroyale.handlers.ZoneStageHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Initialization {
 
@@ -46,7 +47,7 @@ public class Initialization {
         ConfigVariables.zones = zones;
 
         ConfigVariables.times = config.getIntegerList("times");
-        ConfigVariables.timeOut = config.getInt("timeOut", 600);
+        ConfigVariables.timeOuts = config.getIntegerList("timeOuts");
         ConfigVariables.finalZoneMoveDuration = config.getInt("finalZoneMoveDuration", 120);
         if (config.getInt("minFinalZoneMove", 50) < config.getInt("maxFinalZoneMove", 100)) {
             ConfigVariables.minFinalZoneMove = config.getInt("minFinalZoneMove", 50);
