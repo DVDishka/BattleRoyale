@@ -2,6 +2,7 @@ package ru.dvdishka.battleroyale.handlers;
 
 import me.catcoder.sidebar.ProtocolSidebar;
 import me.catcoder.sidebar.Sidebar;
+import me.catcoder.sidebar.pager.SidebarPager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -11,9 +12,13 @@ import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.classes.Zone;
 import ru.dvdishka.battleroyale.common.Common;
 
+import java.util.Arrays;
+
 public class Radar {
 
-    private final Sidebar<Component> radar;
+    private final SidebarPager<Component> radarPager;
+    private final Sidebar<Component> radarFirstPage;
+    private final Sidebar<Component> radarSecondPage;
 
     private static Radar instance = null;
 
@@ -25,42 +30,42 @@ public class Radar {
 
     private Radar() {
 
-        radar = ProtocolSidebar.newAdventureSidebar(
+        radarFirstPage = ProtocolSidebar.newAdventureSidebar(
                 Component.text("Radar")
                         .color(NamedTextColor.GOLD)
                         .decorate(TextDecoration.BOLD),
                 Common.plugin);
 
-        radar.addUpdatableLine(player -> {
+        radarFirstPage.addUpdatableLine(player -> {
             updateMovingZoneColor();
             return updateRadar(player, 0);
         });
 
-        radar.addUpdatableLine(player -> updateRadar(player, 1));
+        radarFirstPage.addUpdatableLine(player -> updateRadar(player, 1));
 
-        radar.addUpdatableLine(player -> updateRadar(player, 2));
+        radarFirstPage.addUpdatableLine(player -> updateRadar(player, 2));
 
-        radar.addUpdatableLine(player -> updateRadar(player, 3));
+        radarFirstPage.addUpdatableLine(player -> updateRadar(player, 3));
 
-        radar.addUpdatableLine(player -> updateRadar(player, 4));
+        radarFirstPage.addUpdatableLine(player -> updateRadar(player, 4));
 
-        radar.addUpdatableLine(player -> updateRadar(player, 5));
+        radarFirstPage.addUpdatableLine(player -> updateRadar(player, 5));
 
-        radar.addUpdatableLine(player -> updateRadar(player, 6));
+        radarFirstPage.addUpdatableLine(player -> updateRadar(player, 6));
 
-        radar.addUpdatableLine(player -> updateRadar(player, 7));
+        radarFirstPage.addUpdatableLine(player -> updateRadar(player, 7));
 
-        radar.addUpdatableLine(player -> updateRadar(player, 8));
+        radarFirstPage.addUpdatableLine(player -> updateRadar(player, 8));
 
-        radar.addUpdatableLine(player -> updateRadar(player, 9));
+        radarFirstPage.addUpdatableLine(player -> updateRadar(player, 9));
 
-        radar.addUpdatableLine(player -> updateRadar(player, 10));
+        radarFirstPage.addUpdatableLine(player -> updateRadar(player, 10));
 
-        radar.addConditionalLine((player) -> Component.text("-----------")
+        radarFirstPage.addConditionalLine((player) -> Component.text("-----------")
                 .color(NamedTextColor.GOLD)
                 .decorate(TextDecoration.BOLD), (player) -> Common.isGameStarted);
 
-        radar.addConditionalLine((player) -> {
+        radarFirstPage.addConditionalLine((player) -> {
 
             Component component = Component
                     .text("PVP:")
@@ -81,11 +86,11 @@ public class Radar {
             return component;
         }, player -> Common.isGameStarted);
 
-        radar.addConditionalLine((player) -> Component.text("-----------")
+        radarFirstPage.addConditionalLine((player) -> Component.text("-----------")
                 .color(NamedTextColor.GOLD)
                 .decorate(TextDecoration.BOLD), (player) -> Common.isBreak || Zone.getInstance().isZoneMoving());
 
-        radar.addConditionalLine((player) -> {
+        radarFirstPage.addConditionalLine((player) -> {
 
             Component component = Component.empty();
 
@@ -113,7 +118,54 @@ public class Radar {
 
         }, (player) -> Common.isBreak || Zone.getInstance().isZoneMoving());
 
-        radar.updateLinesPeriodically(10, 10);
+        radarFirstPage.updateLinesPeriodically(10, 10);
+
+        radarSecondPage = ProtocolSidebar.newAdventureSidebar(
+                Component.text("Radar")
+                        .color(NamedTextColor.GOLD)
+                        .decorate(TextDecoration.BOLD),
+                Common.plugin);
+
+        radarSecondPage.addUpdatableLine(player -> {
+            updateMovingZoneColor();
+            return updateRadar(player, 0);
+        });
+
+        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 1));
+
+        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 2));
+
+        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 3));
+
+        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 4));
+
+        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 5));
+
+        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 6));
+
+        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 7));
+
+        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 8));
+
+        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 9));
+
+        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 10));
+
+        radarSecondPage.updateLinesPeriodically(10, 10);
+
+        radarSecondPage.addUpdatableLine(player -> {
+
+            Component component = Component
+                    .text("North:")
+                    .append(Component.space())
+                    .append(Component.text(Zone.getInstance().getCurrentLowerBorder()))
+                    .append(Component.text("->"))
+                    .append(Component.text(Zone.getInstance().getCurrentUpperBorder()));
+
+            return component;
+        });
+
+        radarPager = new SidebarPager<>(Arrays.asList(radarFirstPage, radarSecondPage), 100, Common.plugin);
     }
 
     public static Radar getInstance() {
@@ -124,7 +176,7 @@ public class Radar {
     }
 
     public void addViewer(Player player) {
-        radar.addViewer(player);
+        radarPager.show(player);
     }
 
     public void updateMovingZoneColor() {
