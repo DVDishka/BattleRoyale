@@ -7,18 +7,16 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.classes.Zone;
 import ru.dvdishka.battleroyale.common.Common;
 
-import java.util.Arrays;
+import java.util.List;
 
 public class Radar {
 
     private final SidebarPager<Component> radarPager;
     private final Sidebar<Component> radarFirstPage;
-    private final Sidebar<Component> radarSecondPage;
 
     private static Radar instance = null;
 
@@ -28,11 +26,14 @@ public class Radar {
     private final TextColor movingZoneSecondColor = NamedTextColor.DARK_RED;
     private volatile TextColor movingZoneColor = movingZoneFirstColor;
 
+    private final TextColor firstCordColor = NamedTextColor.YELLOW;
+    private final TextColor secondCordColor = NamedTextColor.RED;
+
     private Radar() {
 
         radarFirstPage = ProtocolSidebar.newAdventureSidebar(
-                Component.text("Radar")
-                        .color(NamedTextColor.GOLD)
+                Component.text("RADAR")
+                        .color(NamedTextColor.RED)
                         .decorate(TextDecoration.BOLD),
                 Common.plugin);
 
@@ -61,111 +62,81 @@ public class Radar {
 
         radarFirstPage.addUpdatableLine(player -> updateRadar(player, 10));
 
-        radarFirstPage.addConditionalLine((player) -> Component.text("-----------")
-                .color(NamedTextColor.GOLD)
-                .decorate(TextDecoration.BOLD), (player) -> Common.isGameStarted);
-
-        radarFirstPage.addConditionalLine((player) -> {
-
-            Component component = Component
-                    .text("PVP:")
-                    .append(Component.space());
-
-            if (!Bukkit.getWorld("world").getPVP()) {
-                component = component
-                        .append(Component.text("DISABLED")
-                                .color(NamedTextColor.DARK_GREEN)
-                                .decorate(TextDecoration.BOLD));
-            } else {
-                component = component
-                        .append(Component.text("ENABLED")
-                                .color(NamedTextColor.RED)
-                                .decorate(TextDecoration.BOLD));
-            }
-
-            return component;
-        }, player -> Common.isGameStarted);
-
-        radarFirstPage.addConditionalLine((player) -> Component.text("-----------")
-                .color(NamedTextColor.GOLD)
-                .decorate(TextDecoration.BOLD), (player) -> Common.isBreak || Zone.getInstance().isZoneMoving());
-
-        radarFirstPage.addConditionalLine((player) -> {
-
-            Component component = Component.empty();
-
-            if (Common.isBreak) {
-                component = component
-                        .append(Component.text("Break:"))
-                        .append(Component.space());
-            } else {
-                component = component
-                        .append(Component.text("Narrowing:"))
-                        .append(Component.space());
-            }
-
-            component = component
-                    .append(Component.text(Timer.getInstance().getTime() / 3600 / 10))
-                    .append(Component.text(Timer.getInstance().getTime() / 3600 % 10))
-                    .append(Component.text(":"))
-                    .append(Component.text(Timer.getInstance().getTime() / 60 % 60 / 10))
-                    .append(Component.text(Timer.getInstance().getTime() / 60 % 10))
-                    .append(Component.text(":"))
-                    .append(Component.text(Timer.getInstance().getTime() % 60 / 10))
-                    .append(Component.text(Timer.getInstance().getTime() % 10));
-
-            return component;
-
-        }, (player) -> Common.isBreak || Zone.getInstance().isZoneMoving());
-
         radarFirstPage.updateLinesPeriodically(10, 10);
 
-        radarSecondPage = ProtocolSidebar.newAdventureSidebar(
-                Component.text("Radar")
-                        .color(NamedTextColor.GOLD)
-                        .decorate(TextDecoration.BOLD),
-                Common.plugin);
+        radarFirstPage.addUpdatableLine(player -> {
 
-        radarSecondPage.addUpdatableLine(player -> {
-            updateMovingZoneColor();
-            return updateRadar(player, 0);
-        });
-
-        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 1));
-
-        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 2));
-
-        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 3));
-
-        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 4));
-
-        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 5));
-
-        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 6));
-
-        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 7));
-
-        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 8));
-
-        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 9));
-
-        radarSecondPage.addUpdatableLine(player -> updateRadar(player, 10));
-
-        radarSecondPage.updateLinesPeriodically(10, 10);
-
-        radarSecondPage.addUpdatableLine(player -> {
-
-            Component component = Component
-                    .text("North:")
+            Component component = Component.empty()
+                    .append(Component.text("X:")
+                            .decorate(TextDecoration.BOLD)
+                            .color(firstCordColor))
                     .append(Component.space())
-                    .append(Component.text(Zone.getInstance().getCurrentLowerBorder()))
+                    .append(Component.text(Zone.getInstance().getCurrentLeftBorder())
+                            .color(firstCordColor))
+                    .append(Component.space())
                     .append(Component.text("->"))
-                    .append(Component.text(Zone.getInstance().getCurrentUpperBorder()));
+                    .append(Component.space())
+                    .append(Component.text(Zone.getInstance().getNewLeftBorder())
+                            .color(firstCordColor));
 
             return component;
         });
 
-        radarPager = new SidebarPager<>(Arrays.asList(radarFirstPage, radarSecondPage), 100, Common.plugin);
+        radarFirstPage.addUpdatableLine(player -> {
+
+            Component component = Component.empty()
+                    .append(Component.text("X:")
+                            .decorate(TextDecoration.BOLD)
+                            .color(secondCordColor))
+                    .append(Component.space())
+                    .append(Component.text(Zone.getInstance().getCurrentRightBorder())
+                            .color(secondCordColor))
+                    .append(Component.space())
+                    .append(Component.text("->"))
+                    .append(Component.space())
+                    .append(Component.text(Zone.getInstance().getNewRightBorder())
+                            .color(secondCordColor));
+
+            return component;
+        });
+
+        radarFirstPage.addUpdatableLine(player -> {
+
+            Component component = Component.empty()
+                    .append(Component.text("Z:")
+                            .decorate(TextDecoration.BOLD)
+                            .color(firstCordColor))
+                    .append(Component.space())
+                    .append(Component.text(Zone.getInstance().getCurrentLowerBorder())
+                            .color(firstCordColor))
+                    .append(Component.space())
+                    .append(Component.text("->"))
+                    .append(Component.space())
+                    .append(Component.text(Zone.getInstance().getNewLowerBorder())
+                            .color(firstCordColor));
+
+            return component;
+        });
+
+        radarFirstPage.addUpdatableLine(player -> {
+
+            Component component = Component.empty()
+                    .append(Component.text("Z:")
+                            .decorate(TextDecoration.BOLD)
+                            .color(secondCordColor))
+                    .append(Component.space())
+                    .append(Component.text(Zone.getInstance().getCurrentUpperBorder())
+                            .color(secondCordColor))
+                    .append(Component.space())
+                    .append(Component.text("->"))
+                    .append(Component.space())
+                    .append(Component.text(Zone.getInstance().getNewUpperBorder())
+                            .color(secondCordColor));
+
+            return component;
+        });
+
+        radarPager = new SidebarPager<>(List.of(radarFirstPage), 0, Common.plugin);
     }
 
     public static Radar getInstance() {
