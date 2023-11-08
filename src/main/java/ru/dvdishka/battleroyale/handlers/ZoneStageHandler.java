@@ -24,6 +24,32 @@ public class ZoneStageHandler implements Listener  {
             return;
         }
 
+        Common.zoneStage++;
+
+        // REVIVE DISABLE LOGIC
+        if (Common.zoneStage == ConfigVariables.lastReviveZone) {
+
+            Common.isRevivalEnabled = false;
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendTitle(ChatColor.RED + "Revival", ChatColor.RED + "Is now disabled!");
+            }
+        }
+
+        // PVP ENABLE LOGIC
+        if (Common.zoneStage == ConfigVariables.pvpEnableZone) {
+
+            Common.isPVPEnabled = true;
+
+            for (World world : Bukkit.getWorlds()) {
+                world.setPVP(true);
+            }
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendTitle(ChatColor.RED + "PVP", ChatColor.RED + "Is now enabled!");
+            }
+        }
+
         if (Common.zoneStage == 0) {
             firstZoneStage();
         }
@@ -85,9 +111,7 @@ public class ZoneStageHandler implements Listener  {
 
             // ACTIVE BOSS BAR TIMER TASK START
             Timer.getInstance().startTimer(ConfigVariables.times.get(Common.zoneStage), ZonePhase.ACTIVE, true);
-
-            Common.zoneStage++;
-        }, timeOut * 20L);
+            }, timeOut * 20L);
     }
 
     public void mainNextStageLogic() {
@@ -127,18 +151,6 @@ public class ZoneStageHandler implements Listener  {
 
             Common.isBreak = false;
 
-            // PVP ENABLE LOGIC
-            if (Common.zoneStage == 1) {
-
-                for (World world : Bukkit.getWorlds()) {
-                    world.setPVP(true);
-                }
-
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendTitle(ChatColor.RED + "PVP is now enabled!", "");
-                }
-            }
-
             // CHANGE WORLD BORDER
             Zone.getInstance().changeBorders(
                     ConfigVariables.zones.get(Common.zoneStage - 1),
@@ -151,9 +163,7 @@ public class ZoneStageHandler implements Listener  {
 
             // ACTIVE BOSS BAR TIMER TASK START
             Timer.getInstance().startTimer(ConfigVariables.times.get(Common.zoneStage), ZonePhase.ACTIVE, true);
-
-            Common.zoneStage++;
-        }, timeOut * 20L);
+            }, timeOut * 20L);
     }
 
     private void zoneMovingStage() {
@@ -179,6 +189,7 @@ public class ZoneStageHandler implements Listener  {
 
             // East
             case 0 -> {
+                Radar.getInstance().movingZoneChar = ">";
                 x = 1;
                 z = 0;
                 sideName = "East";
@@ -186,6 +197,7 @@ public class ZoneStageHandler implements Listener  {
 
             // WEST
             case 1 -> {
+                Radar.getInstance().movingZoneChar = "<";
                 x = -1;
                 z = 0;
                 sideName = "West";
@@ -193,6 +205,7 @@ public class ZoneStageHandler implements Listener  {
 
             // SOUTH
             case 2 -> {
+                Radar.getInstance().movingZoneChar = "V";
                 z = 1;
                 x = 0;
                 sideName = "South";
@@ -200,17 +213,27 @@ public class ZoneStageHandler implements Listener  {
 
             // NORTH
             case 3 -> {
+                Radar.getInstance().movingZoneChar = "A";
                 z = -1;
                 x = 0;
                 sideName = "North";
             }
 
             default -> {
+                Radar.getInstance().movingZoneChar = "=";
                 x = 0;
                 z = 0;
                 sideName = "";
             }
         }
+
+        Zone.getInstance().setVariables(
+                ConfigVariables.zones.get(ConfigVariables.zones.size() - 1),
+                ConfigVariables.zones.get(ConfigVariables.zones.size() - 1),
+                Zone.getInstance().getNewZoneCenterX(),
+                Zone.getInstance().getNewZoneCenterZ(),
+                Zone.getInstance().getNewZoneCenterX() + x * moveLength,
+                Zone.getInstance().getNewZoneCenterZ() + z * moveLength);
 
         // BREAK BOSS BAR TIMER TASK START
         Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
@@ -218,10 +241,10 @@ public class ZoneStageHandler implements Listener  {
             Timer.getInstance().startTimer(ConfigVariables.zoneMoveTimeOut, ZonePhase.BREAK, false);
         });
 
-        // ACTIVE BORDERS MOVING TASK START
+        // MOVE BORDERS MOVING TASK START
         Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
             Common.isBreak = false;
-            Timer.getInstance().startTimer(ConfigVariables.finalZoneMoveDuration, ZonePhase.ACTIVE, true);
+            Timer.getInstance().startTimer(ConfigVariables.finalZoneMoveDuration, ZonePhase.MOVE, true);
             Zone.getInstance().moveZone(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(moveLength));
         }, ConfigVariables.zoneMoveTimeOut * 20L);
     }

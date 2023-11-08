@@ -14,8 +14,8 @@ public class Zone {
     private int oldZoneDiameter;
     private int newZoneDiameter;
     private int oldZoneCenterX;
-    private int oldZoneCenterZ;
     private int newZoneCenterX;
+    private int oldZoneCenterZ;
     private int newZoneCenterZ;
 
     private volatile boolean isZoneMoving = false;
@@ -134,7 +134,11 @@ public class Zone {
 
         int step = duration * 20 / steps;
 
+        isZoneMoving = true;
+
         for (int i = step; i <= duration * 20; i += step) {
+
+            final int delay = i;
 
             Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
 
@@ -155,12 +159,20 @@ public class Zone {
                     world.getWorldBorder().setCenter(world.getWorldBorder().getCenter().x() + x,
                             world.getWorldBorder().getCenter().z() + z);
                 }
-            }, i);
+
+                if (delay + step >= duration * 20) {
+                    isZoneMoving = false;
+                }
+            }, delay);
         }
     }
 
     public boolean isZoneMoving() {
         return isZoneMoving;
+    }
+
+    public void setZoneMoving(boolean zoneMoving) {
+        this.isZoneMoving = zoneMoving;
     }
 
     public int getNewZoneDiameter() {

@@ -108,12 +108,35 @@ public class Timer {
         if (zonePhase.equals(ZonePhase.BREAK)) {
 
             this.timer.setColor(BarColor.GREEN);
-            this.timer.setTitle(getTimeText(true) + ChatColor.GREEN + ChatColor.BOLD + " | " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "BREAK" + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " | " + ChatColor.RESET + getPVPText());
+            this.timer.setTitle("" + ChatColor.GREEN + ChatColor.BOLD + "BREAK" + ChatColor.RESET +
+                    ChatColor.GREEN + ChatColor.BOLD + " | " + ChatColor.RESET +
+                    getTimeText(zonePhase) +
+                    ChatColor.GREEN + ChatColor.BOLD + " | " + ChatColor.RESET +
+                    getPVPText() + ChatColor.RESET +
+                    ChatColor.GREEN + ChatColor.BOLD + " | " + ChatColor.RESET +
+                    getReviveText());
+
+        } else if (zonePhase.equals(ZonePhase.ACTIVE)) {
+
+            this.timer.setColor(BarColor.RED);
+            this.timer.setTitle("" + ChatColor.RED + ChatColor.BOLD + "NARROWING" + ChatColor.RESET +
+                    ChatColor.RED + ChatColor.BOLD + " | " + ChatColor.RESET +
+                    getTimeText(zonePhase) +
+                    ChatColor.RED + ChatColor.BOLD + " | " + ChatColor.RESET +
+                    getPVPText() + ChatColor.RESET +
+                    ChatColor.RED + ChatColor.BOLD + " | " + ChatColor.RESET +
+                    getReviveText());
 
         } else {
 
-            this.timer.setColor(BarColor.RED);
-            this.timer.setTitle(getTimeText(false) + ChatColor.RED + ChatColor.BOLD + " | " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + "NARROWING" + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + " | " + ChatColor.RESET + getPVPText());
+            this.timer.setColor(BarColor.PINK);
+            this.timer.setTitle("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "MOVING" + ChatColor.RESET +
+                    ChatColor.LIGHT_PURPLE + ChatColor.BOLD + " | " + ChatColor.RESET +
+                    getTimeText(zonePhase) +
+                    ChatColor.LIGHT_PURPLE + ChatColor.BOLD + " | " + ChatColor.RESET +
+                    getPVPText() + ChatColor.RESET +
+                    ChatColor.LIGHT_PURPLE + ChatColor.BOLD + " | " + ChatColor.RESET +
+                    getReviveText());
         }
     }
 
@@ -130,11 +153,25 @@ public class Timer {
         return pvpText;
     }
 
-    private String getTimeText(boolean isBreak) {
+    private String getReviveText() {
+
+        String reviveText;
+
+        if (Common.isRevivalEnabled) {
+            reviveText = ChatColor.BOLD + "REVIVE: " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YES";
+        } else {
+            reviveText = ChatColor.BOLD + "REVIVE: " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + "NO";
+        }
+
+        return reviveText;
+    }
+
+    private String getTimeText(ZonePhase zonePhase) {
 
         String timeText;
 
-        if (isBreak) {
+        if (zonePhase.equals(ZonePhase.BREAK)) {
+
             timeText =
                     ChatColor.BOLD +
                             String.valueOf(Timer.getInstance().getTime() / 3600 / 10) +
@@ -146,7 +183,8 @@ public class Timer {
                             String.valueOf(Timer.getInstance().getTime() % 60 / 10) +
                             String.valueOf(Timer.getInstance().getTime() % 10) +
                             ChatColor.RESET;
-        } else {
+        } else if (zonePhase.equals(ZonePhase.BREAK)) {
+
             timeText =
                     ChatColor.BOLD +
                             String.valueOf(Timer.getInstance().getTime() / 3600 / 10) +
@@ -155,10 +193,25 @@ public class Timer {
                             String.valueOf(Timer.getInstance().getTime() / 60 % 60 / 10) +
                             String.valueOf(Timer.getInstance().getTime() / 60 % 10) +
                             ChatColor.RED + ChatColor.BOLD + ":" + ChatColor.RESET + ChatColor.BOLD +
+                            String.valueOf(Timer.getInstance().getTime() % 60 / 10) +
+                            String.valueOf(Timer.getInstance().getTime() % 10) +
+                            ChatColor.RESET;
+
+        } else {
+
+            timeText =
+                    ChatColor.BOLD +
+                            String.valueOf(Timer.getInstance().getTime() / 3600 / 10) +
+                            String.valueOf(Timer.getInstance().getTime() / 3600 % 10) +
+                            ChatColor.LIGHT_PURPLE + ChatColor.BOLD + ":" + ChatColor.RESET + ChatColor.BOLD +
+                            String.valueOf(Timer.getInstance().getTime() / 60 % 60 / 10) +
+                            String.valueOf(Timer.getInstance().getTime() / 60 % 10) +
+                            ChatColor.LIGHT_PURPLE + ChatColor.BOLD + ":" + ChatColor.RESET + ChatColor.BOLD +
                             String.valueOf(Timer.getInstance().getTime() % 60 / 10) +
                             String.valueOf(Timer.getInstance().getTime() % 10) +
                             ChatColor.RESET;
         }
+
         return timeText;
     }
 }

@@ -138,11 +138,11 @@ public class EventHandler implements Listener {
 
         if (Common.isGameStarted) {
 
-            if (Common.zoneStage < 2) {
+            if (Common.isRevivalEnabled) {
 
-                Bukkit.getPluginManager().callEvent(new FirstZoneDeathEvent(event.getPlayer()));
+                Bukkit.getPluginManager().callEvent(new ReviveDeathEvent(event.getPlayer()));
             }
-            if (Common.zoneStage >= 2) {
+            if (!Common.isRevivalEnabled) {
 
                 Bukkit.getPluginManager().callEvent(new DeathEvent(event.getPlayer()));
             }
@@ -150,7 +150,7 @@ public class EventHandler implements Listener {
     }
 
     @org.bukkit.event.EventHandler
-    public void onFirstZoneDeath(FirstZoneDeathEvent event) {}
+    public void onReviveDeath(ReviveDeathEvent event) {}
 
     @org.bukkit.event.EventHandler
     public void onGameDeath(DeathEvent event) {

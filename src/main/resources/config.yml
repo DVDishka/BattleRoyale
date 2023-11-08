@@ -5,6 +5,10 @@ zones: [1000, 750, 500, 350, 250, 100]
 times: [1500, 1200, 900, 600, 300, 200]
 # Timeout between zones (seconds) (amount of zones + 1) (first timeOut is between defaultWorldBorderRadius and first zone)
 timeOuts: [1800, 750, 600, 450, 300, 150, 100]
+# Zone number after which PVP will be enabled (0 - zones.size + 1) 0 to enable pvp immediately, zones.size + 1 disable pvp for the entire game
+pvpEnableZone: 1
+# Zone number after which revival will be disabled (0 - zones.size + 1) 0 to disable reviving, zones.size + 1 to allow reviving for every zone
+lastReviveZone: 1
 # Final zone time (Seconds)
 finalZoneMoveDuration: 120
 minFinalZoneMove: 50

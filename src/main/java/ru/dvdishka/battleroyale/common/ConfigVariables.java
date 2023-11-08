@@ -8,6 +8,8 @@ public class ConfigVariables {
     public static List<Integer> zones = Arrays.asList(2000, 1500, 1000, 700, 500, 200);
     public static List<Integer> times = Arrays.asList(750, 600, 450, 300, 150, 100);
     public static List<Integer> timeOuts = Arrays.asList(1800, 750, 600, 450, 300, 150, 100);
+    public static int pvpEnableZone = 1;
+    public static int lastReviveZone = 1;
     public static int defaultWorldBorderDiameter = 10000;
     public static int finalZoneMoveDuration = 120;
     public static int minFinalZoneMove = 50;

@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Team;
+import ru.dvdishka.battleroyale.classes.Zone;
+import ru.dvdishka.battleroyale.handlers.Radar;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,8 +30,10 @@ public class Common {
 
     public static volatile boolean isGameStarted = false;
     public static volatile boolean isBreak = false;
+    public static volatile boolean isRevivalEnabled = true;
+    public static volatile boolean isPVPEnabled = false;
 
-    public static int zoneStage = 0;
+    public static int zoneStage = -1;
     public static boolean isStartBox = false;
     public static volatile boolean isPortalLocked = false;
 
@@ -39,13 +43,27 @@ public class Common {
 
     public static void resetVariables() {
 
+
         Common.isGameStarted = false;
-        Common.zoneStage = 0;
+        Common.zoneStage = -1;
         Common.deadPlayers.clear();
         Common.players.clear();
         ru.dvdishka.battleroyale.classes.Team.deadTeams.clear();
         Common.playersPower.clear();
         Common.isPortalLocked = false;
+        Common.isRevivalEnabled = true;
+        Common.isPVPEnabled = false;
+
+        Zone.getInstance().setZoneMoving(false);
+        Zone.getInstance().setVariables(
+                ConfigVariables.defaultWorldBorderDiameter,
+                ConfigVariables.defaultWorldBorderDiameter,
+                0,
+                0,
+                0,
+                0);
+
+        Radar.getInstance().movingZoneChar = "=";
 
         for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
             team.unregister();

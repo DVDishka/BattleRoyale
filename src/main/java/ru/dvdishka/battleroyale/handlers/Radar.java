@@ -10,6 +10,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.classes.Zone;
 import ru.dvdishka.battleroyale.common.Common;
+import ru.dvdishka.battleroyale.common.ConfigVariables;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class Radar {
 
     private final TextColor firstCordColor = NamedTextColor.YELLOW;
     private final TextColor secondCordColor = NamedTextColor.RED;
+
+    public String movingZoneChar = "=";
 
     private Radar() {
 
@@ -189,7 +192,7 @@ public class Radar {
             }
         }
 
-        if (lineNumber == 1 || lineNumber == 9) {
+        else if (lineNumber == 1 || lineNumber == 9) {
 
             if (lineNumber == playerRadarPositionZ) {
 
@@ -205,14 +208,14 @@ public class Radar {
                 if (playerRadarPositionX > 0 && playerRadarPositionX < 10) {
 
                     component = component
-                            .append(Component.text("=".repeat(playerRadarPositionX - 1))
+                            .append(Component.text(movingZoneChar.repeat(playerRadarPositionX - 1))
                                     .color(movingZoneColor))
                             .append(playerSymbolComponent)
-                            .append(Component.text("=".repeat(10 - playerRadarPositionX))
+                            .append(Component.text(movingZoneChar.repeat(10 - playerRadarPositionX))
                                     .color(movingZoneColor));
                 } else {
 
-                    component = component.append(Component.text("=".repeat(9))
+                    component = component.append(Component.text(movingZoneChar.repeat(9))
                             .color(movingZoneColor));
                 }
 
@@ -228,14 +231,14 @@ public class Radar {
                 component = Component
                         .text("=")
                         .append(Component
-                                .text("=".repeat(9))
+                                .text(movingZoneChar.repeat(9))
                                 .color(movingZoneColor))
                         .append(Component
                                 .text("="));
             }
         }
 
-        if (lineNumber == 2 || lineNumber == 8) {
+        else if (lineNumber == 2 || lineNumber == 8 || Common.zoneStage == ConfigVariables.zones.size() && (lineNumber >= 2 && lineNumber <= 8)) {
 
             if (lineNumber == playerRadarPositionZ) {
 
@@ -257,7 +260,7 @@ public class Radar {
                 } else {
 
                     component = component
-                            .append(Component.text("=")
+                            .append(Component.text(movingZoneChar)
                                     .color(movingZoneColor));
                 }
 
@@ -280,7 +283,7 @@ public class Radar {
                 } else {
 
                     component = component
-                            .append(Component.text("=")
+                            .append(Component.text(movingZoneChar)
                                     .color(movingZoneColor));
                 }
 
@@ -299,16 +302,16 @@ public class Radar {
                 component = component
                         .append(Component
                                 .text("="))
-                        .append(Component.text("=")
+                        .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
                         .append(Component.text("=".repeat(7)))
-                        .append(Component.text("=")
+                        .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
                         .append(Component.text("="));
             }
         }
 
-        if (lineNumber == 3 || lineNumber == 7) {
+        else if (lineNumber == 3 || lineNumber == 7) {
 
             if (playerRadarPositionZ == lineNumber) {
 
@@ -327,7 +330,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("=")
+                    component = component.append(Component.text(movingZoneChar)
                             .color(movingZoneColor));
                 }
 
@@ -370,7 +373,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("=")
+                    component = component.append(Component.text(movingZoneChar)
                             .color(movingZoneColor));
                 }
 
@@ -387,19 +390,19 @@ public class Radar {
 
                 component = component
                         .append(Component.text("="))
-                        .append(Component.text("=")
+                        .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
                         .append(Component.text("="))
                         .append(Component.text("=".repeat(5))
                                 .color(safeZoneColor))
                         .append(Component.text("="))
-                        .append(Component.text("=")
+                        .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
                         .append(Component.text("="));
             }
         }
 
-        if (lineNumber == 4 || lineNumber == 5 || lineNumber == 6) {
+        else if (lineNumber == 4 || lineNumber == 5 || lineNumber == 6) {
 
             if (playerRadarPositionZ == lineNumber) {
 
@@ -418,7 +421,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("=")
+                    component = component.append(Component.text(movingZoneChar)
                             .color(movingZoneColor));
                 }
 
@@ -480,7 +483,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("=")
+                    component = component.append(Component.text(movingZoneChar)
                             .color(movingZoneColor));
                 }
 
@@ -497,7 +500,7 @@ public class Radar {
 
                 component = component
                         .append(Component.text("="))
-                        .append(Component.text("=")
+                        .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
                         .append(Component.text("="))
                         .append(Component.text("=")
@@ -506,7 +509,7 @@ public class Radar {
                         .append(Component.text("=")
                                 .color(safeZoneColor))
                         .append(Component.text("="))
-                        .append(Component.text("=")
+                        .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
                         .append(Component.text("="));
             }
@@ -538,7 +541,7 @@ public class Radar {
             return (int) ((playerFloatX - zone.getCurrentLeftFloatBorder()) / segment + 1);
         }
 
-        else {
+        else if (Common.zoneStage < ConfigVariables.zones.size()) {
 
             if (playerX - zone.getNewLeftBorder() < 0) {
                 return 2;
@@ -561,6 +564,12 @@ public class Radar {
 
                 return (playerX - zone.getNewLeftBorder()) / segment + 4;
             }
+
+        } else {
+
+            int segment = (int) ((zone.getCurrentRightFloatBorder() - zone.getCurrentLeftFloatBorder()) / 7 + 1);
+
+            return (int) ((playerFloatX - zone.getCurrentLeftFloatBorder()) / segment + 2);
         }
     }
 
@@ -588,7 +597,7 @@ public class Radar {
             return (int) ((playerFloatZ - zone.getCurrentLowerFloatBorder()) / segment + 1);
         }
 
-        else {
+        else if (Common.zoneStage < ConfigVariables.zones.size()) {
 
             if (playerZ - zone.getNewLowerBorder() < 0) {
                 return 2;
@@ -611,6 +620,12 @@ public class Radar {
 
                 return (playerZ - zone.getNewLowerBorder()) / segment + 4;
             }
+
+        } else {
+
+            int segment = (int) ((zone.getCurrentUpperFloatBorder() - zone.getCurrentLowerFloatBorder()) / 7 + 1);
+
+            return (int) ((playerFloatZ - zone.getCurrentLowerFloatBorder()) / segment + 2);
         }
     }
 

@@ -48,6 +48,8 @@ public class Initialization {
 
         ConfigVariables.times = config.getIntegerList("times");
         ConfigVariables.timeOuts = config.getIntegerList("timeOuts");
+        ConfigVariables.pvpEnableZone = config.getInt("pvpEnableZone", 1);
+        ConfigVariables.lastReviveZone = config.getInt("lastReviveZone", 1);
         ConfigVariables.finalZoneMoveDuration = config.getInt("finalZoneMoveDuration", 120);
         if (config.getInt("minFinalZoneMove", 50) < config.getInt("maxFinalZoneMove", 100)) {
             ConfigVariables.minFinalZoneMove = config.getInt("minFinalZoneMove", 50);
