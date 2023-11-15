@@ -5,11 +5,11 @@ import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.dvdishka.battleroyale.common.Common;
-import ru.dvdishka.battleroyale.common.ConfigVariables;
-import ru.dvdishka.battleroyale.common.Initialization;
-import ru.dvdishka.battleroyale.common.Scheduler;
-import ru.dvdishka.battleroyale.handlers.Timer;
+import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.Initialization;
+import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.ui.Timer;
 
 import java.io.File;
 
@@ -36,6 +36,7 @@ public final class BattleRoyale extends JavaPlugin {
         Initialization.initCommands();
         Initialization.initEventHandlers(this);
         Initialization.initRadar();
+        Initialization.initDropTypes(new File("plugins/BattleRoyale"));
 
         CommandAPI.onEnable();
 

@@ -17,4 +17,10 @@ zoneMoveTimeOut: 10
 startBoxX: 100
 startBoxY: 200
 startBoxZ: 60
+dropSpawnWorlds: ["world"]
+minDropSpawnY: 10
+maxDropSpawnY: 256
+# (Seconds) Time after which the drop container will be opened after first click
+dropOpenTime: 90
+
 betterLogging: false

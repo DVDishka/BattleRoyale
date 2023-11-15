@@ -2,9 +2,10 @@ package ru.dvdishka.battleroyale.handlers;
 
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import ru.dvdishka.battleroyale.classes.*;
-import ru.dvdishka.battleroyale.common.Common;
-import ru.dvdishka.battleroyale.common.Scheduler;
+import org.bukkit.event.player.PlayerInteractEvent;
+import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.Logger;
+import ru.dvdishka.battleroyale.logic.Scheduler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,6 +18,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
+import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
+import ru.dvdishka.battleroyale.logic.event.DeathEvent;
+import ru.dvdishka.battleroyale.logic.event.DropClickEvent;
+import ru.dvdishka.battleroyale.logic.event.ReviveDeathEvent;
+import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
+import ru.dvdishka.battleroyale.logic.Team;
+import ru.dvdishka.battleroyale.ui.Radar;
+import ru.dvdishka.battleroyale.ui.Timer;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -25,8 +34,6 @@ public class EventHandler implements Listener {
 
     @org.bukkit.event.EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-
-        Radar.getInstance().addViewer(event.getPlayer());
 
         if (Common.isGameStarted) {
             if (Common.deadPlayers.contains(event.getPlayer().getName()) &&
@@ -41,6 +48,7 @@ public class EventHandler implements Listener {
 
         if (Common.isGameStarted) {
             Timer.getInstance().addViewer(event.getPlayer());
+            Radar.getInstance().addViewer(event.getPlayer());
         }
 
         Player player = event.getPlayer();
@@ -227,6 +235,19 @@ public class EventHandler implements Listener {
             Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
                 player.kick(Component.text("You are out and your team is not yet!"));
             });
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onBlockClick(PlayerInteractEvent event) {
+
+        if (event.getClickedBlock() != null && event.getClickedBlock().hasMetadata("dropContainer")) {
+
+            if (event.getAction().isLeftClick()) {
+                event.setCancelled(true);
+            } else {
+                Bukkit.getPluginManager().callEvent(new DropClickEvent(DropContainer.getContainerByLocation(event.getClickedBlock().getLocation()), event.getPlayer()));
+            }
         }
     }
 }

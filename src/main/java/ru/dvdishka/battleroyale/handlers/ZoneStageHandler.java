@@ -3,15 +3,16 @@ package ru.dvdishka.battleroyale.handlers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import ru.dvdishka.battleroyale.classes.NextGameStageEvent;
-import ru.dvdishka.battleroyale.classes.Zone;
-import ru.dvdishka.battleroyale.classes.ZonePhase;
-import ru.dvdishka.battleroyale.common.Common;
-import ru.dvdishka.battleroyale.common.ConfigVariables;
-import ru.dvdishka.battleroyale.common.Scheduler;
+import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
+import ru.dvdishka.battleroyale.logic.Zone;
+import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
+import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.ui.Radar;
+import ru.dvdishka.battleroyale.ui.Timer;
 
 import java.util.Random;
 
@@ -24,7 +25,9 @@ public class ZoneStageHandler implements Listener  {
             return;
         }
 
-        Common.zoneStage++;
+        if (Common.zoneStage < ConfigVariables.lastReviveZone) {
+            Common.zoneStage++;
+        }
 
         // REVIVE DISABLE LOGIC
         if (Common.zoneStage == ConfigVariables.lastReviveZone) {
