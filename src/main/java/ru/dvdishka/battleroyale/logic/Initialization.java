@@ -1,9 +1,7 @@
 package ru.dvdishka.battleroyale.logic;
 
 import dev.jorel.commandapi.CommandTree;
-import dev.jorel.commandapi.arguments.LiteralArgument;
-import dev.jorel.commandapi.arguments.PlayerArgument;
-import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.arguments.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,17 +12,22 @@ import ru.dvdishka.battleroyale.handlers.commands.ReviveCommand;
 import ru.dvdishka.battleroyale.handlers.commands.StartCommand;
 import ru.dvdishka.battleroyale.handlers.commands.StopCommand;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
+import ru.dvdishka.battleroyale.handlers.commands.drop.DropFollowCommand;
 import ru.dvdishka.battleroyale.handlers.commands.drop.DropListCommand;
+import ru.dvdishka.battleroyale.handlers.commands.drop.DropUnFollowCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.CreateStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.RemoveStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.EventHandler;
 import ru.dvdishka.battleroyale.handlers.commands.team.*;
+import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
 import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.handlers.ZoneStageHandler;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class Initialization {
 
@@ -224,7 +227,7 @@ public class Initialization {
 
                     .executes((commandSender, commandArguments) -> {
 
-                        new DropListCommand();
+                        new DropListCommand().execute(commandSender, commandArguments);
                     })
 
                     .then(new LiteralArgument("create").withPermission(Permission.DROP_CREATE.getPermission())
@@ -232,6 +235,42 @@ public class Initialization {
                             .executes((commandSender, commandArguments) -> {
 
                                 new DropCreateCommand().execute(commandSender, commandArguments);
+                            })
+                    )
+
+                    .then(new LiteralArgument("list")
+
+                            .executes((commandSender, commandArguments) -> {
+
+                                new DropListCommand().execute(commandSender, commandArguments);
+                            })
+                    )
+
+                    .then(new LiteralArgument("follow")
+
+                            .then(new TextArgument("dropName").includeSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+
+                                ArrayList<String> suggestions = new ArrayList<>();
+
+                                for (DropContainer dropContainer : DropContainer.getContainerList()) {
+
+                                    suggestions.add("\"" + dropContainer.getName() + "\"");
+                                }
+
+                                return suggestions;
+                            }))
+                                            .executesPlayer((commandSender, commandArguments) -> {
+
+                                                new DropFollowCommand().execute(commandSender, commandArguments);
+                                            })
+                            )
+                    )
+
+                    .then(new LiteralArgument("unfollow")
+
+                            .executesPlayer((commandSender, commandArguments) -> {
+
+                                new DropUnFollowCommand().execute(commandSender, commandArguments);
                             })
                     )
             );

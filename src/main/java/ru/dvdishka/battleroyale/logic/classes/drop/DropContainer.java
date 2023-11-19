@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.Scheduler;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class DropContainer {
@@ -32,6 +33,11 @@ public class DropContainer {
         }
 
         dropContainers.put(this.location, this);
+    }
+
+    public String getName() {
+
+        return location.getWorld().getName() + " " + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ();
     }
 
     public DropType getDropType() {
@@ -65,6 +71,10 @@ public class DropContainer {
 
     public static DropContainer getContainerByLocation(Location location) {
         return dropContainers.get(location);
+    }
+
+    public static Collection<DropContainer> getContainerList() {
+        return dropContainers.values();
     }
 
     public void startOpenCountdown() {

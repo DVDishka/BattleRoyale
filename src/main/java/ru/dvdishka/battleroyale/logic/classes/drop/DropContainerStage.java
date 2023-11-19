@@ -9,11 +9,11 @@ public enum DropContainerStage {
     PRE_CLICK_STAGE(Component.text("[CLOSED]")
             .color(NamedTextColor.GREEN)
             .decorate(TextDecoration.BOLD)),
-    OPENING_STAGE(Component.text("[OPEN]")
+    OPENING_STAGE(Component.text("[OPENING...]")
             .color(NamedTextColor.RED)
             .decorate(TextDecoration.BOLD)),
-    OPEN_STAGE(Component.text("[OPENING...]")
-            .color(NamedTextColor.GOLD)
+    OPEN_STAGE(Component.text("[OPEN]")
+            .color(NamedTextColor.YELLOW)
             .decorate(TextDecoration.BOLD));
 
     private Component stageComponent;

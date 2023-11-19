@@ -1,5 +1,6 @@
 package ru.dvdishka.battleroyale.ui;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -22,6 +23,8 @@ public class DropBar {
     private Location coordinates;
     private final TextColor color = NamedTextColor.DARK_AQUA;
     private boolean isActive = false;
+
+    private ScheduledTask updateTask;
 
     private final Player owner;
 
@@ -55,12 +58,15 @@ public class DropBar {
     }
 
     public void setActive(boolean isActive) {
+
+        if (!isActive) {
+            this.updateTask.cancel();
+        }
+
         if (isActive && !this.isActive) {
-            Scheduler.getScheduler().runSyncRepeatingTask(Common.plugin, (scheduledTask) -> {
+
+            this.updateTask = Scheduler.getScheduler().runSyncRepeatingTask(Common.plugin, (scheduledTask) -> {
                 this.update();
-                if (!this.isActive) {
-                    scheduledTask.cancel();
-                }
             }, 10, 10);
         }
         this.isActive = isActive;
@@ -69,7 +75,6 @@ public class DropBar {
     public void setInformation(DropContainer dropContainer) {
 
         this.dropContainer = dropContainer;
-        this.isActive = true;
 
         this.coordinates = dropContainer.getLocation();
 
@@ -78,6 +83,22 @@ public class DropBar {
         } else {
             this.worldName = dropContainer.getLocation().getWorld().getName();
         }
+
+        if (dropContainer.getLocation().getWorld().getName().equals("the_nether")) {
+            this.worldName = "nether";
+        } else {
+            this.worldName = dropContainer.getLocation().getWorld().getName();
+        }
+
+        if (dropContainer.getLocation().getWorld().getName().equals("the_end")) {
+            this.worldName = "end";
+        } else {
+            this.worldName = dropContainer.getLocation().getWorld().getName();
+        }
+
+        this.worldName = this.worldName.toUpperCase();
+
+        this.setActive(true);
     }
 
     public void update() {
