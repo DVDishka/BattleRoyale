@@ -2,6 +2,7 @@ package ru.dvdishka.battleroyale.handlers.commands.drop;
 
 import dev.jorel.commandapi.executors.CommandArguments;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
@@ -13,6 +14,11 @@ public class DropCreateCommand implements CommandInterface {
 
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
+
+        if (DropType.getRandomType() == null) {
+            returnFailure("Drop types are not defined in " + "\"" + ConfigVariables.dropTypesFile + "\"", sender);
+            return;
+        }
 
         for (World world : ConfigVariables.dropSpawnWorlds) {
             Bukkit.getPluginManager().callEvent(new DropCreateEvent(DropType.getRandomType(), world));

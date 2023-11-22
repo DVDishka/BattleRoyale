@@ -22,5 +22,6 @@ minDropSpawnY: 10
 maxDropSpawnY: 256
 # (Seconds) Time after which the drop container will be opened after first click
 dropOpenTime: 90
+dropTypesFile: "plugins/BattleRoyale/dropTypes.yml"
 
 betterLogging: false

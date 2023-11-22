@@ -5,6 +5,7 @@ import dev.jorel.commandapi.arguments.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import ru.dvdishka.battleroyale.handlers.DropHandler;
 import ru.dvdishka.battleroyale.handlers.commands.drop.DropCreateCommand;
@@ -27,6 +28,7 @@ import ru.dvdishka.battleroyale.handlers.ZoneStageHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class Initialization {
@@ -281,7 +283,11 @@ public class Initialization {
 
     public static void initDropTypes(File file) {
 
-        DropType.deserialize(file);
+        FileConfiguration dropTypesConfig = YamlConfiguration.loadConfiguration(file);
+
+        for (Map.Entry<String, Object> dropTypeMap : dropTypesConfig.getValues(false).entrySet()) {
+            DropType.deserialize(dropTypesConfig.getConfigurationSection(dropTypeMap.getKey()));
+        }
     }
 
     public static void initEventHandlers(Plugin plugin) {

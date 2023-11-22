@@ -25,6 +25,7 @@ public class ConfigVariables {
     public static int minDropSpawnY = 10;
     public static int maxDropSpawnY = 256;
     public static int dropOpenTime = 90;
+    public static String dropTypesFile = "plugins/BattleRoyale/dropTypes.yml";
 
     public static boolean betterLogging = false;
 }

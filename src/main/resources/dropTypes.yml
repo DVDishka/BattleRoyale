@@ -1,0 +1,18 @@
+1:
+  items:
+    1:
+      material: "diamond_sword"
+      amount: 1
+      enchantments:
+        1:
+          name: "sharpness"
+          level: 3
+2:
+  items:
+    1:
+      material: "diamond_pickaxe"
+      amount: 1
+      enchantments:
+        1:
+          name: "sharpness"
+          level: 3

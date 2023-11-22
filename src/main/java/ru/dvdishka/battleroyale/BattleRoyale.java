@@ -4,11 +4,13 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Initialization;
 import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
 import ru.dvdishka.battleroyale.ui.Timer;
 
 import java.io.File;
@@ -27,8 +29,13 @@ public final class BattleRoyale extends JavaPlugin {
         if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").toFile().exists()) {
             Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").toFile().mkdirs();
         }
-        if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").toFile().exists()) {
+
+        if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").resolve("config.yml").toFile().exists()) {
             Common.plugin.saveDefaultConfig();
+        }
+
+        if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").resolve("dropTypes.yml").toFile().exists()) {
+            this.saveResource("dropTypes.yml", false);
         }
 
         Initialization.checkDependencies();
@@ -36,7 +43,7 @@ public final class BattleRoyale extends JavaPlugin {
         Initialization.initCommands();
         Initialization.initEventHandlers(this);
         Initialization.initRadar();
-        Initialization.initDropTypes(Bukkit.getPluginsFolder().toPath().resolve("dropTypesConfig.yml").toFile());
+        Initialization.initDropTypes(new File(ConfigVariables.dropTypesFile));
 
         CommandAPI.onEnable();
 
