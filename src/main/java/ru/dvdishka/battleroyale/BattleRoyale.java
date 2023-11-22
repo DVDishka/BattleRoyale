@@ -24,10 +24,10 @@ public final class BattleRoyale extends JavaPlugin {
 
         Timer.getInstance().unregister();
 
-        if (!new File("plugins/BattleRoyale").exists()) {
-            new File("plugins/BattleRoyale").mkdir();
+        if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").toFile().exists()) {
+            Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").toFile().mkdirs();
         }
-        if (!new File("plugins/BattleRoyale/config.yml").exists()) {
+        if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").toFile().exists()) {
             Common.plugin.saveDefaultConfig();
         }
 
@@ -36,7 +36,7 @@ public final class BattleRoyale extends JavaPlugin {
         Initialization.initCommands();
         Initialization.initEventHandlers(this);
         Initialization.initRadar();
-        Initialization.initDropTypes(new File("plugins/BattleRoyale"));
+        Initialization.initDropTypes(Bukkit.getPluginsFolder().toPath().resolve("dropTypesConfig.yml").toFile());
 
         CommandAPI.onEnable();
 
