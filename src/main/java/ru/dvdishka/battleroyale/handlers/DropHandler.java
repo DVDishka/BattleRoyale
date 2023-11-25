@@ -1,7 +1,13 @@
 package ru.dvdishka.battleroyale.handlers;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Skull;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -23,7 +29,11 @@ public class DropHandler implements Listener {
     @EventHandler
     public void onDropCreateEvent(DropCreateEvent event) {
 
-        DropContainer dropContainer = generateDropRandomLocation(event.getDropType(), event.getWorld());
+        if (!Common.isGameStarted) {
+            return;
+        }
+
+        DropContainer dropContainer = generateDropContainer(event.getDropType(), event.getWorld());
 
         dropContainer.getLocation().getBlock().setType(Material.PLAYER_HEAD);
 
@@ -34,6 +44,84 @@ public class DropHandler implements Listener {
         dropContainerBlock.setMetadata("dropContainer", dropContainerMetadataValue);
 
         dropContainerBlock.update();
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+
+            String worldName = dropContainer.getLocation().getWorld().getName();
+            TextColor worldNameColor = NamedTextColor.WHITE;
+
+            if (worldName.equals("world")) {
+                worldName = "overworld";
+                worldNameColor = NamedTextColor.DARK_GREEN;
+            }
+
+            if (worldName.equals("the_nether")) {
+                worldName = "nether";
+                worldNameColor = NamedTextColor.DARK_RED;
+            }
+
+            if (worldName.equals("the_end")) {
+                worldName = "end";
+                worldNameColor = NamedTextColor.DARK_PURPLE;
+            }
+
+            worldName = worldName.toUpperCase();
+
+            Component message = Component.empty();
+            Component followButton = Component.empty();
+
+            followButton = followButton
+                    .append(Component.text("[FOLLOW]")
+                            .color(NamedTextColor.GREEN)
+                            .decorate(TextDecoration.BOLD)
+                            .clickEvent(ClickEvent.runCommand("/battleroyale drop follow " + "\"" + dropContainer.getName() + "\"")));
+
+            message = message
+                    .append(Component.newline())
+                    .append(Component.text("-".repeat(26))
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("New drop container!")
+                            .color(NamedTextColor.GOLD)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline())
+                    .append(Component.text("-".repeat(27))
+                            .color(NamedTextColor.YELLOW))
+                    .append(Component.newline())
+                    .append(Component.text(worldName)
+                            .color(worldNameColor))
+                    .append(Component.space())
+                    .append(Component.text("X:"))
+                    .append(Component.space())
+                    .append(Component.text(dropContainer.getLocation().getBlockX()))
+                    .append(Component.space())
+                    .append(Component.text("Y:"))
+                    .append(Component.space())
+                    .append(Component.text(dropContainer.getLocation().getBlockY()))
+                    .append(Component.space())
+                    .append(Component.text("Z:"))
+                    .append(Component.space())
+                    .append(Component.text(dropContainer.getLocation().getBlockZ()))
+                    .append(Component.newline())
+                    .append(Component.text("-".repeat(27))
+                            .color(NamedTextColor.YELLOW))
+                    .append(Component.newline())
+                    .append(followButton)
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("-".repeat(26))
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            player.sendMessage(message);
+
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 75, 100);
+        }
 
         Logger.getLogger().warn(String.valueOf(dropContainer.getLocation().getBlockX()));
         Logger.getLogger().warn(String.valueOf(dropContainer.getLocation().getBlockY()));
@@ -59,7 +147,7 @@ public class DropHandler implements Listener {
         }
     }
 
-    private DropContainer generateDropRandomLocation(DropType dropType, World world) {
+    private DropContainer generateDropContainer(DropType dropType, World world) {
         
         int x = new Random().nextInt(Zone.getInstance().getNewLeftBorder(), Zone.getInstance().getNewRightBorder() + 1);
         int z = new Random().nextInt(Zone.getInstance().getNewLowerBorder(), Zone.getInstance().getNewUpperBorder() + 1);

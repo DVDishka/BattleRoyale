@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
+import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
 import ru.dvdishka.battleroyale.logic.event.DropCreateEvent;
@@ -15,15 +16,20 @@ public class DropCreateCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
-        if (DropType.getRandomType() == null) {
+        if (!Common.isGameStarted) {
+            returnFailure("Drop can not be spawned if the game is not running", sender);
+            return;
+        }
+
+        if (DropType.getDropTypes().isEmpty()) {
             returnFailure("Drop types are not defined in " + "\"" + ConfigVariables.dropTypesFile + "\"", sender);
             return;
         }
 
-        for (World world : ConfigVariables.dropSpawnWorlds) {
-            Bukkit.getPluginManager().callEvent(new DropCreateEvent(DropType.getRandomType(), world));
-        }
+        DropType dropType = DropType.getByNameOrRandom((String) args.get("dropTypeName"));
 
-        returnSuccess("Drop has been spawned", sender);
+        for (World world : ConfigVariables.dropSpawnWorlds) {
+            Bukkit.getPluginManager().callEvent(new DropCreateEvent(dropType, world));
+        }
     }
 }

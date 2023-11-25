@@ -15,16 +15,6 @@ public class StopCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
-        Scheduler.cancelTasks(Common.plugin);
-
-        Timer.getInstance().unregister();
-
-        for (World world : Bukkit.getWorlds()) {
-            world.setPVP(true);
-            world.getWorldBorder().setCenter(0, 0);
-            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter);
-        }
-
         Common.resetVariables();
     }
 }

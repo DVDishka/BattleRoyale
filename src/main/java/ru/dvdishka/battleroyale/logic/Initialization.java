@@ -1,11 +1,14 @@
 package ru.dvdishka.battleroyale.logic;
 
 import dev.jorel.commandapi.CommandTree;
+import dev.jorel.commandapi.IStringTooltip;
+import dev.jorel.commandapi.StringTooltip;
 import dev.jorel.commandapi.arguments.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import ru.dvdishka.battleroyale.handlers.DropHandler;
 import ru.dvdishka.battleroyale.handlers.commands.drop.DropCreateCommand;
@@ -27,6 +30,7 @@ import ru.dvdishka.battleroyale.handlers.ZoneStageHandler;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -234,10 +238,33 @@ public class Initialization {
 
                     .then(new LiteralArgument("create").withPermission(Permission.DROP_CREATE.getPermission())
 
-                            .executes((commandSender, commandArguments) -> {
+                            .then(new StringArgument("dropTypeName")
+                                    .includeSuggestions(ArgumentSuggestions.stringsWithTooltipsCollection(commandSenderSuggestionInfo -> {
 
-                                new DropCreateCommand().execute(commandSender, commandArguments);
-                            })
+                                        Collection<IStringTooltip> suggestions = new ArrayList<>();
+
+                                        for (DropType dropType : DropType.getDropTypes()) {
+
+                                            String tooltip = "";
+
+                                            for (ItemStack itemStack : dropType.getItems()) {
+                                                if (itemStack != null) {
+                                                    tooltip = tooltip.concat(itemStack.getType().getKey().value() + ("(") + itemStack.getAmount() + ") ");
+                                                }
+                                            }
+
+                                            suggestions.add(StringTooltip.ofString(dropType.getName(), tooltip));
+                                        }
+
+                                        return suggestions;
+                                    }))
+                                    .setOptional(true)
+
+                                    .executes((commandSender, commandArguments) -> {
+
+                                        new DropCreateCommand().execute(commandSender, commandArguments);
+                                    })
+                            )
                     )
 
                     .then(new LiteralArgument("list")
@@ -250,7 +277,8 @@ public class Initialization {
 
                     .then(new LiteralArgument("follow")
 
-                            .then(new TextArgument("dropName").includeSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+                            .then(new TextArgument("dropName")
+                                            .includeSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
 
                                 ArrayList<String> suggestions = new ArrayList<>();
 
@@ -286,7 +314,7 @@ public class Initialization {
         FileConfiguration dropTypesConfig = YamlConfiguration.loadConfiguration(file);
 
         for (Map.Entry<String, Object> dropTypeMap : dropTypesConfig.getValues(false).entrySet()) {
-            DropType.deserialize(dropTypesConfig.getConfigurationSection(dropTypeMap.getKey()));
+            DropType.deserialize(dropTypesConfig.getConfigurationSection(dropTypeMap.getKey()), dropTypeMap.getKey());
         }
     }
 
@@ -295,9 +323,5 @@ public class Initialization {
         Bukkit.getPluginManager().registerEvents(new EventHandler(), plugin);
         Bukkit.getPluginManager().registerEvents(new ZoneStageHandler(), plugin);
         Bukkit.getPluginManager().registerEvents(new DropHandler(), plugin);
-    }
-
-    public static void initRadar() {
-        Radar.getInstance();
     }
 }

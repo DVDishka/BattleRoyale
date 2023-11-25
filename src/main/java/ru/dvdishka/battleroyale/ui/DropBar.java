@@ -6,15 +6,15 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.Scheduler;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainerStage;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class DropBar {
 
@@ -51,6 +51,10 @@ public class DropBar {
         }, 10, 10);
 
         return instance;
+    }
+
+    public static Collection<DropBar> getInstances() {
+        return instances.values();
     }
 
     public boolean isActive() {
@@ -103,20 +107,41 @@ public class DropBar {
 
     public void update() {
 
-        owner.sendActionBar(
-                Component.text(worldName)
-                        .decorate(TextDecoration.BOLD)
-                        .append(Component.space())
-                        .append(Component.text("X:"))
-                        .append(Component.text(coordinates.getBlockX()))
-                        .append(Component.space())
-                        .append(Component.text("Y:"))
-                        .append(Component.text(coordinates.getBlockY()))
-                        .append(Component.space())
-                        .append(Component.text("Z:"))
-                        .append(Component.text(coordinates.getBlockZ()))
-                        .color(color)
-                        .append(Component.space())
-                        .append(this.dropContainer.getStage().getStageComponent()));
+        Component actionBar = Component.text(worldName)
+                .decorate(TextDecoration.BOLD)
+                .append(Component.space())
+                .append(Component.text("X:"))
+                .append(Component.text(coordinates.getBlockX()))
+                .append(Component.space())
+                .append(Component.text("Y:"))
+                .append(Component.text(coordinates.getBlockY()))
+                .append(Component.space())
+                .append(Component.text("Z:"))
+                .append(Component.text(coordinates.getBlockZ()))
+                .color(color)
+                .append(Component.space())
+                .append(this.dropContainer.getStage().getForPercentStageComponent());
+
+        if (this.dropContainer.getStage().equals(DropContainerStage.OPENING_STAGE)) {
+
+            actionBar = actionBar
+                    .append(Component.text((int) (((float) (this.dropContainer.getMaxTimeToOpen() - this.dropContainer.getTimeToOpen())) / (((float) dropContainer.getMaxTimeToOpen()) / 100.0)))
+                            .decorate(TextDecoration.BOLD)
+                            .color(NamedTextColor.RED))
+                    .append(Component.text("%")
+                            .decorate(TextDecoration.BOLD)
+                            .color(NamedTextColor.RED))
+                    .append(Component.text("]")
+                            .decorate(TextDecoration.BOLD)
+                            .color(NamedTextColor.RED));
+        }
+
+        owner.sendActionBar(actionBar);
+    }
+
+    public void unregister() {
+
+        this.setActive(false);
+        instances.remove(this.owner.getName());
     }
 }

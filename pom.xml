@@ -90,7 +90,7 @@
         <dependency>
             <groupId>me.catcoder</groupId>
             <artifactId>bukkit-sidebar</artifactId>
-            <version>6.2.4-SNAPSHOT</version>
+            <version>6.2.5-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

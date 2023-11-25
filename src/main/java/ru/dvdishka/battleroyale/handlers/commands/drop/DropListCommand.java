@@ -18,6 +18,7 @@ public class DropListCommand implements CommandInterface {
         Component message = Component.empty();
 
         message = message
+                .append(Component.newline())
                 .append(Component.text("-".repeat(26))
                         .color(NamedTextColor.RED)
                         .decorate(TextDecoration.BOLD))
@@ -59,8 +60,9 @@ public class DropListCommand implements CommandInterface {
                             .clickEvent(ClickEvent.runCommand("/battleroyale drop follow " + "\"" + dropContainer.getName() + "\"")));
 
             message = message
-                    .append(Component.text("-".repeat(30))
-                            .color(NamedTextColor.AQUA))
+                    .append(Component.text("=".repeat(24))
+                            .color(NamedTextColor.GOLD)
+                            .decorate(TextDecoration.BOLD))
                     .append(Component.newline())
                     .append(Component.text(worldName)
                             .color(worldNameColor))
@@ -77,6 +79,9 @@ public class DropListCommand implements CommandInterface {
                     .append(Component.space())
                     .append(Component.text(dropContainer.getLocation().getBlockZ()))
                     .append(Component.newline())
+                    .append(Component.text("-".repeat(25))
+                            .color(NamedTextColor.YELLOW))
+                    .append(Component.newline())
                     .append(followButton)
                     .append(Component.newline());
         }
@@ -90,13 +95,18 @@ public class DropListCommand implements CommandInterface {
                         .clickEvent(ClickEvent.runCommand("/battleroyale drop unFollow")));
 
         message = message
+                .append(Component.text("=".repeat(24))
+                        .color(NamedTextColor.GOLD)
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline())
                 .append(unFollowButton)
                 .append(Component.newline());
 
         message = message
                 .append(Component.text("-".repeat(26))
                         .color(NamedTextColor.RED)
-                        .decorate(TextDecoration.BOLD));
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
 
         sender.sendMessage(message);
     }

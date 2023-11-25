@@ -1,7 +1,12 @@
 package ru.dvdishka.battleroyale.handlers;
 
+import com.destroystokyo.paper.event.block.BlockDestroyEvent;
+import io.papermc.paper.event.block.BlockBreakBlockEvent;
+import org.bukkit.block.Block;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.Logger;
@@ -239,14 +244,84 @@ public class EventHandler implements Listener {
     }
 
     @org.bukkit.event.EventHandler
-    public void onBlockClick(PlayerInteractEvent event) {
+    public void onDropContainerExplode(EntityExplodeEvent event) {
 
-        if (event.getClickedBlock() != null && event.getClickedBlock().hasMetadata("dropContainer")) {
+        for (Block block : event.blockList()) {
 
-            if (event.getAction().isLeftClick()) {
+            if (block.hasMetadata("dropContainer")) {
+
                 event.setCancelled(true);
-            } else {
-                Bukkit.getPluginManager().callEvent(new DropClickEvent(DropContainer.getContainerByLocation(event.getClickedBlock().getLocation()), event.getPlayer()));
+            }
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerExplode(BlockExplodeEvent event) {
+
+        for (Block block : event.blockList()) {
+
+            if (block.hasMetadata("dropContainer")) {
+
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerLiquidBreak(BlockFromToEvent event) {
+
+        if (event.getToBlock().hasMetadata("dropContainer")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerBreak(BlockBreakEvent event) {
+
+        if (event.getBlock().hasMetadata("dropContainer")) {
+
+            event.setCancelled(true);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerDestroy(BlockDestroyEvent event) {
+
+        if (event.getBlock().hasMetadata("dropContainer")) {
+
+            event.setCancelled(true);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerBurn(BlockBurnEvent event) {
+
+        if (event.getBlock().hasMetadata("dropContainer")) {
+
+            event.setCancelled(true);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerPistonExtend(BlockPistonExtendEvent event) {
+
+        for (Block block : event.getBlocks()) {
+
+            if (block.hasMetadata("dropContainer")) {
+
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerPistonRetract(BlockPistonRetractEvent event) {
+
+        for (Block block : event.getBlocks()) {
+
+            if (block.hasMetadata("dropContainer")) {
+
+                event.setCancelled(true);
             }
         }
     }

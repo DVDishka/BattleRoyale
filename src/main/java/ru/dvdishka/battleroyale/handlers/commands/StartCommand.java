@@ -14,6 +14,7 @@ import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.ui.DropBar;
 import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
 import ru.dvdishka.battleroyale.logic.classes.superpower.EffectUpdateTask;
@@ -30,6 +31,7 @@ public class StartCommand implements CommandInterface {
         Common.isGameStarted = true;
 
         Timer.getInstance().register();
+        Radar.getInstance().register();
 
         Scheduler.getScheduler().runAsyncRepeatingTask(Common.plugin, (scheduledTask) -> {
             new EffectUpdateTask().run();

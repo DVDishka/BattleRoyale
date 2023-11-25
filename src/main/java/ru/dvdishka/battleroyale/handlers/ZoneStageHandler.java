@@ -119,7 +119,7 @@ public class ZoneStageHandler implements Listener  {
 
     public void mainNextStageLogic() {
 
-        int timeOut = ConfigVariables.timeOuts.get(Common.zoneStage + 1);
+        int timeOut = ConfigVariables.timeOuts.get(Common.zoneStage);
         int previousZoneDiameter = ConfigVariables.zones.get(Common.zoneStage - 1);
 
         final int oldZoneCenterX = Zone.getInstance().getNewZoneCenterX();

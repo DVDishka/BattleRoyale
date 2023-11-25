@@ -167,6 +167,17 @@ public class Radar {
         }
     }
 
+    public void register() {}
+
+    public void unregister() {
+
+        try {
+            radarFirstPage.destroy();
+            radarPager.destroy();
+            instance = null;
+        } catch (Exception ignored) {}
+    }
+
     private Component updateRadar(Player player, int lineNumber) {
 
         int playerRadarPositionX = getPlayerRadarPositionX(player);

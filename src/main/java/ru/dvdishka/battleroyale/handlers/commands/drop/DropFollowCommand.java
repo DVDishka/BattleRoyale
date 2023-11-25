@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
+import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.ui.DropBar;
 
@@ -15,9 +16,15 @@ public class DropFollowCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
+        if (!Common.isGameStarted) {
+            returnFailure("You can not follow the drop if the game is not running", sender);
+            return;
+        }
+
         String[] dropName = ((String) args.get("dropName")).split(" ");
 
         World world;
+
         try {
             world = Bukkit.getWorld(dropName[0]);
             if (world == null) {
@@ -56,7 +63,7 @@ public class DropFollowCommand implements CommandInterface {
         DropContainer followedDropContainer = DropContainer.getContainerByLocation(new Location(world, x, y, z));
 
         if (followedDropContainer == null) {
-            returnFailure("Wrond drop name!", sender);
+            returnFailure("Wrong drop name!", sender);
             return;
         }
 

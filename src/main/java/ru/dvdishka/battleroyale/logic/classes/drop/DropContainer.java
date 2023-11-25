@@ -18,6 +18,7 @@ public class DropContainer {
 
     private DropContainerStage stage = DropContainerStage.PRE_CLICK_STAGE;
     private int timeToOpen;
+    private int maxTimeToOpen;
 
     private static final HashMap<Location, DropContainer> dropContainers = new HashMap<>();
 
@@ -26,6 +27,7 @@ public class DropContainer {
         this.dropType = dropType;
         this.location = location;
         this.timeToOpen = timeToOpen;
+        this.maxTimeToOpen = timeToOpen;
         this.inventory = new DropContainerInventory();
 
         for (ItemStack item : dropType.getItems()) {
@@ -67,6 +69,10 @@ public class DropContainer {
 
     public int getTimeToOpen() {
         return this.timeToOpen;
+    }
+
+    public int getMaxTimeToOpen() {
+        return this.maxTimeToOpen;
     }
 
     public static DropContainer getContainerByLocation(Location location) {

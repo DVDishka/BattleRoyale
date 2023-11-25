@@ -3,6 +3,7 @@ package ru.dvdishka.battleroyale.logic;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.bukkit.Bukkit;
@@ -11,7 +12,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Team;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
+import ru.dvdishka.battleroyale.ui.DropBar;
 import ru.dvdishka.battleroyale.ui.Radar;
+import ru.dvdishka.battleroyale.ui.Timer;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +41,6 @@ public class Common {
     public static HashMap<String, SuperPower> playersPower = new HashMap<>();
 
     public static void resetVariables() {
-
 
         Common.isGameStarted = false;
         Common.zoneStage = -1;
@@ -69,6 +71,20 @@ public class Common {
             for (PotionEffect potionEffectType : player.getActivePotionEffects()) {
                 player.removePotionEffect(potionEffectType.getType());
             }
+        }
+
+        Scheduler.cancelTasks(Common.plugin);
+
+        Timer.getInstance().unregister();
+        Radar.getInstance().unregister();
+        for (DropBar dropBar : DropBar.getInstances()) {
+            dropBar.unregister();;
+        }
+
+        for (World world : Bukkit.getWorlds()) {
+            world.setPVP(true);
+            world.getWorldBorder().setCenter(0, 0);
+            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter);
         }
     }
 

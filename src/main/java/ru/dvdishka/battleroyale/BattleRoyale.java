@@ -11,6 +11,7 @@ import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Initialization;
 import ru.dvdishka.battleroyale.logic.Scheduler;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
+import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
 
 import java.io.File;
@@ -42,7 +43,6 @@ public final class BattleRoyale extends JavaPlugin {
         Initialization.initConfig();
         Initialization.initCommands();
         Initialization.initEventHandlers(this);
-        Initialization.initRadar();
         Initialization.initDropTypes(new File(ConfigVariables.dropTypesFile));
 
         CommandAPI.onEnable();
@@ -57,16 +57,6 @@ public final class BattleRoyale extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
-        Scheduler.cancelTasks(this);
-
-        Timer.getInstance().unregister();
-
-        for (World world : Bukkit.getWorlds()) {
-            world.setPVP(true);
-            world.getWorldBorder().setCenter(0, 0);
-            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter);
-        };
 
         Common.resetVariables();
 

@@ -21,12 +21,25 @@ import java.util.*;
 
 public class DropType implements ConfigurationSerializable {
 
-    private ArrayList<ItemStack> items = new ArrayList<>();
+    private String name;
+    private ArrayList<ItemStack> items;
 
     private static ArrayList<DropType> dropTypes = new ArrayList<>();
 
-    private DropType(ArrayList<ItemStack> items) {
+    private DropType(ArrayList<ItemStack> items, String name) {
         this.items = items;
+        this.name = name;
+    }
+
+    public static DropType getByNameOrRandom(String name) {
+
+        for (DropType dropType : dropTypes) {
+            if (dropType.name.equals(name)) {
+                return dropType;
+            }
+        }
+
+        return getRandomType();
     }
 
     public static DropType getRandomType() {
@@ -36,11 +49,19 @@ public class DropType implements ConfigurationSerializable {
         return dropTypes.get(new Random().nextInt(0, dropTypes.size()));
     }
 
-    public ArrayList<ItemStack> getItems() {
-        return items;
+    public static ArrayList<DropType> getDropTypes() {
+        return dropTypes;
     }
 
-    public static void deserialize(ConfigurationSection dropTypeConfig) {
+    public ArrayList<ItemStack> getItems() {
+        return this.items;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public static void deserialize(ConfigurationSection dropTypeConfig, String dropTypeName) {
 
         Map<String, Object> serializedItems = dropTypeConfig.getConfigurationSection("items").getValues(false);
 
@@ -76,7 +97,7 @@ public class DropType implements ConfigurationSerializable {
             deserializedItems.add(deserializedItem);
         }
 
-        dropTypes.add(new DropType(deserializedItems));
+        dropTypes.add(new DropType(deserializedItems, dropTypeName));
     }
 
     @Override
