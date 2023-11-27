@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
 import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
@@ -71,6 +72,8 @@ public class StartCommand implements CommandInterface {
             int powerNumber = new Random().nextInt(0, SuperPower.values().length);
             SuperPower.values()[powerNumber].setToPlayer(player);
         }
+
+        Logger.getLogger().log("Battleroyale has been started");
 
         Bukkit.getPluginManager().callEvent(new NextGameStageEvent());
     }

@@ -233,7 +233,7 @@ public class EventHandler implements Listener {
 
                 BossBar bossBar = Bukkit.createBossBar("Team " + aliveTeams.get(0) + " wins!", BarColor.PINK, BarStyle.SOLID);
 
-                Bukkit.getConsoleSender().sendMessage("Team " + aliveTeams.get(0) + " wins!");
+                Logger.getLogger().log("Team " + aliveTeams.get(0) + " wins!");
             }
         }
         if (!isTeamDead) {

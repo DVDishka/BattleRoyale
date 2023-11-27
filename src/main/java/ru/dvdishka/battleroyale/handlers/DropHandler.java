@@ -119,8 +119,7 @@ public class DropHandler implements Listener {
                     .append(Component.newline());
 
             player.sendMessage(message);
-
-            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 75, 100);
+            Common.notificationSound(player);
         }
 
         Logger.getLogger().warn(String.valueOf(dropContainer.getLocation().getBlockX()));

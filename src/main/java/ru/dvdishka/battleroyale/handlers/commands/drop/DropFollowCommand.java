@@ -69,6 +69,8 @@ public class DropFollowCommand implements CommandInterface {
 
         DropBar.getInstance((Player) sender).setInformation(followedDropContainer);
 
+        Common.notificationSound((Player) sender);
+
         returnSuccess("You have successfully followed the drop", sender);
     }
 }

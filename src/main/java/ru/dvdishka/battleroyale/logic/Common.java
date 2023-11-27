@@ -3,6 +3,7 @@ package ru.dvdishka.battleroyale.logic;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -128,6 +129,12 @@ public class Common {
     public static void sendMessage(String message, @NotNull CommandSender sender) {
         try {
             sender.sendMessage(message);
+        } catch (Exception ignored) {}
+    }
+
+    public static void notificationSound(Player player) {
+        try {
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 75, 100);
         } catch (Exception ignored) {}
     }
 }

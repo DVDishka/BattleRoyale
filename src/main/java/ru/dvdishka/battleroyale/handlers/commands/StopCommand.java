@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.Scheduler;
 import ru.dvdishka.battleroyale.ui.Timer;
 
@@ -16,5 +17,8 @@ public class StopCommand implements CommandInterface {
     public void execute(CommandSender sender, CommandArguments args) {
 
         Common.resetVariables();
+
+        Logger.getLogger().log("Battleroyale has been stopped");
+        returnSuccess("Battleroyale has been stopped", sender);
     }
 }
