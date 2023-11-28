@@ -14,8 +14,11 @@ public class RemoveStartBoxCommand implements CommandInterface {
     public void execute(CommandSender sender, CommandArguments args) {
 
         Common.isStartBox = false;
-        Location startBoxLocation = new Location(Bukkit.getWorld("world"),
-                ConfigVariables.startBoxX, ConfigVariables.startBoxY, ConfigVariables.startBoxZ);
+        Location startBoxLocation = new Location(
+                Bukkit.getWorld("world"),
+                Bukkit.getServer().getWorld("world").getSpawnLocation().getX(),
+                ConfigVariables.startBoxY,
+                Bukkit.getServer().getWorld("world").getSpawnLocation().getZ());
 
         Scheduler.getScheduler().runRegionTask(Common.plugin, startBoxLocation, (scheduledTask) -> {
 
@@ -51,11 +54,6 @@ public class RemoveStartBoxCommand implements CommandInterface {
             }
         });
 
-        Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
-            Bukkit.getWorld("world").setSpawnLocation(0, 0, 0);
-            Bukkit.getWorld("world").setGameRule(GameRule.SPAWN_RADIUS, 0);
-        });
-
-        returnSuccess("Start box has been removed successfully!", sender);
+        returnSuccess("Start box has been removed successfully", sender);
     }
 }

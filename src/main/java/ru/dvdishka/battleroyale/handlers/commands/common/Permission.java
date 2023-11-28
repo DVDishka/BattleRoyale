@@ -8,7 +8,7 @@ public enum Permission {
     START_BOX(CommandPermission.fromString("battleroyale.start_box")),
     TEAM_CREATE(CommandPermission.fromString("battleroyale.team.create")),
     REVIVE(CommandPermission.fromString("battleroyale.revive")),
-    DROP_CREATE(CommandPermission.fromString("battleroyale.drop_create"));
+    DROP(CommandPermission.fromString("battleroyale.drop"));
 
     private final CommandPermission commandPermission;
 
@@ -18,5 +18,9 @@ public enum Permission {
 
     public CommandPermission getPermission() {
         return commandPermission;
+    }
+
+    public String getStringPermission() {
+        return commandPermission.toString();
     }
 }

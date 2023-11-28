@@ -15,8 +15,11 @@ public class CreateStartBoxCommand implements CommandInterface {
     public void execute(CommandSender sender, CommandArguments args) {
 
         Common.isStartBox = true;
-        Location startBoxLocation = new Location(Bukkit.getWorld("world"),
-                ConfigVariables.startBoxX, ConfigVariables.startBoxY, ConfigVariables.startBoxZ);
+        Location startBoxLocation = new Location(
+                Bukkit.getWorld("world"),
+                Bukkit.getServer().getWorld("world").getSpawnLocation().getX(),
+                ConfigVariables.startBoxY,
+                Bukkit.getServer().getWorld("world").getSpawnLocation().getZ());
 
         Chunk startBoxChunk = startBoxLocation.getChunk();
 
@@ -64,6 +67,6 @@ public class CreateStartBoxCommand implements CommandInterface {
             });
         }
 
-        returnSuccess("Start box has been created successfully!", sender);
+        returnSuccess("Start box has been created successfully", sender);
     }
 }

@@ -20,6 +20,7 @@ public class Radar {
     private final Sidebar<Component> radarFirstPage;
 
     private static Radar instance = null;
+    private static boolean isInitialized = false;
 
     private final TextColor safeZoneColor = NamedTextColor.AQUA;
     private final TextColor stableZoneColor = NamedTextColor.YELLOW;
@@ -145,6 +146,7 @@ public class Radar {
     public static Radar getInstance() {
         if (instance == null) {
             instance = new Radar();
+            isInitialized = true;
         }
         return instance;
     }
@@ -167,11 +169,16 @@ public class Radar {
         }
     }
 
+    public static boolean isInitialized() {
+        return isInitialized;
+    }
+
     public void register() {}
 
     public void unregister() {
 
         try {
+            isInitialized = false;
             radarFirstPage.destroy();
             radarPager.destroy();
             instance = null;

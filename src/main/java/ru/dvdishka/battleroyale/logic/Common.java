@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Team;
+import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
 import ru.dvdishka.battleroyale.ui.DropBar;
 import ru.dvdishka.battleroyale.ui.Radar;
@@ -62,7 +63,10 @@ public class Common {
                 0,
                 0);
 
-        Radar.getInstance().movingZoneChar = "=";
+        if (Radar.isInitialized()) {
+            Radar.getInstance().movingZoneChar = "=";
+            Radar.getInstance().unregister();
+        }
 
         for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
             team.unregister();
@@ -77,9 +81,12 @@ public class Common {
         Scheduler.cancelTasks(Common.plugin);
 
         Timer.getInstance().unregister();
-        Radar.getInstance().unregister();
         for (DropBar dropBar : DropBar.getInstances()) {
             dropBar.unregister();;
+        }
+
+        for (DropContainer dropContainer : DropContainer.getContainerList()) {
+            dropContainer.delete();
         }
 
         for (World world : Bukkit.getWorlds()) {
@@ -134,7 +141,13 @@ public class Common {
 
     public static void notificationSound(Player player) {
         try {
-            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 75, 100);
+            player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 75, 100);
+        } catch (Exception ignored) {}
+    }
+
+    public static void buttonSound(Player player) {
+        try {
+            player.playSound(player, Sound.UI_BUTTON_CLICK, 75, 10);
         } catch (Exception ignored) {}
     }
 }

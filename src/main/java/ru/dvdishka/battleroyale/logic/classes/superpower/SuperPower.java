@@ -1,6 +1,8 @@
 package ru.dvdishka.battleroyale.logic.classes.superpower;
 
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import ru.dvdishka.battleroyale.logic.Common;
@@ -32,17 +34,52 @@ public enum SuperPower {
 
     public void setToPlayer(Player player) {
 
-        String subTitle = "";
+        Common.playersPower.put(player.getName(), this);
+
+        Component message = Component.empty();
+
+        message = message
+                .append(Component.newline())
+                .append(Component.text("-".repeat(26))
+                        .color(NamedTextColor.RED)
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text("Your Superpower:"))
+                .append(Component.space())
+                .append(Component.text(this.name.toUpperCase())
+                        .color(NamedTextColor.GREEN)
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline())
+                .append(Component.text("-".repeat(27))
+                        .color(NamedTextColor.YELLOW))
+                .append(Component.newline())
+                .append(Component.text("Effects:"))
+                .append(Component.newline());
 
         for (int i = 0; i < effectType.size(); i++) {
 
-            subTitle = subTitle.concat(effectType.get(i).getName()).concat(" ");
+            message = message
+                    .append(Component.text(effectType.get(i).getKey().getKey().toUpperCase())
+                    .color(NamedTextColor.GOLD)
+                    .decorate(TextDecoration.BOLD))
+                    .append(Component.space())
+                    .append(Component.text("lvl:"))
+                    .append(Component.space())
+                    .append(Component.text(amplifier.get(i) + 1)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
         }
 
-        String title = subTitle;
+        message = message
+                .append(Component.text("-".repeat(26))
+                        .color(NamedTextColor.RED)
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
 
-        Common.playersPower.put(player.getName(), this);
-        player.sendTitle(ChatColor.LIGHT_PURPLE + name, ChatColor.BLUE + title);
+        player.sendMessage(message);
+        Common.notificationSound(player);
     }
 
     public List<PotionEffectType> getEffects() {

@@ -11,29 +11,23 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import ru.dvdishka.battleroyale.handlers.DropHandler;
-import ru.dvdishka.battleroyale.handlers.commands.drop.DropCreateCommand;
+import ru.dvdishka.battleroyale.handlers.commands.drop.*;
 import ru.dvdishka.battleroyale.handlers.commands.ReviveCommand;
 import ru.dvdishka.battleroyale.handlers.commands.StartCommand;
 import ru.dvdishka.battleroyale.handlers.commands.StopCommand;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
-import ru.dvdishka.battleroyale.handlers.commands.drop.DropFollowCommand;
-import ru.dvdishka.battleroyale.handlers.commands.drop.DropListCommand;
-import ru.dvdishka.battleroyale.handlers.commands.drop.DropUnFollowCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.CreateStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.RemoveStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.EventHandler;
 import ru.dvdishka.battleroyale.handlers.commands.team.*;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
-import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.handlers.ZoneStageHandler;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class Initialization {
 
@@ -62,6 +56,7 @@ public class Initialization {
         ConfigVariables.zones = zones;
 
         ConfigVariables.times = config.getIntegerList("times");
+        ConfigVariables.timeGameStart = config.getInt("timeGameStart");
         ConfigVariables.timeOuts = config.getIntegerList("timeOuts");
         ConfigVariables.pvpEnableZone = config.getInt("pvpEnableZone", 1);
         ConfigVariables.lastReviveZone = config.getInt("lastReviveZone", 1);
@@ -73,9 +68,7 @@ public class Initialization {
             Logger.getLogger().warn("Config exception! maxFinalZoneMove can not be less than maxFinalZoneMove");
         }
         ConfigVariables.zoneMoveTimeOut = config.getInt("zoneMoveTimeOut", 10);
-        ConfigVariables.startBoxX = config.getInt("startBoxX", 0);
-        ConfigVariables.startBoxY = config.getInt("startBoxY", 200);
-        ConfigVariables.startBoxZ = config.getInt("startBoxZ", 0);
+        ConfigVariables.startBoxY = config.getInt("startBoxY",  200);
 
         ArrayList<World> dropSpawnWorlds = new ArrayList<>();
         for (String world : config.getStringList("dropSpawnWorlds")) {
@@ -236,7 +229,7 @@ public class Initialization {
                         new DropListCommand().execute(commandSender, commandArguments);
                     })
 
-                    .then(new LiteralArgument("create").withPermission(Permission.DROP_CREATE.getPermission())
+                    .then(new LiteralArgument("create").withPermission(Permission.DROP.getPermission())
 
                             .then(new StringArgument("dropTypeName")
                                     .includeSuggestions(ArgumentSuggestions.stringsWithTooltipsCollection(commandSenderSuggestionInfo -> {
@@ -263,6 +256,27 @@ public class Initialization {
                                     .executes((commandSender, commandArguments) -> {
 
                                         new DropCreateCommand().execute(commandSender, commandArguments);
+                                    })
+                            )
+                    )
+
+                    .then(new LiteralArgument("delete").withPermission(Permission.DROP.getPermission())
+
+                            .then(new TextArgument("dropName")
+                                    .includeSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+
+                                        ArrayList<String> suggestions = new ArrayList<>();
+
+                                        for (DropContainer dropContainer : DropContainer.getContainerList()) {
+
+                                            suggestions.add("\"" + dropContainer.getName() + "\"");
+                                        }
+
+                                        return suggestions;
+                                    }))
+                                    .executes((commandSender, commandArguments) -> {
+
+                                        new DropDeleteCommand().execute(commandSender, commandArguments);
                                     })
                             )
                     )

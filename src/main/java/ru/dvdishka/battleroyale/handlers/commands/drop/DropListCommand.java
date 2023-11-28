@@ -8,12 +8,18 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
+import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 
 public class DropListCommand implements CommandInterface {
 
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
+
+        if (DropContainer.getContainerList().isEmpty()){
+            returnFailure("There are no drop containers yet", sender);
+            return;
+        }
 
         Component message = Component.empty();
 
@@ -59,6 +65,14 @@ public class DropListCommand implements CommandInterface {
                             .decorate(TextDecoration.BOLD)
                             .clickEvent(ClickEvent.runCommand("/battleroyale drop follow " + "\"" + dropContainer.getName() + "\"")));
 
+            Component deleteButton = Component.empty();
+
+            deleteButton = deleteButton
+                    .append(Component.text("[DELETE]")
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD)
+                            .clickEvent(ClickEvent.runCommand("/battleroyale drop delete " + "\"" + dropContainer.getName() + "\"")));
+
             message = message
                     .append(Component.text("=".repeat(24))
                             .color(NamedTextColor.GOLD)
@@ -82,7 +96,15 @@ public class DropListCommand implements CommandInterface {
                     .append(Component.text("-".repeat(25))
                             .color(NamedTextColor.YELLOW))
                     .append(Component.newline())
-                    .append(followButton)
+                    .append(followButton);
+
+            if (sender.hasPermission(Permission.DROP.getStringPermission())) {
+                message = message
+                        .append(Component.space())
+                        .append(deleteButton);
+            }
+
+            message = message
                     .append(Component.newline());
         }
 
@@ -92,7 +114,7 @@ public class DropListCommand implements CommandInterface {
                 .append(Component.text("[UNFOLLOW]")
                         .color(NamedTextColor.RED)
                         .decorate(TextDecoration.BOLD)
-                        .clickEvent(ClickEvent.runCommand("/battleroyale drop unFollow")));
+                        .clickEvent(ClickEvent.runCommand("/battleroyale drop unfollow")));
 
         message = message
                 .append(Component.text("=".repeat(24))

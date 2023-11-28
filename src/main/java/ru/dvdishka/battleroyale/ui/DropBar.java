@@ -57,19 +57,24 @@ public class DropBar {
         return instances.values();
     }
 
+    public DropContainer getInformation() {
+        return dropContainer;
+    }
+
     public boolean isActive() {
         return isActive;
     }
 
     public void setActive(boolean isActive) {
 
-        if (!isActive) {
+        if (!isActive && this.isActive) {
             this.updateTask.cancel();
         }
 
         if (isActive && !this.isActive) {
 
             this.updateTask = Scheduler.getScheduler().runSyncRepeatingTask(Common.plugin, (scheduledTask) -> {
+
                 this.update();
             }, 10, 10);
         }
@@ -77,6 +82,8 @@ public class DropBar {
     }
 
     public void setInformation(DropContainer dropContainer) {
+
+        this.setActive(false);
 
         this.dropContainer = dropContainer;
 

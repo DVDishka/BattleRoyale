@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Logger;
@@ -68,6 +69,7 @@ public class DropHandler implements Listener {
             worldName = worldName.toUpperCase();
 
             Component message = Component.empty();
+
             Component followButton = Component.empty();
 
             followButton = followButton
@@ -75,6 +77,14 @@ public class DropHandler implements Listener {
                             .color(NamedTextColor.GREEN)
                             .decorate(TextDecoration.BOLD)
                             .clickEvent(ClickEvent.runCommand("/battleroyale drop follow " + "\"" + dropContainer.getName() + "\"")));
+
+            Component deleteButton = Component.empty();
+
+            deleteButton = deleteButton
+                    .append(Component.text("[DELETE]")
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD)
+                            .clickEvent(ClickEvent.runCommand("/battleroyale drop delete " + "\"" + dropContainer.getName() + "\"")));
 
             message = message
                     .append(Component.newline())
@@ -109,7 +119,15 @@ public class DropHandler implements Listener {
                     .append(Component.text("-".repeat(27))
                             .color(NamedTextColor.YELLOW))
                     .append(Component.newline())
-                    .append(followButton)
+                    .append(followButton);
+
+            if (player.hasPermission(Permission.DROP.getStringPermission())) {
+                message = message
+                        .append(Component.space())
+                        .append(deleteButton);
+            }
+
+            message = message
                     .append(Component.newline());
 
             message = message
@@ -132,17 +150,17 @@ public class DropHandler implements Listener {
 
         if (event.getDropContainer().getStage().equals(DropContainerStage.PRE_CLICK_STAGE)) {
 
-            event.getPlayer().playSound(event.getDropContainer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100, 1);
+            event.getPlayer().playSound(event.getPlayer(), Sound.ENTITY_PLAYER_LEVELUP, 100, 1);
             event.getDropContainer().startOpenCountdown();
 
         } else if (event.getDropContainer().getStage().equals(DropContainerStage.OPEN_STAGE)) {
 
-            event.getPlayer().playSound(event.getDropContainer().getLocation(), org.bukkit.Sound.UI_BUTTON_CLICK, 100, 1);
+            event.getPlayer().playSound(event.getPlayer(), org.bukkit.Sound.UI_BUTTON_CLICK, 100, 1);
             event.getPlayer().openInventory(event.getDropContainer().getInventory().getInventory());
 
         } else if (event.getDropContainer().getStage().equals(DropContainerStage.OPENING_STAGE)) {
 
-            event.getPlayer().playSound(event.getDropContainer().getLocation(), org.bukkit.Sound.BLOCK_ANVIL_PLACE, 100, 1);
+            event.getPlayer().playSound(event.getPlayer(), org.bukkit.Sound.BLOCK_ANVIL_PLACE, 100, 1);
         }
     }
 

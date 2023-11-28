@@ -2,6 +2,7 @@ package ru.dvdishka.battleroyale.handlers;
 
 import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import io.papermc.paper.event.block.BlockBreakBlockEvent;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -137,11 +138,12 @@ public class EventHandler implements Listener {
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
                     Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
+                        if (Common.players.contains(onlinePlayer.getName())) {
+                            onlinePlayer.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_6, 1000, 0);
+                        }
                         onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
                     });
                 }
-
-                Common.isGameStarted = false;
             }
         }
     }
@@ -223,11 +225,12 @@ public class EventHandler implements Listener {
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
                     Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
+                        if (Common.players.contains(onlinePlayer.getName())) {
+                            onlinePlayer.playSound(onlinePlayer, Sound.ITEM_GOAT_HORN_SOUND_6, 1000, 0);
+                        }
                         onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
                     });
                 }
-
-                Common.isGameStarted = false;
 
                 Timer.getInstance().unregister();
 
@@ -322,6 +325,15 @@ public class EventHandler implements Listener {
             if (block.hasMetadata("dropContainer")) {
 
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onBlockClick(PlayerInteractEvent event) {
+        if (event.getClickedBlock() != null && event.getClickedBlock().hasMetadata("dropContainer")) {
+            if (event.getAction().isRightClick()) {
+                Bukkit.getPluginManager().callEvent(new DropClickEvent(DropContainer.getContainerByLocation(event.getClickedBlock().getLocation()), event.getPlayer()));
             }
         }
     }
