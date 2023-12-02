@@ -27,10 +27,12 @@ public interface CommandInterface {
         Common.returnFailure(message, sender, color);
     }
 
+    @SuppressWarnings("unused")
     default void returnWarning(String message, CommandSender sender, TextColor color) {
         Common.returnWarning(message, sender, color);
     }
 
+    @SuppressWarnings("unused")
     default void returnWarning(String message, CommandSender sender) {
         Common.returnWarning(message, sender);
     }

@@ -3,15 +3,10 @@ package ru.dvdishka.battleroyale;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Initialization;
-import ru.dvdishka.battleroyale.logic.Scheduler;
-import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
-import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
 
 import java.io.File;

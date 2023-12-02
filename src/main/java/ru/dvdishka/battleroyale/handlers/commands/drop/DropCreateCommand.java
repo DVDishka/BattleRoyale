@@ -2,7 +2,6 @@ package ru.dvdishka.battleroyale.handlers.commands.drop;
 
 import dev.jorel.commandapi.executors.CommandArguments;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;

@@ -1,7 +1,11 @@
 package ru.dvdishka.battleroyale.handlers.commands.team;
 
 import dev.jorel.commandapi.executors.CommandArguments;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.logic.Team;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.logic.Common;
@@ -35,6 +39,38 @@ public class CreateTeamCommand implements CommandInterface {
 
         newTeam.addMember(sender.getName());
 
-        returnSuccess("Team " + teamName + " has been created!", sender);
+        Common.notificationSound((Player) sender);
+
+        Component message = Component.empty();
+
+        message = message
+                .append(Component.newline())
+                .append(Component.text("-".repeat(26))
+                        .color(NamedTextColor.RED)
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text(newTeam.getName())
+                        .color(newTeam.getColor())
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text("-".repeat(27))
+                        .color(NamedTextColor.YELLOW))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text("Team has been created"))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text("-".repeat(26))
+                        .color(NamedTextColor.RED)
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
+
+        sender.sendMessage(message);
     }
 }

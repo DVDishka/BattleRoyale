@@ -18,7 +18,7 @@ public class Team {
     private String leader;
     private NamedTextColor color;
     private ArrayList<String> members = new ArrayList<>();
-    private org.bukkit.scoreboard.Team scoreboardTeam;
+    private final org.bukkit.scoreboard.Team scoreboardTeam;
 
     public static ArrayList<Team> teams = new ArrayList<>();
     public static HashSet<String> deadTeams = new HashSet<>();
@@ -86,6 +86,7 @@ public class Team {
         return this.leader;
     }
 
+    @SuppressWarnings("unused")
     public void setLeader(String leader) {
         this.leader = leader;
     }
@@ -98,6 +99,7 @@ public class Team {
         this.name = name;
     }
 
+    @SuppressWarnings("unused")
     public void setMembers(ArrayList<String> members) {
         this.members = members;
     }
@@ -119,10 +121,12 @@ public class Team {
         } catch (Exception ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public boolean isMember(String name) {
         return members.contains(name);
     }
 
+    @SuppressWarnings("unused")
     public boolean isMember(Player player) {
         return members.contains(player.getName());
     }
@@ -131,6 +135,7 @@ public class Team {
         return this.leader.equals(name);
     }
 
+    @SuppressWarnings("unused")
     public boolean isLeader(Player player) {
         return this.leader.equals(player.getName());
     }
@@ -139,6 +144,7 @@ public class Team {
         return members;
     }
 
+    @SuppressWarnings("unused")
     public org.bukkit.scoreboard.Team getScoreboardTeam() {
         return scoreboardTeam;
     }

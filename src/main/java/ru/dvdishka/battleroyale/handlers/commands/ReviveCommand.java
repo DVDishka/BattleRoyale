@@ -19,7 +19,9 @@ public class ReviveCommand implements CommandInterface {
         Player revivePlayer = (Player) args.get("player");
 
         Common.deadPlayers.remove(revivePlayer.getName());
+
         try {
+
             Team.deadTeams.remove(Team.getTeam(revivePlayer.getName()).getName());
 
             returnSuccess(revivePlayer.getName() + " has been revived!", sender);

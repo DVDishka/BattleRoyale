@@ -3,7 +3,7 @@ package ru.dvdishka.battleroyale.handlers.commands.team;
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.title.TitlePart;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,22 +32,45 @@ public class LeaveTeamCommand implements CommandInterface {
         if (playerTeam.isLeader(sender.getName())) {
 
             for (String memberName : playerTeam.getMembers()) {
+
                 Player memberPlayer = Bukkit.getPlayer(memberName);
+
                 try {
-                    memberPlayer.sendTitlePart(TitlePart.TITLE, Component
-                            .text("Unregistered")
-                            .color(NamedTextColor.RED));
-                    memberPlayer.sendTitlePart(TitlePart.SUBTITLE, Component
-                            .text("Team")
-                            .color(NamedTextColor.RED)
-                            .append(Component.space())
-                            .append(Component
-                                    .text(playerTeam.getName())
-                                    .color(playerTeam.getColor()))
-                            .append(Component.space())
-                            .append(Component
-                                    .text("has been unregistered!")
-                                    .color(NamedTextColor.RED)));
+
+                    Component message = Component.empty();
+
+                    message = message
+                            .append(Component.newline())
+                            .append(Component.text("-".repeat(26))
+                                    .color(NamedTextColor.RED)
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text(playerTeam.getName())
+                                    .color(playerTeam.getColor())
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text("-".repeat(27))
+                                    .color(NamedTextColor.YELLOW))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text("The team has been disbanded")
+                                    .color(NamedTextColor.RED))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text("-".repeat(26))
+                                    .color(NamedTextColor.RED)
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    memberPlayer.sendMessage(message);
+                    Common.notificationSound(memberPlayer);
+
                 } catch (Exception ignored) {}
             }
 
@@ -58,21 +81,84 @@ public class LeaveTeamCommand implements CommandInterface {
             playerTeam.removeMember(sender.getName());
 
             for (String memberName : playerTeam.getMembers()) {
+
                 Player memberPlayer = Bukkit.getPlayer(memberName);
+
                 try {
-                    memberPlayer.sendTitlePart(TitlePart.TITLE, Component
-                            .text("Leave")
-                            .color(NamedTextColor.RED));
-                    memberPlayer.sendTitlePart(TitlePart.SUBTITLE, Component
-                            .text(sender.getName())
+
+                    Component message = Component.empty();
+
+                    message = message
+                            .append(Component.newline())
+                            .append(Component.text("-".repeat(26))
+                                    .color(NamedTextColor.RED)
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text(playerTeam.getName())
+                                    .color(playerTeam.getColor())
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text("-".repeat(27))
+                                    .color(NamedTextColor.YELLOW))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text(sender.getName())
+                                    .decorate(TextDecoration.BOLD))
                             .append(Component.space())
-                            .append(Component
-                                    .text("left your team!")
-                                    .color(NamedTextColor.RED)));
+                            .append(Component.text("left your team")
+                                    .color(NamedTextColor.RED))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text("-".repeat(26))
+                                    .color(NamedTextColor.RED)
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    memberPlayer.sendMessage(message);
+                    Common.notificationSound(memberPlayer);
+
                 } catch (Exception ignored) {}
             }
         }
 
-        returnSuccess("You left the team " + playerTeam.getName(), sender);
+        Component message = Component.empty();
+
+        message = message
+                .append(Component.newline())
+                .append(Component.text("-".repeat(26))
+                        .color(NamedTextColor.RED)
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text(playerTeam.getName())
+                        .color(playerTeam.getColor())
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text("-".repeat(27))
+                        .color(NamedTextColor.YELLOW))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text("You left the team")
+                        .color(NamedTextColor.RED))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text("-".repeat(26))
+                        .color(NamedTextColor.RED)
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
+
+        sender.sendMessage(message);
+        Common.notificationSound((Player) sender);
     }
 }

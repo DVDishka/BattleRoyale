@@ -22,7 +22,7 @@ public class DropContainer {
 
     private DropContainerStage stage = DropContainerStage.PRE_CLICK_STAGE;
     private int timeToOpen;
-    private int maxTimeToOpen;
+    private final int maxTimeToOpen;
 
     private static final HashMap<Location, DropContainer> dropContainers = new HashMap<>();
 
@@ -46,6 +46,7 @@ public class DropContainer {
         return location.getWorld().getName() + " " + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ();
     }
 
+    @SuppressWarnings("unused")
     public DropType getDropType() {
         return dropType;
     }
@@ -54,6 +55,7 @@ public class DropContainer {
         return location;
     }
 
+    @SuppressWarnings("unused")
     public void nextStage() {
         if (this.stage.equals(DropContainerStage.PRE_CLICK_STAGE)) {
             this.stage = DropContainerStage.OPENING_STAGE;
@@ -63,6 +65,7 @@ public class DropContainer {
         }
     }
 
+    @SuppressWarnings("unused")
     public void setStage(DropContainerStage stage) {
         this.stage = stage;
     }
@@ -172,6 +175,7 @@ public class DropContainer {
         return dropContainers.values();
     }
 
+    @SuppressWarnings("UnusedAssignment")
     public static DropContainer parseFromString(String dropContainerString) {
 
         if (!Common.isGameStarted) {

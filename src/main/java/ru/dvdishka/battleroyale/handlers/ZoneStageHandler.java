@@ -1,16 +1,19 @@
 package ru.dvdishka.battleroyale.handlers;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
-import ru.dvdishka.battleroyale.logic.Zone;
-import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.logic.Zone;
+import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
+import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
 import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
 
@@ -35,7 +38,39 @@ public class ZoneStageHandler implements Listener  {
             Common.isRevivalEnabled = false;
 
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.sendTitle(ChatColor.RED + "Revival", ChatColor.RED + "Is now disabled!");
+
+                Component message = Component.empty();
+
+                message = message
+                        .append(Component.newline())
+                        .append(Component.text("-".repeat(26))
+                                .color(NamedTextColor.RED)
+                                .decorate(TextDecoration.BOLD))
+                        .append(Component.newline());
+
+                message = message
+                        .append(Component.text("Revival")
+                                .decorate(TextDecoration.BOLD))
+                        .append(Component.newline());
+
+                message = message
+                        .append(Component.text("-".repeat(27))
+                                .color(NamedTextColor.YELLOW))
+                        .append(Component.newline());
+
+                message = message
+                        .append(Component.text("Revival is now disabled")
+                                .color(NamedTextColor.RED))
+                        .append(Component.newline());
+
+                message = message
+                        .append(Component.text("-".repeat(26))
+                                .color(NamedTextColor.RED)
+                                .decorate(TextDecoration.BOLD))
+                        .append(Component.newline());
+
+                player.sendMessage(message);
+                Common.notificationSound(player);
             }
         }
 
@@ -49,8 +84,39 @@ public class ZoneStageHandler implements Listener  {
             }
 
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.sendTitle(ChatColor.RED + "PVP", ChatColor.RED + "Is now enabled!");
-            }
+
+                Component message = Component.empty();
+
+                message = message
+                        .append(Component.newline())
+                        .append(Component.text("-".repeat(26))
+                                .color(NamedTextColor.RED)
+                                .decorate(TextDecoration.BOLD))
+                        .append(Component.newline());
+
+                message = message
+                        .append(Component.text("PVP")
+                                .decorate(TextDecoration.BOLD))
+                        .append(Component.newline());
+
+                message = message
+                        .append(Component.text("-".repeat(27))
+                                .color(NamedTextColor.YELLOW))
+                        .append(Component.newline());
+
+                message = message
+                        .append(Component.text("PVP is now enabled")
+                                .color(NamedTextColor.RED))
+                        .append(Component.newline());
+
+                message = message
+                        .append(Component.text("-".repeat(26))
+                                .color(NamedTextColor.RED)
+                                .decorate(TextDecoration.BOLD))
+                        .append(Component.newline());
+
+                player.sendMessage(message);
+                Common.notificationSound(player);            }
         }
 
         if (Common.zoneStage == 0) {

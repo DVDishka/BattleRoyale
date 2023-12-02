@@ -30,8 +30,8 @@ public enum DropContainerStage {
                     .color(NamedTextColor.YELLOW)
                     .decorate(TextDecoration.BOLD));
 
-    private Component stageComponent;
-    private Component stageNameComponent;
+    private final Component stageComponent;
+    private final Component stageNameComponent;
 
     DropContainerStage(Component stageComponent, Component stageNameComponent) {
         this.stageComponent = stageComponent;

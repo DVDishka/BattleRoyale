@@ -3,7 +3,7 @@ package ru.dvdishka.battleroyale.handlers.commands.team;
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -43,28 +43,105 @@ public class InviteTeamCommand implements CommandInterface {
 
         Team.invites.get(inviterTeam.getName()).add(invitedPlayer.getName());
 
-        returnSuccess(invitedPlayer.getName() + " has benn invited to your team!", sender);
+        {
+            Component message = Component.empty();
 
-        invitedPlayer.sendMessage(Component.text()
-                .append(Component.text("You has been invited to ")
-                        .color(TextColor.color(0, 143, 234))
-                )
-                .append(Component.text(inviterTeam.getName())
-                        .color(inviterTeam.getColor())
-                )
-                .appendNewline()
-                .append(Component.text("[ACCEPT]")
-                        .color(TextColor.color(0, 234, 53))
-                        .decorate(TextDecoration.BOLD)
-                        .clickEvent(ClickEvent.runCommand("/battleroyale accept " + inviterTeam.getName()))
-                )
-                .appendSpace()
-                .append(Component.text("[DECLINE]")
-                        .color(TextColor.color(222, 16, 23))
-                        .decorate(TextDecoration.BOLD)
-                        .clickEvent(ClickEvent.runCommand("/battleroyale cancel " + inviterTeam.getName()))
-                )
-                .build()
-        );
+            message = message
+                    .append(Component.newline())
+                    .append(Component.text("-".repeat(26))
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text(inviterTeam.getName())
+                            .color(inviterTeam.getColor())
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("-".repeat(27))
+                            .color(NamedTextColor.YELLOW))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text(invitedPlayer.getName())
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.space())
+                    .append(Component.text("has been invited to your team!"))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("-".repeat(26))
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            Common.notificationSound((Player) sender);
+            sender.sendMessage(message);
+        }
+
+        {
+            Component declineButton = Component.text("[DECLINE]")
+                    .color(NamedTextColor.RED)
+                    .decorate(TextDecoration.BOLD)
+                    .clickEvent(ClickEvent.runCommand("/battleroyale cancel " + inviterTeam.getName()));
+
+            Component acceptButton = Component.text("[ACCEPT]")
+                    .color(NamedTextColor.GREEN)
+                    .decorate(TextDecoration.BOLD)
+                    .clickEvent(ClickEvent.runCommand("/battleroyale accept " + inviterTeam.getName()));
+
+            Component message = Component.empty();
+
+            message = message
+                    .append(Component.newline())
+                    .append(Component.text("-".repeat(26))
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text(inviterTeam.getName())
+                            .color(inviterTeam.getColor())
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("-".repeat(27))
+                            .color(NamedTextColor.YELLOW))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text(sender.getName())
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.space())
+                    .append(Component.text("invited you to "))
+                    .append(Component.space())
+                    .append(Component.text(inviterTeam.getName())
+                            .decorate(TextDecoration.BOLD)
+                            .color(inviterTeam.getColor()))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("-".repeat(27))
+                            .color(NamedTextColor.YELLOW))
+                    .append(Component.newline());
+
+            message = message
+                    .append(acceptButton)
+                    .append(Component.space())
+                    .append(declineButton)
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("-".repeat(26))
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            invitedPlayer.sendMessage(message);
+            Common.notificationSound(invitedPlayer);
+        }
     }
 }

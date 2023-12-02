@@ -8,8 +8,8 @@ import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
 
 public class DropCreateEvent extends Event {
 
-    private DropType dropType;
-    private World world;
+    private final DropType dropType;
+    private final World world;
 
     private static final HandlerList handlerList = new HandlerList();
 
@@ -18,6 +18,7 @@ public class DropCreateEvent extends Event {
         return handlerList;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {
         return handlerList;
     }

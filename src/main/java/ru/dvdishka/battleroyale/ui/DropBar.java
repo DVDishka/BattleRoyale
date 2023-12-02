@@ -14,7 +14,6 @@ import ru.dvdishka.battleroyale.logic.classes.drop.DropContainerStage;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class DropBar {
 
@@ -61,6 +60,7 @@ public class DropBar {
         return dropContainer;
     }
 
+    @SuppressWarnings("unused")
     public boolean isActive() {
         return isActive;
     }

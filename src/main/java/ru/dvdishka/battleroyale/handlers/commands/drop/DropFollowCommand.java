@@ -1,9 +1,6 @@
 package ru.dvdishka.battleroyale.handlers.commands.drop;
 
 import dev.jorel.commandapi.executors.CommandArguments;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;

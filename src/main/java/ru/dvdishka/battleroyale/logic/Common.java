@@ -82,7 +82,7 @@ public class Common {
 
         Timer.getInstance().unregister();
         for (DropBar dropBar : DropBar.getInstances()) {
-            dropBar.unregister();;
+            dropBar.unregister();
         }
 
         for (DropContainer dropContainer : DropContainer.getContainerList()) {

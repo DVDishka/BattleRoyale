@@ -140,7 +140,7 @@ public class Initialization {
 
                             .then(new StringArgument("teamName").withPermission(Permission.TEAM_CREATE.getPermission())
 
-                                    .executes((commandSender, commandArguments) -> {
+                                    .executesPlayer((commandSender, commandArguments) -> {
 
                                         new CreateTeamCommand().execute(commandSender, commandArguments);
                                     })
@@ -153,7 +153,7 @@ public class Initialization {
                         return Team.getTeam(commandSender.getName()) != null;
                     })
 
-                            .executes((commandSender, commandArguments) -> {
+                            .executesPlayer((commandSender, commandArguments) -> {
 
                                 new LeaveTeamCommand().execute(commandSender, commandArguments);
                             })
@@ -165,19 +165,11 @@ public class Initialization {
 
                             .then(new PlayerArgument("player")
 
-                                    .executes(((commandSender, commandArguments) -> {
+                                    .executesPlayer(((commandSender, commandArguments) -> {
 
                                         new InviteTeamCommand().execute(commandSender, commandArguments);
                                     }))
                             )
-                    )
-
-                    .then(new LiteralArgument("list")
-
-                            .executes((commandSender, commandArguments) -> {
-
-                                new ListTeamCommand().execute(commandSender, commandArguments);
-                            })
                     )
             );
         }
@@ -187,7 +179,7 @@ public class Initialization {
 
                     .then(new StringArgument("team")
 
-                            .executes((commandSender, commandArguments) -> {
+                            .executesPlayer((commandSender, commandArguments) -> {
 
                                 new AcceptTeamCommand().execute(commandSender, commandArguments);
                             })
@@ -200,7 +192,7 @@ public class Initialization {
 
                     .then(new StringArgument("team")
 
-                            .executes((commandSender, commandArguments) -> {
+                            .executesPlayer((commandSender, commandArguments) -> {
 
                                 new CancelTeamCommand().execute(commandSender, commandArguments);
                             })

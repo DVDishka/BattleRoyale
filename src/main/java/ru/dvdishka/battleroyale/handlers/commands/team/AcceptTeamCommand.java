@@ -3,7 +3,7 @@ package ru.dvdishka.battleroyale.handlers.commands.team;
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.title.TitlePart;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,6 +15,8 @@ public class AcceptTeamCommand implements CommandInterface {
 
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
+
+        Common.buttonSound((Player) sender);
 
         if (Common.isGameStarted) {
             returnFailure("You can not accept an invitation while the game is on!", sender);
@@ -42,32 +44,163 @@ public class AcceptTeamCommand implements CommandInterface {
 
             oldTeam.removeMember(newMemberName);
 
-            if (newMember != null) {
+            Component message = Component.empty();
 
-                returnFailure("You left " + oldTeam.getName(), sender);
+            message = message
+                    .append(Component.newline())
+                    .append(Component.text("-".repeat(26))
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text(oldTeam.getName())
+                            .color(oldTeam.getColor())
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("-".repeat(27))
+                            .color(NamedTextColor.YELLOW))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("You left the team")
+                            .color(NamedTextColor.RED))
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("-".repeat(26))
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            newMember.sendMessage(message);
+
+            for (String memberName : oldTeam.getMembers()) {
+
+                try {
+
+                    Player member = Bukkit.getPlayer(memberName);
+
+                    message = Component.empty();
+
+                    message = message
+                            .append(Component.newline())
+                            .append(Component.text("-".repeat(26))
+                                    .color(NamedTextColor.RED)
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text(oldTeam.getName())
+                                    .color(oldTeam.getColor())
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text("-".repeat(27))
+                                    .color(NamedTextColor.YELLOW))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text(newMemberName)
+                                    .decorate(TextDecoration.BOLD)
+                                    .color(NamedTextColor.RED))
+                            .append(Component.space())
+                            .append(Component.text("left your team"))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text("-".repeat(26))
+                                    .color(NamedTextColor.RED)
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    member.sendMessage(message);
+
+                    Common.notificationSound(member);
+
+                } catch (Exception ignored) {}
             }
         }
 
-        if (newMember != null) {
+        Component message = Component.empty();
 
-            returnSuccess("You joined " + newTeamName, sender);
+        message = message
+                .append(Component.newline())
+                .append(Component.text("-".repeat(26))
+                        .color(NamedTextColor.RED)
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
 
-        }
+        message = message
+                .append(Component.text(newTeamName)
+                        .color(newTeam.getColor())
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text("-".repeat(27))
+                        .color(NamedTextColor.YELLOW))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text("You have joined the team"))
+                .append(Component.newline());
+
+        message = message
+                .append(Component.text("-".repeat(26))
+                        .color(NamedTextColor.RED)
+                        .decorate(TextDecoration.BOLD))
+                .append(Component.newline());
+
+        newMember.sendMessage(message);
 
         for (String memberName : newTeam.getMembers()) {
+
             if (!memberName.equals(newMemberName)) {
                 try {
-                    Player memberPlayer = Bukkit.getPlayer(memberName);
-                    memberPlayer.sendTitlePart(TitlePart.TITLE, Component
-                            .text("Join")
-                            .color(NamedTextColor.LIGHT_PURPLE));
-                    memberPlayer.sendTitlePart(TitlePart.SUBTITLE, Component
-                            .text(newMemberName)
-                            .append(Component.space())
-                            .append(Component.text("joined"))
-                            .append(Component.space())
+
+                    Player member = Bukkit.getPlayer(memberName);
+
+                    message = Component.empty();
+
+                    message = message
+                            .append(Component.newline())
+                            .append(Component.text("-".repeat(26))
+                                    .color(NamedTextColor.RED)
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    message = message
                             .append(Component.text(newTeamName)
-                                    .color(newTeam.getColor())));
+                                    .color(newTeam.getColor())
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text("-".repeat(27))
+                                    .color(NamedTextColor.YELLOW))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text(newMemberName)
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.space())
+                            .append(Component.text("joined your team"))
+                            .append(Component.newline());
+
+                    message = message
+                            .append(Component.text("-".repeat(26))
+                                    .color(NamedTextColor.RED)
+                                    .decorate(TextDecoration.BOLD))
+                            .append(Component.newline());
+
+                    member.sendMessage(message);
+
+                    Common.notificationSound(member);
+
                 } catch (Exception ignored) {}
             }
         }

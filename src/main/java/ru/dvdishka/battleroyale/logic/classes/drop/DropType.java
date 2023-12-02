@@ -3,8 +3,6 @@ package ru.dvdishka.battleroyale.logic.classes.drop;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -13,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Logger;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.*;
@@ -21,10 +18,10 @@ import java.util.*;
 
 public class DropType implements ConfigurationSerializable {
 
-    private String name;
-    private ArrayList<ItemStack> items;
+    private final String name;
+    private final ArrayList<ItemStack> items;
 
-    private static ArrayList<DropType> dropTypes = new ArrayList<>();
+    private static final ArrayList<DropType> dropTypes = new ArrayList<>();
 
     private DropType(ArrayList<ItemStack> items, String name) {
         this.items = items;

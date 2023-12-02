@@ -18,6 +18,7 @@ public class DropClickEvent extends Event {
         return handlerList;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {
         return handlerList;
     }
