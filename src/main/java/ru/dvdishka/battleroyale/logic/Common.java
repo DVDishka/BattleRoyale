@@ -18,6 +18,7 @@ import ru.dvdishka.battleroyale.ui.DropBar;
 import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Logger;
@@ -85,7 +86,8 @@ public class Common {
             dropBar.unregister();
         }
 
-        for (DropContainer dropContainer : DropContainer.getContainerList()) {
+        Collection<DropContainer> dropContainerList = DropContainer.getContainerList();
+        for (DropContainer dropContainer : dropContainerList) {
             dropContainer.delete();
         }
 

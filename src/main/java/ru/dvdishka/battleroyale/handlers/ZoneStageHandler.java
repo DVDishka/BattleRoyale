@@ -13,6 +13,8 @@ import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Scheduler;
 import ru.dvdishka.battleroyale.logic.Zone;
 import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
+import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
+import ru.dvdishka.battleroyale.logic.event.DropCreateEvent;
 import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
 import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
@@ -28,9 +30,7 @@ public class ZoneStageHandler implements Listener  {
             return;
         }
 
-        if (Common.zoneStage < ConfigVariables.lastReviveZone) {
-            Common.zoneStage++;
-        }
+        Common.zoneStage++;
 
         // REVIVE DISABLE LOGIC
         if (Common.zoneStage == ConfigVariables.lastReviveZone) {
@@ -119,13 +119,14 @@ public class ZoneStageHandler implements Listener  {
                 Common.notificationSound(player);            }
         }
 
-        if (Common.zoneStage == 0) {
-            firstZoneStage();
+        // ZONE MOVING STAGE LOGIC
+        if (Common.zoneStage == ConfigVariables.zones.size()) {
+            zoneMovingStage();
         }
 
-        // ZONE MOVING STAGE LOGIC
-        else if (Common.zoneStage == ConfigVariables.zones.size()) {
-            zoneMovingStage();
+        // FIRST ZONE STAGE LOGIC
+        else if (Common.zoneStage == 0) {
+            firstZoneStage();
         }
 
         // NEW ZONE START LOGIC
@@ -206,6 +207,10 @@ public class ZoneStageHandler implements Listener  {
                 oldZoneCenterZ,
                 nextZoneCenterX,
                 nextZoneCenterZ);
+
+        for (World world : ConfigVariables.dropSpawnWorlds) {
+            Bukkit.getPluginManager().callEvent(new DropCreateEvent(DropType.getRandomType(), world));
+        }
 
         // BREAK BOSS BAR TIMER TASK START
         Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {

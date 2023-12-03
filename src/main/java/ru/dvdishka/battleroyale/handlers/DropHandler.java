@@ -1,15 +1,20 @@
 package ru.dvdishka.battleroyale.handlers;
 
+import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
@@ -171,5 +176,97 @@ public class DropHandler implements Listener {
         int y = new Random().nextInt(ConfigVariables.minDropSpawnY, ConfigVariables.maxDropSpawnY + 1);
 
         return new DropContainer(dropType, new Location(world, x, y, z), ConfigVariables.dropOpenTime);
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerExplode(EntityExplodeEvent event) {
+
+        for (Block block : event.blockList()) {
+
+            if (block.hasMetadata("dropContainer")) {
+
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerExplode(BlockExplodeEvent event) {
+
+        for (Block block : event.blockList()) {
+
+            if (block.hasMetadata("dropContainer")) {
+
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerLiquidBreak(BlockFromToEvent event) {
+
+        if (event.getToBlock().hasMetadata("dropContainer")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerBreak(BlockBreakEvent event) {
+
+        if (event.getBlock().hasMetadata("dropContainer")) {
+
+            event.setCancelled(true);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerDestroy(BlockDestroyEvent event) {
+
+        if (event.getBlock().hasMetadata("dropContainer")) {
+
+            event.setCancelled(true);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerBurn(BlockBurnEvent event) {
+
+        if (event.getBlock().hasMetadata("dropContainer")) {
+
+            event.setCancelled(true);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerPistonExtend(BlockPistonExtendEvent event) {
+
+        for (Block block : event.getBlocks()) {
+
+            if (block.hasMetadata("dropContainer")) {
+
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onDropContainerPistonRetract(BlockPistonRetractEvent event) {
+
+        for (Block block : event.getBlocks()) {
+
+            if (block.hasMetadata("dropContainer")) {
+
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onBlockClick(PlayerInteractEvent event) {
+        if (event.getClickedBlock() != null && event.getClickedBlock().hasMetadata("dropContainer")) {
+            if (event.getAction().isRightClick()) {
+                Bukkit.getPluginManager().callEvent(new DropClickEvent(DropContainer.getContainerByLocation(event.getClickedBlock().getLocation()), event.getPlayer()));
+            }
+        }
     }
 }

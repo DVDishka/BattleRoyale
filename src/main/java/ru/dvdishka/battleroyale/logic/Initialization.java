@@ -36,10 +36,8 @@ public class Initialization {
         try {
             Class.forName("io.papermc.paper.threadedregions.scheduler.EntityScheduler");
             Common.isFolia = true;
-            Logger.getLogger().devLog("Paper/Folia has been detected!");
         } catch (Exception e) {
             Common.isFolia = false;
-            Logger.getLogger().devLog("Paper/Folia has not been detected!");
         }
     }
 
@@ -147,11 +145,7 @@ public class Initialization {
                             )
                     )
 
-                    .then(new LiteralArgument("leave").withRequirement((commandSender) -> {
-
-                        Logger.getLogger().devLog(String.valueOf(Team.getTeam(commandSender.getName()) != null));
-                        return Team.getTeam(commandSender.getName()) != null;
-                    })
+                    .then(new LiteralArgument("leave")
 
                             .executesPlayer((commandSender, commandArguments) -> {
 
@@ -159,9 +153,7 @@ public class Initialization {
                             })
                     )
 
-                    .then(new LiteralArgument("invite").withRequirement((commandSender) ->
-                                    Team.getTeam(commandSender.getName()) != null &&
-                                            Team.getTeam(commandSender.getName()).getLeader().equals(commandSender.getName()))
+                    .then(new LiteralArgument("invite")
 
                             .then(new PlayerArgument("player")
 
