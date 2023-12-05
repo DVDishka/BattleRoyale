@@ -18,10 +18,6 @@ public final class BattleRoyale extends JavaPlugin {
 
         Common.plugin = this;
 
-        Bukkit.setSpawnRadius(0);
-
-        Timer.getInstance().unregister();
-
         if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").toFile().exists()) {
             Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").toFile().mkdirs();
         }

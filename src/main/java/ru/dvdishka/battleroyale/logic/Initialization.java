@@ -45,7 +45,7 @@ public class Initialization {
 
         FileConfiguration config = Common.plugin.getConfig();
 
-        ConfigVariables.defaultWorldBorderDiameter = config.getInt("defaultWorldBorderRadius", 5000) * 2;
+        ConfigVariables.defaultWorldBorderDiameter = (int) loadConfigValueSafely(config, "game.defaultWorldBorderRadius", ConfigVariables.defaultWorldBorderDiameter);
 
         ArrayList<Integer> zones = new ArrayList<>();
         for (int zoneRadius : config.getIntegerList("zones")) {
@@ -321,5 +321,12 @@ public class Initialization {
         Bukkit.getPluginManager().registerEvents(new EventHandler(), plugin);
         Bukkit.getPluginManager().registerEvents(new ZoneStageHandler(), plugin);
         Bukkit.getPluginManager().registerEvents(new DropHandler(), plugin);
+    }
+
+    public static Object loadConfigValueSafely(FileConfiguration config, String path, Object value) {
+        if (!config.contains(path)) {
+            config.set(path, value);
+        }
+        return config.get(path);
     }
 }
