@@ -53,7 +53,7 @@ public class StartCommand implements CommandInterface {
 
             world.setPVP(false);
             world.setTime(ConfigVariables.timeGameStart);
-            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter, 1);
+            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderRadius, 1);
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {

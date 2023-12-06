@@ -4,7 +4,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -140,18 +139,18 @@ public class ZoneStageHandler implements Listener  {
         int timeOut = ConfigVariables.timeOuts.get(0);
         final int oldZoneCenterX = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockX();
         final int oldZoneCenterZ = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockZ();
-        int previousZoneDiameter = ConfigVariables.defaultWorldBorderDiameter;
+        int previousZoneDiameter = ConfigVariables.defaultWorldBorderRadius;
 
         final int nextZoneCenterX = Zone.getInstance().generateRandomZoneCenterX(
-                ConfigVariables.defaultWorldBorderDiameter / 2,
+                ConfigVariables.defaultWorldBorderRadius / 2,
                 ConfigVariables.zones.get(Common.zoneStage) / 2,
                 oldZoneCenterX);
         final int nextZoneCenterZ = Zone.getInstance().generateRandomZoneCenterZ(
-                ConfigVariables.defaultWorldBorderDiameter / 2,
+                ConfigVariables.defaultWorldBorderRadius / 2,
                 ConfigVariables.zones.get(Common.zoneStage) / 2,
                 oldZoneCenterZ);
 
-        Zone.getInstance().setVariables(ConfigVariables.defaultWorldBorderDiameter,
+        Zone.getInstance().setVariables(ConfigVariables.defaultWorldBorderRadius,
                 ConfigVariables.zones.get(Common.zoneStage),
                 oldZoneCenterX,
                 oldZoneCenterZ,
@@ -171,7 +170,7 @@ public class ZoneStageHandler implements Listener  {
 
             // CHANGE WORLD BORDER
             Zone.getInstance().changeBorders(
-                    ConfigVariables.defaultWorldBorderDiameter,
+                    ConfigVariables.defaultWorldBorderRadius,
                     ConfigVariables.zones.get(Common.zoneStage),
                     ConfigVariables.times.get(Common.zoneStage),
                     oldZoneCenterX,

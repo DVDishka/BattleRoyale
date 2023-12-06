@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import ru.dvdishka.battleroyale.handlers.DropHandler;
+import ru.dvdishka.battleroyale.handlers.StartElytraHandler;
 import ru.dvdishka.battleroyale.handlers.commands.drop.*;
 import ru.dvdishka.battleroyale.handlers.commands.ReviveCommand;
 import ru.dvdishka.battleroyale.handlers.commands.StartCommand;
@@ -27,6 +28,7 @@ import ru.dvdishka.battleroyale.handlers.ZoneStageHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class Initialization {
@@ -45,45 +47,241 @@ public class Initialization {
 
         FileConfiguration config = Common.plugin.getConfig();
 
-        ConfigVariables.defaultWorldBorderDiameter = (int) loadConfigValueSafely(config, "game.defaultWorldBorderRadius", ConfigVariables.defaultWorldBorderDiameter);
+        // GAME SECTION
+        {
+            // DEFAULT ZONE RADIUS LOADING
+            {
+                int defaultWorldBorderRadius = loadIntConfigValueSafely(config, "game.defaultWorldBorderRadius", ConfigVariables.defaultWorldBorderRadius);
 
-        ArrayList<Integer> zones = new ArrayList<>();
-        for (int zoneRadius : config.getIntegerList("zones")) {
-            zones.add(zoneRadius * 2);
-        }
-        ConfigVariables.zones = zones;
+                if (defaultWorldBorderRadius <= 0) {
+                    Logger.getLogger().warn("defaultWorldBorderRadius must be > 0. Using default value...");
+                }
+                else {
+                    ConfigVariables.defaultWorldBorderRadius = defaultWorldBorderRadius;
+                }
+            }
 
-        ConfigVariables.times = config.getIntegerList("times");
-        ConfigVariables.timeGameStart = config.getInt("timeGameStart");
-        ConfigVariables.timeOuts = config.getIntegerList("timeOuts");
-        ConfigVariables.pvpEnableZone = config.getInt("pvpEnableZone", 1);
-        ConfigVariables.lastReviveZone = config.getInt("lastReviveZone", 1);
-        ConfigVariables.finalZoneMoveDuration = config.getInt("finalZoneMoveDuration", 120);
-        if (config.getInt("minFinalZoneMove", 50) < config.getInt("maxFinalZoneMove", 100)) {
-            ConfigVariables.minFinalZoneMove = config.getInt("minFinalZoneMove", 50);
-            ConfigVariables.maxFinalZoneMove = config.getInt("maxFinalZoneMove", 100);
-        } else {
-            Logger.getLogger().warn("Config exception! maxFinalZoneMove can not be less than maxFinalZoneMove");
-        }
-        ConfigVariables.zoneMoveTimeOut = config.getInt("zoneMoveTimeOut", 10);
-        ConfigVariables.startBoxY = config.getInt("startBoxY",  200);
+            // ZONE RADIUS LIST LOADING
+            {
+                boolean isOrdered = true;
+                boolean lessThenNull = false;
+                boolean biggerThenDefaultRadius = false;
+                int lastValue = 1000000000;
 
-        ArrayList<World> dropSpawnWorlds = new ArrayList<>();
-        for (String world : config.getStringList("dropSpawnWorlds")) {
-            if (Bukkit.getWorld(world) != null) {
-                dropSpawnWorlds.add(Bukkit.getWorld(world));
-            } else {
-                Logger.getLogger().warn("Incorrect world name in \"dropSpawnWorlds\" config.yml: " + world);
+                ArrayList<Integer> zones = new ArrayList<>();
+                for (int zoneRadius : loadIntListConfigValueSafely(config, "game.zones", ConfigVariables.zones)) {
+                    if (lastValue <= zoneRadius) {
+                        isOrdered = false;
+                        break;
+                    }
+                    if (zoneRadius >= ConfigVariables.defaultWorldBorderRadius) {
+                        biggerThenDefaultRadius = true;
+                        break;
+                    }
+                    if (zoneRadius <= 0) {
+                        lessThenNull = true;
+                        break;
+                    }
+                    zones.add(zoneRadius * 2);
+                }
+
+                if (lessThenNull) {
+                    Logger.getLogger().warn("Each zone radius must be > 0. Using default value...");
+                }
+                else if (biggerThenDefaultRadius) {
+                    Logger.getLogger().warn("Each zone radius must be < defaultWorldBorderRadius. Using default value...");
+                }
+                else if (!isOrdered) {
+                    Logger.getLogger().warn("Zones must be ordered in descending order. Using default value...");
+                }
+                else if (zones.isEmpty()) {
+                    Logger.getLogger().warn("The list of zones must contain at least one element. Using default value...");
+                }
+                else {
+                    ConfigVariables.zones = zones;
+                }
+            }
+
+            // TIME LIST LOADING
+            {
+                boolean lessThenNull = false;
+
+                ArrayList<Integer> times = new ArrayList<>();
+                for (int time : loadIntListConfigValueSafely(config, "game.times", ConfigVariables.times)) {
+                    if (time <= 0) {
+                        lessThenNull = true;
+                        break;
+                    }
+                    times.add(time);
+                }
+
+                if (lessThenNull) {
+                    Logger.getLogger().warn("Each zone time must be > 0. Using default value...");
+                    times.clear();
+                    for (int i = ConfigVariables.zones.size() * 100; i >= 100; i -= 100) {
+                        times.add(i);
+                    }
+                    ConfigVariables.times = times;
+                }
+                else if (times.size() > ConfigVariables.zones.size()) {
+                    Logger.getLogger().warn("Amount of zone times must be equal to amount of zones. Cutting the time list...");
+                    ConfigVariables.times = times.subList(0, ConfigVariables.zones.size());
+                }
+                else if (times.size() < ConfigVariables.zones.size()) {
+                    Logger.getLogger().warn("Amount of zone times must be equal to amount of zones. Using default value...");
+                    times.clear();
+                    for (int i = ConfigVariables.zones.size() * 100; i >= 100; i -= 100) {
+                        times.add(i);
+                    }
+                    ConfigVariables.times = times;
+                }
+                else {
+                    ConfigVariables.times = times;
+                }
+            }
+
+            // PVP ENABLE ZONE LOADING
+            {
+                int pvpEnableZone = loadIntConfigValueSafely(config, "game.pvpEnableZone", ConfigVariables.pvpEnableZone);
+
+                if (pvpEnableZone < 0) {
+                    Logger.getLogger().warn("pvpEnableZone must be >= 0. Using default value...");
+                }
+                else if (pvpEnableZone > ConfigVariables.zones.size() + 1) {
+                    Logger.getLogger().warn("pvpEnableZone must be <= amount of zones + 1. Using default value...");
+                }
+                else {
+                    ConfigVariables.pvpEnableZone = pvpEnableZone;
+                }
+            }
+
+            // LAST REVIVE ZONE LOADING
+            {
+                int lastReviveZone = loadIntConfigValueSafely(config, "game.lastReviveZone", ConfigVariables.lastReviveZone);
+
+                if (lastReviveZone < 0) {
+                    Logger.getLogger().warn("lastReviveZone must be >= 0. Using default value...");
+                }
+                else if (lastReviveZone > ConfigVariables.zones.size()) {
+                    Logger.getLogger().warn("lastReviveZone must be <= amount of zones + 1. Using default value...");
+                }
+                else {
+                    ConfigVariables.lastReviveZone = lastReviveZone;
+                }
             }
         }
-        ConfigVariables.dropSpawnWorlds = dropSpawnWorlds;
 
-        ConfigVariables.minDropSpawnY = config.getInt("minDropSpawnY", 10);
-        ConfigVariables.maxDropSpawnY = config.getInt("maxDropSpawnY", 256);
+        // START SECTION
+        {
+            // TIME GAME START LOADING
+            {
+                int timeGameStart = loadIntConfigValueSafely(config, "start.timeGameStart", ConfigVariables.timeGameStart);
 
-        ConfigVariables.dropOpenTime = config.getInt("dropOpenTime", 90);
+                if (timeGameStart < 0) {
+                    Logger.getLogger().warn("timeGameStart must be >= 0. Using default value...");
+                } else {
+                    ConfigVariables.timeGameStart = timeGameStart;
+                }
+            }
+        }
 
-        ConfigVariables.betterLogging = config.getBoolean("betterLogging");
+        // DROP SECTION
+        {
+            // DROP TYPES FILE LOADING
+            {
+                ConfigVariables.dropTypesFile = loadStringConfigValueSafely(config, "drop.dropTypesFile", ConfigVariables.dropTypesFile);
+            }
+
+            // DROP OPEN TIME
+            {
+                int dropOpenTime = loadIntConfigValueSafely(config, "drop.dropOpenTime", ConfigVariables.dropOpenTime);
+
+                if (dropOpenTime < 0) {
+                    Logger.getLogger().warn("dropOpenTime must be >= 0. Using default value...");
+                }
+                else {
+                    ConfigVariables.dropOpenTime = dropOpenTime;
+                }
+            }
+
+            // DROP SPAWN WORLDS
+            {
+                List<String> worldNames = new ArrayList<>();
+                for (World world : ConfigVariables.dropSpawnWorlds) {
+                    worldNames.add(world.getName());
+                }
+
+                List<String> dropSpawnWorlds = loadStringListConfigValueSafely(config, "drop.dropSpawnWorlds", worldNames);
+                List<World> worlds = new ArrayList<>();
+
+                for (String worldName : dropSpawnWorlds) {
+                    if (Bukkit.getWorld(worldName) != null) {
+                        worlds.add(Bukkit.getWorld(worldName));
+                    } else {
+                        Logger.getLogger().warn("Wrong dropSpawnWorld \"" + worldName + "\"");
+                    }
+                }
+
+                ConfigVariables.dropSpawnWorlds = worlds;
+            }
+        }
+
+        // FINAL ZONE SECTION
+        {
+            // FINAL ZONE MOVE DURATION LOADING
+            {
+                int finalZoneMoveDuration = loadIntConfigValueSafely(config, "finalZone.finalZoneMoveDuration", ConfigVariables.finalZoneMoveDuration);
+
+                if (finalZoneMoveDuration < 1) {
+                    Logger.getLogger().warn("finalZoneMoveDuration must be > 0. Using default value...");
+                }
+                else {
+                    ConfigVariables.finalZoneMoveDuration = finalZoneMoveDuration;
+                }
+            }
+
+            // MIN FINAL ZONE MOVE LOADING
+            {
+                int minFinalZoneMove = loadIntConfigValueSafely(config, "finalZone.minFinalZoneMove", ConfigVariables.minFinalZoneMove);
+
+                if (minFinalZoneMove < 1) {
+                    Logger.getLogger().warn("minFinalZoneMove must be > 0. Using default value...");
+                }
+                else {
+                    ConfigVariables.minFinalZoneMove = minFinalZoneMove;
+                }
+            }
+
+            // MAX FINAL ZONE MOVE LOADING
+            {
+                int maxFinalZoneMove = loadIntConfigValueSafely(config, "finalZone.maxFinalZoneMove", ConfigVariables.maxFinalZoneMove);
+
+                if (maxFinalZoneMove < 1) {
+                    Logger.getLogger().warn("maxFinalZoneMove must be > 0. Using default value...");
+                }
+                else if (maxFinalZoneMove < ConfigVariables.maxFinalZoneMove) {
+                    ConfigVariables.maxFinalZoneMove = ConfigVariables.minFinalZoneMove;
+                    Logger.getLogger().warn("maxFinalZoneMove must be >= minFinalZoneMove. Using default value...");
+                }
+                else {
+                    ConfigVariables.maxFinalZoneMove = maxFinalZoneMove;
+                }
+            }
+
+            // ZONE MOVE TIMEOUT LOADING
+            {
+                int zoneMoveTimeOut = loadIntConfigValueSafely(config, "finalZone.zoneMoveTimeOut", ConfigVariables.zoneMoveTimeOut);
+
+                if (zoneMoveTimeOut < 1) {
+                    Logger.getLogger().warn("zoneMoveTimeOut must be > 0. Using default value...");
+                }
+                else {
+                    ConfigVariables.zoneMoveTimeOut = zoneMoveTimeOut;
+                }
+            }
+
+            ConfigVariables.betterLogging = Boolean.parseBoolean(loadStringConfigValueSafely(config, "betterLogging", String.valueOf(ConfigVariables.betterLogging)));
+        }
     }
 
     public static void initCommands() {
@@ -321,12 +519,50 @@ public class Initialization {
         Bukkit.getPluginManager().registerEvents(new EventHandler(), plugin);
         Bukkit.getPluginManager().registerEvents(new ZoneStageHandler(), plugin);
         Bukkit.getPluginManager().registerEvents(new DropHandler(), plugin);
+        Bukkit.getPluginManager().registerEvents(new StartElytraHandler(), plugin);
     }
 
-    public static Object loadConfigValueSafely(FileConfiguration config, String path, Object value) {
+    public static int loadIntConfigValueSafely(FileConfiguration config, String path, int defaultValue) {
         if (!config.contains(path)) {
-            config.set(path, value);
+            config.set(path, defaultValue);
+            Common.plugin.saveConfig();
         }
-        return config.get(path);
+        if (!config.contains(path)) {
+            Logger.getLogger().warn("Failed to load " + path + " from Battleroyale config file. Using default value...");
+        }
+        return config.getInt(path, defaultValue);
+    }
+
+    public static String loadStringConfigValueSafely(FileConfiguration config, String path, String defaultValue) {
+        if (!config.contains(path)) {
+            config.set(path, defaultValue);
+            Common.plugin.saveConfig();
+        }
+        if (config.getString(path) == null) {
+            Logger.getLogger().warn("Failed to load " + path + " from Battleroyale config file. Using default value...");
+        }
+        return config.getString(path, defaultValue);
+    }
+
+    public static List<Integer> loadIntListConfigValueSafely(FileConfiguration config, String path, List<Integer> defaultValue) {
+        if (!config.contains(path)) {
+            config.set(path, defaultValue);
+            Common.plugin.saveConfig();
+        }
+        if (!config.contains(path)) {
+            Logger.getLogger().warn("Failed to load " + path + " from Battleroyale config file. Using default value...");
+        }
+        return config.getIntegerList(path);
+    }
+
+    public static List<String> loadStringListConfigValueSafely(FileConfiguration config, String path, List<String> defaultValue) {
+        if (!config.contains(path)) {
+            config.set(path, defaultValue);
+            Common.plugin.saveConfig();
+        }
+        if (config.getString(path) == null) {
+            Logger.getLogger().warn("Failed to load " + path + " from Battleroyale config file. Using default value...");
+        }
+        return config.getStringList(path);
     }
 }

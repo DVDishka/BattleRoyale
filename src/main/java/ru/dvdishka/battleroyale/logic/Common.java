@@ -57,8 +57,8 @@ public class Common {
 
         Zone.getInstance().setZoneMoving(false);
         Zone.getInstance().setVariables(
-                ConfigVariables.defaultWorldBorderDiameter,
-                ConfigVariables.defaultWorldBorderDiameter,
+                ConfigVariables.defaultWorldBorderRadius,
+                ConfigVariables.defaultWorldBorderRadius,
                 0,
                 0,
                 0,
@@ -94,7 +94,7 @@ public class Common {
         for (World world : Bukkit.getWorlds()) {
             world.setPVP(true);
             world.getWorldBorder().setCenter(0, 0);
-            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter);
+            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderRadius);
         }
     }
 
