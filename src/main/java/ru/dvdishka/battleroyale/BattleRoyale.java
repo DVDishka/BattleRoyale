@@ -3,6 +3,8 @@ package ru.dvdishka.battleroyale;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
@@ -23,7 +25,7 @@ public final class BattleRoyale extends JavaPlugin {
         }
 
         if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").resolve("config.yml").toFile().exists()) {
-            Common.plugin.saveDefaultConfig();
+            this.saveDefaultConfig();
         }
 
         if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").resolve("dropTypes.yml").toFile().exists()) {
@@ -31,7 +33,7 @@ public final class BattleRoyale extends JavaPlugin {
         }
 
         Initialization.checkDependencies();
-        Initialization.initConfig();
+        Initialization.initConfig(this.getConfig());
         Initialization.initCommands();
         Initialization.initEventHandlers(this);
         Initialization.initDropTypes(new File(ConfigVariables.dropTypesFile));

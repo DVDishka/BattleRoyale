@@ -119,7 +119,7 @@ public class ZoneStageHandler implements Listener  {
         }
 
         // ZONE MOVING STAGE LOGIC
-        if (Common.zoneStage == ConfigVariables.zones.size()) {
+        if (Common.zoneStage >= ConfigVariables.zones.size()) {
             zoneMovingStage();
         }
 

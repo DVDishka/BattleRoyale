@@ -43,9 +43,7 @@ public class Initialization {
         }
     }
 
-    public static void initConfig() {
-
-        FileConfiguration config = Common.plugin.getConfig();
+    public static void initConfig(FileConfiguration config) {
 
         // GAME SECTION
         {
@@ -280,7 +278,7 @@ public class Initialization {
                 }
             }
 
-            ConfigVariables.betterLogging = Boolean.parseBoolean(loadStringConfigValueSafely(config, "betterLogging", String.valueOf(ConfigVariables.betterLogging)));
+            ConfigVariables.betterLogging = loadBoolConfigValueSafely(config, "betterLogging", ConfigVariables.betterLogging);
         }
     }
 
@@ -524,44 +522,45 @@ public class Initialization {
 
     public static int loadIntConfigValueSafely(FileConfiguration config, String path, int defaultValue) {
         if (!config.contains(path)) {
+            Logger.getLogger().warn("Failed to load " + path + " from BattleRoyale config file. Using default value...");
             config.set(path, defaultValue);
             Common.plugin.saveConfig();
-        }
-        if (!config.contains(path)) {
-            Logger.getLogger().warn("Failed to load " + path + " from Battleroyale config file. Using default value...");
         }
         return config.getInt(path, defaultValue);
     }
 
     public static String loadStringConfigValueSafely(FileConfiguration config, String path, String defaultValue) {
         if (!config.contains(path)) {
+            Logger.getLogger().warn("Failed to load " + path + " from BattleRoyale config file. Using default value...");
             config.set(path, defaultValue);
             Common.plugin.saveConfig();
-        }
-        if (config.getString(path) == null) {
-            Logger.getLogger().warn("Failed to load " + path + " from Battleroyale config file. Using default value...");
         }
         return config.getString(path, defaultValue);
     }
 
-    public static List<Integer> loadIntListConfigValueSafely(FileConfiguration config, String path, List<Integer> defaultValue) {
+    public static boolean loadBoolConfigValueSafely(FileConfiguration config, String path, boolean defaultValue) {
         if (!config.contains(path)) {
+            Logger.getLogger().warn("Failed to load " + path + " from BattleRoyale config file. Using default value...");
             config.set(path, defaultValue);
             Common.plugin.saveConfig();
         }
+        return config.getBoolean(path, defaultValue);
+    }
+
+    public static List<Integer> loadIntListConfigValueSafely(FileConfiguration config, String path, List<Integer> defaultValue) {
         if (!config.contains(path)) {
-            Logger.getLogger().warn("Failed to load " + path + " from Battleroyale config file. Using default value...");
+            Logger.getLogger().warn("Failed to load " + path + " from BattleRoyale config file. Using default value...");
+            config.set(path, defaultValue);
+            Common.plugin.saveConfig();
         }
         return config.getIntegerList(path);
     }
 
     public static List<String> loadStringListConfigValueSafely(FileConfiguration config, String path, List<String> defaultValue) {
         if (!config.contains(path)) {
+            Logger.getLogger().warn("Failed to load " + path + " from BattleRoyale config file. Using default value...");
             config.set(path, defaultValue);
             Common.plugin.saveConfig();
-        }
-        if (config.getString(path) == null) {
-            Logger.getLogger().warn("Failed to load " + path + " from Battleroyale config file. Using default value...");
         }
         return config.getStringList(path);
     }
