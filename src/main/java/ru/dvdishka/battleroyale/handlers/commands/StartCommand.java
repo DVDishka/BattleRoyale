@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import ru.dvdishka.battleroyale.handlers.StartElytraHandler;
+import ru.dvdishka.battleroyale.handlers.commands.startbox.CreateStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.RemoveStartBoxCommand;
 import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
@@ -53,7 +54,7 @@ public class StartCommand implements CommandInterface {
 
             world.setPVP(false);
             world.setTime(ConfigVariables.timeGameStart);
-            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderRadius, 1);
+            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter, 1);
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -93,6 +94,8 @@ public class StartCommand implements CommandInterface {
         }
 
         StartElytraHandler.giveStartElytra();
+
+        new CreateStartBoxCommand().execute(sender, null);
         new RemoveStartBoxCommand().execute(sender, null);
 
         Logger.getLogger().log("Battleroyale has been started");

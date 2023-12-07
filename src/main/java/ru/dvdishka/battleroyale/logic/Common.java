@@ -21,6 +21,7 @@ import ru.dvdishka.battleroyale.ui.Timer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Common {
@@ -57,8 +58,8 @@ public class Common {
 
         Zone.getInstance().setZoneMoving(false);
         Zone.getInstance().setVariables(
-                ConfigVariables.defaultWorldBorderRadius,
-                ConfigVariables.defaultWorldBorderRadius,
+                ConfigVariables.defaultWorldBorderDiameter,
+                ConfigVariables.defaultWorldBorderDiameter,
                 0,
                 0,
                 0,
@@ -82,19 +83,18 @@ public class Common {
         Scheduler.cancelTasks(Common.plugin);
 
         Timer.getInstance().unregister();
-        for (DropBar dropBar : DropBar.getInstances()) {
+        for (DropBar dropBar : List.copyOf(DropBar.getInstances())) {
             dropBar.unregister();
         }
 
-        Collection<DropContainer> dropContainerList = DropContainer.getContainerList();
-        for (DropContainer dropContainer : dropContainerList) {
+        for (DropContainer dropContainer : List.copyOf(DropContainer.getContainerList())) {
             dropContainer.delete();
         }
 
         for (World world : Bukkit.getWorlds()) {
             world.setPVP(true);
             world.getWorldBorder().setCenter(0, 0);
-            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderRadius);
+            world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter);
         }
     }
 

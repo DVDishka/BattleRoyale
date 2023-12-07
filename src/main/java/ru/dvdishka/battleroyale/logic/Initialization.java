@@ -49,13 +49,13 @@ public class Initialization {
         {
             // DEFAULT ZONE RADIUS LOADING
             {
-                int defaultWorldBorderRadius = loadIntConfigValueSafely(config, "game.defaultWorldBorderRadius", ConfigVariables.defaultWorldBorderRadius);
+                int defaultWorldBorderRadius = loadIntConfigValueSafely(config, "game.defaultWorldBorderRadius", ConfigVariables.defaultWorldBorderDiameter / 2);
 
                 if (defaultWorldBorderRadius <= 0) {
                     Logger.getLogger().warn("defaultWorldBorderRadius must be > 0. Using default value...");
                 }
                 else {
-                    ConfigVariables.defaultWorldBorderRadius = defaultWorldBorderRadius;
+                    ConfigVariables.defaultWorldBorderDiameter = defaultWorldBorderRadius * 2;
                 }
             }
 
@@ -72,7 +72,7 @@ public class Initialization {
                         isOrdered = false;
                         break;
                     }
-                    if (zoneRadius >= ConfigVariables.defaultWorldBorderRadius) {
+                    if (zoneRadius >= ConfigVariables.defaultWorldBorderDiameter) {
                         biggerThenDefaultRadius = true;
                         break;
                     }
@@ -81,18 +81,31 @@ public class Initialization {
                         break;
                     }
                     zones.add(zoneRadius * 2);
+                    lastValue = zoneRadius;
                 }
 
                 if (lessThenNull) {
+                    if (ConfigVariables.zones.get(0) >= ConfigVariables.defaultWorldBorderDiameter) {
+                        ConfigVariables.defaultWorldBorderDiameter = ConfigVariables.zones.get(0) * 2;
+                    }
                     Logger.getLogger().warn("Each zone radius must be > 0. Using default value...");
                 }
                 else if (biggerThenDefaultRadius) {
+                    if (ConfigVariables.zones.get(0) >= ConfigVariables.defaultWorldBorderDiameter) {
+                        ConfigVariables.defaultWorldBorderDiameter = ConfigVariables.zones.get(0) * 2;
+                    }
                     Logger.getLogger().warn("Each zone radius must be < defaultWorldBorderRadius. Using default value...");
                 }
                 else if (!isOrdered) {
+                    if (ConfigVariables.zones.get(0) >= ConfigVariables.defaultWorldBorderDiameter) {
+                        ConfigVariables.defaultWorldBorderDiameter = ConfigVariables.zones.get(0) * 2;
+                    }
                     Logger.getLogger().warn("Zones must be ordered in descending order. Using default value...");
                 }
                 else if (zones.isEmpty()) {
+                    if (ConfigVariables.zones.get(0) >= ConfigVariables.defaultWorldBorderDiameter) {
+                        ConfigVariables.defaultWorldBorderDiameter = ConfigVariables.zones.get(0) * 2;
+                    }
                     Logger.getLogger().warn("The list of zones must contain at least one element. Using default value...");
                 }
                 else {
@@ -135,6 +148,44 @@ public class Initialization {
                 }
                 else {
                     ConfigVariables.times = times;
+                }
+            }
+
+            // TIME OUT LIST LOADING
+            {
+                boolean lessThenNull = false;
+
+                ArrayList<Integer> timeOuts = new ArrayList<>();
+                for (int timeOut : loadIntListConfigValueSafely(config, "game.timeOuts", ConfigVariables.times)) {
+                    if (timeOut <= 0) {
+                        lessThenNull = true;
+                        break;
+                    }
+                    timeOuts.add(timeOut);
+                }
+
+                if (lessThenNull) {
+                    Logger.getLogger().warn("Each timeOut must be > 0. Using default value...");
+                    timeOuts.clear();
+                    for (int i = (ConfigVariables.zones.size() + 1) * 100; i >= 100; i -= 100) {
+                        timeOuts.add(i);
+                    }
+                    ConfigVariables.timeOuts = timeOuts;
+                }
+                else if (timeOuts.size() > ConfigVariables.zones.size() + 1) {
+                    Logger.getLogger().warn("Amount of timeOuts must be equal to amount of zones + 1. Cutting the timeOuts list...");
+                    ConfigVariables.timeOuts = timeOuts.subList(0, ConfigVariables.zones.size() + 1);
+                }
+                else if (timeOuts.size() < ConfigVariables.zones.size() + 1) {
+                    Logger.getLogger().warn("Amount of timeOuts must be equal to amount of zones + 1. Using default value...");
+                    timeOuts.clear();
+                    for (int i = (ConfigVariables.zones.size() + 1) * 100; i >= 100; i -= 100) {
+                        timeOuts.add(i);
+                    }
+                    ConfigVariables.timeOuts = timeOuts;
+                }
+                else {
+                    ConfigVariables.timeOuts = timeOuts;
                 }
             }
 

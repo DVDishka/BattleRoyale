@@ -269,7 +269,7 @@ public class Radar {
             }
         }
 
-        else if (lineNumber == 2 || lineNumber == 8 || Common.zoneStage == ConfigVariables.zones.size() && (lineNumber >= 2 && lineNumber <= 8)) {
+        else if (lineNumber == 2 || lineNumber == 8 || Common.zoneStage >= ConfigVariables.zones.size() && (lineNumber >= 2 && lineNumber <= 8)) {
 
             if (lineNumber == playerRadarPositionZ) {
 

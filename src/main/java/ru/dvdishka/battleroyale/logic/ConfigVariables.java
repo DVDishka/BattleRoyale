@@ -14,7 +14,7 @@ public class ConfigVariables {
     public static int timeGameStart = 1200;
     public static int pvpEnableZone = 1;
     public static int lastReviveZone = 1;
-    public static int defaultWorldBorderRadius = 10000;
+    public static int defaultWorldBorderDiameter = 10000;
     public static int finalZoneMoveDuration = 120;
     public static int minFinalZoneMove = 50;
     public static int maxFinalZoneMove = 100;

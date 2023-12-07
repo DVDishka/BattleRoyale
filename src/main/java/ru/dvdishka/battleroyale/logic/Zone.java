@@ -32,8 +32,8 @@ public class Zone {
 
         if (instance == null) {
             instance = new Zone(
-                    ConfigVariables.defaultWorldBorderRadius,
-                    ConfigVariables.defaultWorldBorderRadius,
+                    ConfigVariables.defaultWorldBorderDiameter,
+                    ConfigVariables.defaultWorldBorderDiameter,
                     0,
                     0,
                     0,
