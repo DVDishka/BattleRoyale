@@ -3,6 +3,7 @@ package ru.dvdishka.battleroyale.logic;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -150,6 +151,44 @@ public class Common {
     public static void buttonSound(Player player) {
         try {
             player.playSound(player, Sound.UI_BUTTON_CLICK, 75, 10);
+        } catch (Exception ignored) {}
+    }
+
+    public static void sendNotification(Component header, Component text, Player player) {
+
+        try {
+            Component message = Component.empty();
+
+            message = message
+                    .append(Component.newline())
+                    .append(Component.text("-".repeat(26))
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            message = message
+                    .append(header)
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("-".repeat(27))
+                            .color(NamedTextColor.YELLOW))
+                    .append(Component.newline());
+
+            message = message
+                    .append(text)
+                    .append(Component.newline());
+
+            message = message
+                    .append(Component.text("-".repeat(26))
+                            .color(NamedTextColor.RED)
+                            .decorate(TextDecoration.BOLD))
+                    .append(Component.newline());
+
+            player.sendMessage(message);
+
+            Common.notificationSound(player);
+
         } catch (Exception ignored) {}
     }
 }

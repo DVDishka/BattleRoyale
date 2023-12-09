@@ -30,44 +30,26 @@ public class CancelTeamCommand implements CommandInterface {
 
         try {
 
-            Component message = Component.empty();
+            {
+                Component header = Component.empty();
+                Component text = Component.empty();
 
-            message = message
-                    .append(Component.newline())
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
+                header = header
+                        .append(Component.text(team.getName())
+                                .color(team.getColor())
+                                .decorate(TextDecoration.BOLD));
 
-            message = message
-                    .append(Component.text(team.getName())
-                            .color(team.getColor())
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
+                text = text
+                        .append(Component.text(sender.getName())
+                                .color(NamedTextColor.RED)
+                                .decorate(TextDecoration.BOLD))
+                        .append(Component.space())
+                        .append(Component.text("declined your invitation"));
 
-            message = message
-                    .append(Component.text("-".repeat(27))
-                            .color(NamedTextColor.YELLOW))
-                    .append(Component.newline());
+                Player leader = Bukkit.getPlayer(team.getLeader());
 
-            message = message
-                    .append(Component.text(sender.getName())
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.space())
-                    .append(Component.text("declined your invitation"))
-                    .append(Component.newline());
-
-            message = message
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
-
-            Player leader = Bukkit.getPlayer(team.getLeader());
-
-            Common.notificationSound(leader);
-            leader.sendMessage(message);
+                Common.sendNotification(header, text, leader);
+            }
 
         } catch (Exception ignored) {}
     }

@@ -42,27 +42,14 @@ public class StartElytraHandler implements Listener {
                 startElytra.setItemMeta(startElytraMeta);
 
                 {
-                    Component message = Component.empty();
+                    Component header = Component.empty();
+                    Component text = Component.empty();
 
-                    message = message
-                            .append(Component.newline())
-                            .append(Component.text("-".repeat(26))
-                                    .color(NamedTextColor.RED)
-                                    .decorate(TextDecoration.BOLD))
-                            .append(Component.newline());
-
-                    message = message
+                    header = header
                             .append(Component.text("HANG GLIDER")
                                     .color(NamedTextColor.LIGHT_PURPLE)
-                                    .decorate(TextDecoration.BOLD))
-                            .append(Component.newline());
-
-                    message = message
-                            .append(Component.text("-".repeat(27))
-                                    .color(NamedTextColor.YELLOW))
-                            .append(Component.newline());
-
-                    message = message
+                                    .decorate(TextDecoration.BOLD));
+                    text = text
                             .append(Component.text("You got a"))
                             .append(Component.space())
                             .append(Component.text("HANG GLIDER")
@@ -72,17 +59,9 @@ public class StartElytraHandler implements Listener {
                                     .color(NamedTextColor.YELLOW))
                             .append(Component.newline())
                             .append(Component.text("it will be deleted from your inventory after landing")
-                                    .color(NamedTextColor.RED))
-                            .append(Component.newline());
+                                    .color(NamedTextColor.RED));
 
-                    message = message
-                            .append(Component.text("-".repeat(26))
-                                    .color(NamedTextColor.RED)
-                                    .decorate(TextDecoration.BOLD))
-                            .append(Component.newline());
-
-                    player.sendMessage(message);
-                    Common.notificationSound(player);
+                    Common.sendNotification(header, text, player);
                 }
 
                 player.getInventory().setChestplate(startElytra);
@@ -109,42 +88,22 @@ public class StartElytraHandler implements Listener {
                     player.getInventory().setChestplate(null);
 
                     {
-                        Component message = Component.empty();
+                        Component header = Component.empty();
+                        Component text = Component.empty();
 
-                        message = message
-                                .append(Component.newline())
-                                .append(Component.text("-".repeat(26))
-                                        .color(NamedTextColor.RED)
-                                        .decorate(TextDecoration.BOLD))
-                                .append(Component.newline());
-
-                        message = message
+                        header = header
                                 .append(Component.text("HANG GLIDER")
                                         .color(NamedTextColor.LIGHT_PURPLE)
-                                        .decorate(TextDecoration.BOLD))
-                                .append(Component.newline());
+                                        .decorate(TextDecoration.BOLD));
 
-                        message = message
-                                .append(Component.text("-".repeat(27))
-                                        .color(NamedTextColor.YELLOW))
-                                .append(Component.newline());
-
-                        message = message
+                        text = text
                                 .append(Component.text("HANG GLIDER")
                                         .color(NamedTextColor.GOLD))
                                 .append(Component.space())
                                 .append(Component.text("has been removed from your inventory")
-                                        .color(NamedTextColor.RED))
-                                .append(Component.newline());
+                                        .color(NamedTextColor.RED));
 
-                        message = message
-                                .append(Component.text("-".repeat(26))
-                                        .color(NamedTextColor.RED)
-                                        .decorate(TextDecoration.BOLD))
-                                .append(Component.newline());
-
-                        player.sendMessage(message);
-                        Common.notificationSound(player);
+                        Common.sendNotification(header, text, player);
                     }
                 }
 

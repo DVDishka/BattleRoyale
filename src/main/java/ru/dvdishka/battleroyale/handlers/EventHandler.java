@@ -82,26 +82,17 @@ public class EventHandler implements Listener {
     @org.bukkit.event.EventHandler
     public void onQuit(PlayerQuitEvent event) {
 
-        ArrayList<String> aliveTeams = new ArrayList<>();
+        ArrayList<String> aliveTeams;
         Player player = event.getPlayer();
 
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-
-            if (onlinePlayer.getGameMode().equals(GameMode.SURVIVAL) && !onlinePlayer.getName().equals(player.getName())) {
-                if (Team.getTeam(onlinePlayer) != null) {
-                    if (!aliveTeams.contains(onlinePlayer.getName())) {
-                        aliveTeams.add(Team.getTeam(onlinePlayer).getName());
-                    }
-                } else {
-                    aliveTeams.add(onlinePlayer.getName());
-                }
-            }
-        }
+        aliveTeams = getAliveTeams(player);
 
         Team playerTeam = Team.getTeam(player);
 
+        // IF ONLY ONE TEAM LEFT
         if (aliveTeams.size() == 1) {
 
+            // IF THIS PLAYER QUIT WHEN THERE ARE NO ALIVE PLAYERS IN HIS TEAM AND ONLY ONE OTHER TEAM LEFT
             if (playerTeam == null || !aliveTeams.contains(playerTeam.getName())) {
 
                 Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
@@ -236,5 +227,24 @@ public class EventHandler implements Listener {
                 player.kick(Component.text("You are out and your team is not yet!"));
             });
         }
+    }
+
+    private static ArrayList<String> getAliveTeams(Player notCheckedPlayer) {
+
+        ArrayList<String> aliveTeams = new ArrayList<>();
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+
+            if (onlinePlayer.getGameMode().equals(GameMode.SURVIVAL) && !onlinePlayer.getName().equals(notCheckedPlayer.getName())) {
+                if (Team.getTeam(onlinePlayer) != null) {
+                    if (!aliveTeams.contains(onlinePlayer.getName())) {
+                        aliveTeams.add(Team.getTeam(onlinePlayer).getName());
+                    }
+                } else {
+                    aliveTeams.add(onlinePlayer.getName());
+                }
+            }
+        }
+        return aliveTeams;
     }
 }

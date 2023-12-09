@@ -44,41 +44,22 @@ public class InviteTeamCommand implements CommandInterface {
         Team.invites.get(inviterTeam.getName()).add(invitedPlayer.getName());
 
         {
-            Component message = Component.empty();
+            Component header = Component.empty();
+            Component text = Component.empty();
 
-            message = message
-                    .append(Component.newline())
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
-
-            message = message
+            header = header
                     .append(Component.text(inviterTeam.getName())
                             .color(inviterTeam.getColor())
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
+                            .decorate(TextDecoration.BOLD));
 
-            message = message
-                    .append(Component.text("-".repeat(27))
-                            .color(NamedTextColor.YELLOW))
-                    .append(Component.newline());
-
-            message = message
+            text = text
                     .append(Component.text(invitedPlayer.getName())
                             .decorate(TextDecoration.BOLD))
                     .append(Component.space())
                     .append(Component.text("has been invited to your team!"))
                     .append(Component.newline());
 
-            message = message
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
-
-            Common.notificationSound((Player) sender);
-            sender.sendMessage(message);
+            Common.sendNotification(header, text, (Player) sender);
         }
 
         {
@@ -92,56 +73,35 @@ public class InviteTeamCommand implements CommandInterface {
                     .decorate(TextDecoration.BOLD)
                     .clickEvent(ClickEvent.runCommand("/battleroyale accept " + inviterTeam.getName()));
 
-            Component message = Component.empty();
+            Component header = Component.empty();
+            Component text = Component.empty();
 
-            message = message
-                    .append(Component.newline())
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
-
-            message = message
+            header = header
                     .append(Component.text(inviterTeam.getName())
                             .color(inviterTeam.getColor())
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
+                            .decorate(TextDecoration.BOLD));
 
-            message = message
-                    .append(Component.text("-".repeat(27))
-                            .color(NamedTextColor.YELLOW))
-                    .append(Component.newline());
-
-            message = message
-                    .append(Component.text(sender.getName())
-                            .decorate(TextDecoration.BOLD))
+            text = text
+                    .append(Component.text(sender.getName()))
                     .append(Component.space())
                     .append(Component.text("invited you to "))
                     .append(Component.space())
                     .append(Component.text(inviterTeam.getName())
-                            .decorate(TextDecoration.BOLD)
                             .color(inviterTeam.getColor()))
                     .append(Component.newline());
 
-            message = message
+            text = text
                     .append(Component.text("-".repeat(27))
                             .color(NamedTextColor.YELLOW))
                     .append(Component.newline());
 
-            message = message
+            text = text
                     .append(acceptButton)
                     .append(Component.space())
                     .append(declineButton)
                     .append(Component.newline());
 
-            message = message
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
-
-            invitedPlayer.sendMessage(message);
-            Common.notificationSound(invitedPlayer);
+            Common.sendNotification(header, text, invitedPlayer);
         }
     }
 }

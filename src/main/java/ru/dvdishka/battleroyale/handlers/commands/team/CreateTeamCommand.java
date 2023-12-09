@@ -39,38 +39,19 @@ public class CreateTeamCommand implements CommandInterface {
 
         newTeam.addMember(sender.getName());
 
-        Common.notificationSound((Player) sender);
+        {
+            Component header = Component.empty();
+            Component text = Component.empty();
 
-        Component message = Component.empty();
+            header = header
+                    .append(Component.text(newTeam.getName())
+                            .color(newTeam.getColor())
+                            .decorate(TextDecoration.BOLD));
 
-        message = message
-                .append(Component.newline())
-                .append(Component.text("-".repeat(26))
-                        .color(NamedTextColor.RED)
-                        .decorate(TextDecoration.BOLD))
-                .append(Component.newline());
+            text = text
+                    .append(Component.text("Team has been created"));
 
-        message = message
-                .append(Component.text(newTeam.getName())
-                        .color(newTeam.getColor())
-                        .decorate(TextDecoration.BOLD))
-                .append(Component.newline());
-
-        message = message
-                .append(Component.text("-".repeat(27))
-                        .color(NamedTextColor.YELLOW))
-                .append(Component.newline());
-
-        message = message
-                .append(Component.text("Team has been created"))
-                .append(Component.newline());
-
-        message = message
-                .append(Component.text("-".repeat(26))
-                        .color(NamedTextColor.RED)
-                        .decorate(TextDecoration.BOLD))
-                .append(Component.newline());
-
-        sender.sendMessage(message);
+            Common.sendNotification(header, text, (Player) sender);
+        }
     }
 }

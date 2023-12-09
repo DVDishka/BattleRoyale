@@ -117,23 +117,15 @@ public class DropContainer {
 
                 worldName = worldName.toUpperCase();
 
-                Component message = Component.empty();
+                Component header = Component.empty();
+                Component text = Component.empty();
 
-                message = message
-                        .append(Component.newline())
-                        .append(Component.text("-".repeat(26))
-                                .color(NamedTextColor.RED)
-                                .decorate(TextDecoration.BOLD))
-                        .append(Component.newline());
-
-                message = message
+                header = header
                         .append(Component.text("Drop container has been deleted!")
                                 .color(NamedTextColor.GOLD)
-                                .decorate(TextDecoration.BOLD))
-                        .append(Component.newline())
-                        .append(Component.text("-".repeat(27))
-                                .color(NamedTextColor.YELLOW))
-                        .append(Component.newline())
+                                .decorate(TextDecoration.BOLD));
+
+                text = text
                         .append(Component.text(worldName)
                                 .color(worldNameColor))
                         .append(Component.space())
@@ -147,20 +139,10 @@ public class DropContainer {
                         .append(Component.space())
                         .append(Component.text("Z:"))
                         .append(Component.space())
-                        .append(Component.text(this.getLocation().getBlockZ()))
-                        .append(Component.newline())
-                        .append(Component.text("-".repeat(27))
-                                .color(NamedTextColor.YELLOW))
-                        .append(Component.newline());
+                        .append(Component.text(this.getLocation().getBlockZ()));
 
-                message = message
-                        .append(Component.text("-".repeat(26))
-                                .color(NamedTextColor.RED)
-                                .decorate(TextDecoration.BOLD))
-                        .append(Component.newline());
 
-                player.sendMessage(message);
-                Common.notificationSound(player);
+                Common.sendNotification(header, text, player);
             }
         }
 

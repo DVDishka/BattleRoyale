@@ -35,38 +35,18 @@ public class ZoneStageHandler implements Listener  {
 
             for (Player player : Bukkit.getOnlinePlayers()) {
 
-                Component message = Component.empty();
+                Component header = Component.empty();
+                Component text = Component.empty();
 
-                message = message
-                        .append(Component.newline())
-                        .append(Component.text("-".repeat(26))
-                                .color(NamedTextColor.RED)
-                                .decorate(TextDecoration.BOLD))
-                        .append(Component.newline());
-
-                message = message
+                header = header
                         .append(Component.text("Revival")
-                                .decorate(TextDecoration.BOLD))
-                        .append(Component.newline());
+                                .decorate(TextDecoration.BOLD));
 
-                message = message
-                        .append(Component.text("-".repeat(27))
-                                .color(NamedTextColor.YELLOW))
-                        .append(Component.newline());
-
-                message = message
+                text = text
                         .append(Component.text("Revival is now disabled")
-                                .color(NamedTextColor.RED))
-                        .append(Component.newline());
+                                .color(NamedTextColor.RED));
 
-                message = message
-                        .append(Component.text("-".repeat(26))
-                                .color(NamedTextColor.RED)
-                                .decorate(TextDecoration.BOLD))
-                        .append(Component.newline());
-
-                player.sendMessage(message);
-                Common.notificationSound(player);
+                Common.sendNotification(header, text, player);
             }
         }
 
@@ -81,38 +61,19 @@ public class ZoneStageHandler implements Listener  {
 
             for (Player player : Bukkit.getOnlinePlayers()) {
 
-                Component message = Component.empty();
+                Component header = Component.empty();
+                Component text = Component.empty();
 
-                message = message
-                        .append(Component.newline())
-                        .append(Component.text("-".repeat(26))
-                                .color(NamedTextColor.RED)
-                                .decorate(TextDecoration.BOLD))
-                        .append(Component.newline());
-
-                message = message
+                header = header
                         .append(Component.text("PVP")
-                                .decorate(TextDecoration.BOLD))
-                        .append(Component.newline());
+                                .decorate(TextDecoration.BOLD));
 
-                message = message
-                        .append(Component.text("-".repeat(27))
-                                .color(NamedTextColor.YELLOW))
-                        .append(Component.newline());
-
-                message = message
+                text = text
                         .append(Component.text("PVP is now enabled")
-                                .color(NamedTextColor.RED))
-                        .append(Component.newline());
+                                .color(NamedTextColor.RED));
 
-                message = message
-                        .append(Component.text("-".repeat(26))
-                                .color(NamedTextColor.RED)
-                                .decorate(TextDecoration.BOLD))
-                        .append(Component.newline());
-
-                player.sendMessage(message);
-                Common.notificationSound(player);            }
+                Common.sendNotification(header, text, player);
+            }
         }
 
         // ZONE MOVING STAGE LOGIC

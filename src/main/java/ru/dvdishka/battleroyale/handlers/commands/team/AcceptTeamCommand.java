@@ -44,38 +44,21 @@ public class AcceptTeamCommand implements CommandInterface {
 
             oldTeam.removeMember(newMemberName);
 
-            Component message = Component.empty();
+            {
+                Component header = Component.empty();
+                Component text = Component.empty();
 
-            message = message
-                    .append(Component.newline())
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
+                header = header
+                        .append(Component.text(oldTeam.getName())
+                                .color(oldTeam.getColor())
+                                .decorate(TextDecoration.BOLD));
 
-            message = message
-                    .append(Component.text(oldTeam.getName())
-                            .color(oldTeam.getColor())
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
+                text = text
+                        .append(Component.text("You left the team")
+                                .color(NamedTextColor.RED));
 
-            message = message
-                    .append(Component.text("-".repeat(27))
-                            .color(NamedTextColor.YELLOW))
-                    .append(Component.newline());
-
-            message = message
-                    .append(Component.text("You left the team")
-                            .color(NamedTextColor.RED))
-                    .append(Component.newline());
-
-            message = message
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
-
-            newMember.sendMessage(message);
+                Common.sendNotification(header, text, newMember);
+            }
 
             for (String memberName : oldTeam.getMembers()) {
 
@@ -83,79 +66,42 @@ public class AcceptTeamCommand implements CommandInterface {
 
                     Player member = Bukkit.getPlayer(memberName);
 
-                    message = Component.empty();
+                    {
+                        Component header = Component.empty();
+                        Component text = Component.empty();
 
-                    message = message
-                            .append(Component.newline())
-                            .append(Component.text("-".repeat(26))
-                                    .color(NamedTextColor.RED)
-                                    .decorate(TextDecoration.BOLD))
-                            .append(Component.newline());
+                        header = header
+                                .append(Component.text(oldTeam.getName())
+                                        .color(oldTeam.getColor())
+                                        .decorate(TextDecoration.BOLD));
 
-                    message = message
-                            .append(Component.text(oldTeam.getName())
-                                    .color(oldTeam.getColor())
-                                    .decorate(TextDecoration.BOLD))
-                            .append(Component.newline());
+                        text = text
+                                .append(Component.text(newMemberName)
+                                        .color(NamedTextColor.RED))
+                                .append(Component.space())
+                                .append(Component.text("left your team"));
 
-                    message = message
-                            .append(Component.text("-".repeat(27))
-                                    .color(NamedTextColor.YELLOW))
-                            .append(Component.newline());
-
-                    message = message
-                            .append(Component.text(newMemberName)
-                                    .decorate(TextDecoration.BOLD)
-                                    .color(NamedTextColor.RED))
-                            .append(Component.space())
-                            .append(Component.text("left your team"))
-                            .append(Component.newline());
-
-                    message = message
-                            .append(Component.text("-".repeat(26))
-                                    .color(NamedTextColor.RED)
-                                    .decorate(TextDecoration.BOLD))
-                            .append(Component.newline());
-
-                    member.sendMessage(message);
-
-                    Common.notificationSound(member);
+                        Common.sendNotification(header, text, member);
+                    }
 
                 } catch (Exception ignored) {}
             }
         }
 
-        Component message = Component.empty();
+        {
+            Component header = Component.empty();
+            Component text = Component.empty();
 
-        message = message
-                .append(Component.newline())
-                .append(Component.text("-".repeat(26))
-                        .color(NamedTextColor.RED)
-                        .decorate(TextDecoration.BOLD))
-                .append(Component.newline());
+            header = header
+                    .append(Component.text(newTeamName)
+                            .color(newTeam.getColor())
+                            .decorate(TextDecoration.BOLD));
 
-        message = message
-                .append(Component.text(newTeamName)
-                        .color(newTeam.getColor())
-                        .decorate(TextDecoration.BOLD))
-                .append(Component.newline());
+            text = text
+                    .append(Component.text("You have joined the team"));
 
-        message = message
-                .append(Component.text("-".repeat(27))
-                        .color(NamedTextColor.YELLOW))
-                .append(Component.newline());
-
-        message = message
-                .append(Component.text("You have joined the team"))
-                .append(Component.newline());
-
-        message = message
-                .append(Component.text("-".repeat(26))
-                        .color(NamedTextColor.RED)
-                        .decorate(TextDecoration.BOLD))
-                .append(Component.newline());
-
-        newMember.sendMessage(message);
+            Common.sendNotification(header, text, newMember);
+        }
 
         for (String memberName : newTeam.getMembers()) {
 
@@ -164,42 +110,22 @@ public class AcceptTeamCommand implements CommandInterface {
 
                     Player member = Bukkit.getPlayer(memberName);
 
-                    message = Component.empty();
+                    {
+                        Component header = Component.empty();
+                        Component text = Component.empty();
 
-                    message = message
-                            .append(Component.newline())
-                            .append(Component.text("-".repeat(26))
-                                    .color(NamedTextColor.RED)
-                                    .decorate(TextDecoration.BOLD))
-                            .append(Component.newline());
+                        header = header
+                                .append(Component.text(newTeamName)
+                                        .color(newTeam.getColor())
+                                        .decorate(TextDecoration.BOLD));
 
-                    message = message
-                            .append(Component.text(newTeamName)
-                                    .color(newTeam.getColor())
-                                    .decorate(TextDecoration.BOLD))
-                            .append(Component.newline());
+                        text = text
+                                .append(Component.text(newMemberName))
+                                .append(Component.space())
+                                .append(Component.text("joined your team"));
 
-                    message = message
-                            .append(Component.text("-".repeat(27))
-                                    .color(NamedTextColor.YELLOW))
-                            .append(Component.newline());
-
-                    message = message
-                            .append(Component.text(newMemberName)
-                                    .decorate(TextDecoration.BOLD))
-                            .append(Component.space())
-                            .append(Component.text("joined your team"))
-                            .append(Component.newline());
-
-                    message = message
-                            .append(Component.text("-".repeat(26))
-                                    .color(NamedTextColor.RED)
-                                    .decorate(TextDecoration.BOLD))
-                            .append(Component.newline());
-
-                    member.sendMessage(message);
-
-                    Common.notificationSound(member);
+                        Common.sendNotification(header, text, member);
+                    }
 
                 } catch (Exception ignored) {}
             }

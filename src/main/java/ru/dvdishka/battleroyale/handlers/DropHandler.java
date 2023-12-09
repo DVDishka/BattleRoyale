@@ -73,7 +73,8 @@ public class DropHandler implements Listener {
 
             worldName = worldName.toUpperCase();
 
-            Component message = Component.empty();
+            Component header = Component.empty();
+            Component text = Component.empty();
 
             Component followButton = Component.empty();
 
@@ -91,21 +92,11 @@ public class DropHandler implements Listener {
                             .decorate(TextDecoration.BOLD)
                             .clickEvent(ClickEvent.runCommand("/battleroyale drop delete " + "\"" + dropContainer.getName() + "\"")));
 
-            message = message
-                    .append(Component.newline())
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
-
-            message = message
+            header = header
                     .append(Component.text("New drop container!")
                             .color(NamedTextColor.GOLD)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline())
-                    .append(Component.text("-".repeat(27))
-                            .color(NamedTextColor.YELLOW))
-                    .append(Component.newline())
+                            .decorate(TextDecoration.BOLD));
+            text = text
                     .append(Component.text(worldName)
                             .color(worldNameColor))
                     .append(Component.space())
@@ -127,22 +118,12 @@ public class DropHandler implements Listener {
                     .append(followButton);
 
             if (player.hasPermission(Permission.DROP.getStringPermission())) {
-                message = message
+                text = text
                         .append(Component.space())
                         .append(deleteButton);
             }
 
-            message = message
-                    .append(Component.newline());
-
-            message = message
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
-
-            player.sendMessage(message);
-            Common.notificationSound(player);
+            Common.sendNotification(header, text, player);
         }
 
         Logger.getLogger().warn(String.valueOf(dropContainer.getLocation().getBlockX()));

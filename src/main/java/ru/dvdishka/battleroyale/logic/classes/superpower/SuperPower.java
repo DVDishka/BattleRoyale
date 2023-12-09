@@ -36,31 +36,23 @@ public enum SuperPower {
 
         Common.playersPower.put(player.getName(), this);
 
-        Component message = Component.empty();
+        Component header = Component.empty();
+        Component text = Component.empty();
 
-        message = message
-                .append(Component.newline())
-                .append(Component.text("-".repeat(26))
-                        .color(NamedTextColor.RED)
-                        .decorate(TextDecoration.BOLD))
-                .append(Component.newline());
-
-        message = message
-                .append(Component.text("Your Superpower:"))
+        header = header
+                .append(Component.text("Superpower:"))
                 .append(Component.space())
                 .append(Component.text(this.name.toUpperCase())
                         .color(NamedTextColor.GREEN)
-                        .decorate(TextDecoration.BOLD))
-                .append(Component.newline())
-                .append(Component.text("-".repeat(27))
-                        .color(NamedTextColor.YELLOW))
-                .append(Component.newline())
-                .append(Component.text("Effects:"))
-                .append(Component.newline());
+                        .decorate(TextDecoration.BOLD));
+
+        text = text
+                .append(Component.text("Effects:"));
 
         for (int i = 0; i < effectType.size(); i++) {
 
-            message = message
+            text = text
+                    .append(Component.newline())
                     .append(Component.text(effectType.get(i).getKey().getKey().toUpperCase())
                     .color(NamedTextColor.GOLD)
                     .decorate(TextDecoration.BOLD))
@@ -68,18 +60,10 @@ public enum SuperPower {
                     .append(Component.text("lvl:"))
                     .append(Component.space())
                     .append(Component.text(amplifier.get(i) + 1)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
+                            .decorate(TextDecoration.BOLD));
         }
 
-        message = message
-                .append(Component.text("-".repeat(26))
-                        .color(NamedTextColor.RED)
-                        .decorate(TextDecoration.BOLD))
-                .append(Component.newline());
-
-        player.sendMessage(message);
-        Common.notificationSound(player);
+        Common.sendNotification(header, text, player);
     }
 
     public List<PotionEffectType> getEffects() {

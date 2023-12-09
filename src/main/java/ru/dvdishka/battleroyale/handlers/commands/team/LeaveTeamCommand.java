@@ -31,39 +31,19 @@ public class LeaveTeamCommand implements CommandInterface {
 
         // YOU LEFT THE TEAM MESSAGE
         {
-            Component message = Component.empty();
+            Component header = Component.empty();
+            Component text = Component.empty();
 
-            message = message
-                    .append(Component.newline())
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
-
-            message = message
+            header = header
                     .append(Component.text(playerTeam.getName())
                             .color(playerTeam.getColor())
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
+                            .decorate(TextDecoration.BOLD));
 
-            message = message
-                    .append(Component.text("-".repeat(27))
-                            .color(NamedTextColor.YELLOW))
-                    .append(Component.newline());
-
-            message = message
+            text = text
                     .append(Component.text("You left the team")
-                            .color(NamedTextColor.RED))
-                    .append(Component.newline());
+                            .color(NamedTextColor.RED));
 
-            message = message
-                    .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
-
-            sender.sendMessage(message);
-            Common.notificationSound((Player) sender);
+            Common.sendNotification(header, text, (Player) sender);
         }
 
         // TEAM DISBAND OR LEAVE MESSAGE
@@ -76,42 +56,22 @@ public class LeaveTeamCommand implements CommandInterface {
 
                     try {
 
-                        Component message = Component.empty();
+                        Component header = Component.empty();
+                        Component text = Component.empty();
 
-                        message = message
-                                .append(Component.newline())
-                                .append(Component.text("-".repeat(26))
-                                        .color(NamedTextColor.RED)
-                                        .decorate(TextDecoration.BOLD))
-                                .append(Component.newline());
-
-                        message = message
+                        header = header
                                 .append(Component.text(playerTeam.getName())
                                         .color(playerTeam.getColor())
-                                        .decorate(TextDecoration.BOLD))
-                                .append(Component.newline());
+                                        .decorate(TextDecoration.BOLD));
 
-                        message = message
-                                .append(Component.text("-".repeat(27))
-                                        .color(NamedTextColor.YELLOW))
-                                .append(Component.newline());
-
-                        message = message
+                        text = text
                                 .append(Component.text("The team has been disbanded")
                                         .color(NamedTextColor.RED))
                                 .append(Component.newline());
 
-                        message = message
-                                .append(Component.text("-".repeat(26))
-                                        .color(NamedTextColor.RED)
-                                        .decorate(TextDecoration.BOLD))
-                                .append(Component.newline());
+                        Common.sendNotification(header, text, memberPlayer);
 
-                        memberPlayer.sendMessage(message);
-                        Common.notificationSound(memberPlayer);
-
-                    } catch (Exception ignored) {
-                    }
+                    } catch (Exception ignored) {}
                 }
 
                 playerTeam.unregister();
@@ -125,42 +85,22 @@ public class LeaveTeamCommand implements CommandInterface {
 
                     try {
 
-                        Component message = Component.empty();
+                        Component header = Component.empty();
+                        Component text = Component.empty();
 
-                        message = message
-                                .append(Component.newline())
-                                .append(Component.text("-".repeat(26))
-                                        .color(NamedTextColor.RED)
-                                        .decorate(TextDecoration.BOLD))
-                                .append(Component.newline());
-
-                        message = message
+                        header = header
                                 .append(Component.text(playerTeam.getName())
                                         .color(playerTeam.getColor())
-                                        .decorate(TextDecoration.BOLD))
-                                .append(Component.newline());
+                                        .decorate(TextDecoration.BOLD));
 
-                        message = message
-                                .append(Component.text("-".repeat(27))
-                                        .color(NamedTextColor.YELLOW))
-                                .append(Component.newline());
-
-                        message = message
+                        text = text
                                 .append(Component.text(sender.getName())
                                         .decorate(TextDecoration.BOLD))
                                 .append(Component.space())
                                 .append(Component.text("left your team")
-                                        .color(NamedTextColor.RED))
-                                .append(Component.newline());
+                                        .color(NamedTextColor.RED));
 
-                        message = message
-                                .append(Component.text("-".repeat(26))
-                                        .color(NamedTextColor.RED)
-                                        .decorate(TextDecoration.BOLD))
-                                .append(Component.newline());
-
-                        memberPlayer.sendMessage(message);
-                        Common.notificationSound(memberPlayer);
+                        Common.sendNotification(header, text, memberPlayer);
 
                     } catch (Exception ignored) {
                     }
