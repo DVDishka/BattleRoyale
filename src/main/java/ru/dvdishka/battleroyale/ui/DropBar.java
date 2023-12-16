@@ -6,6 +6,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.Scheduler;
@@ -86,25 +88,21 @@ public class DropBar {
         this.setActive(false);
 
         this.dropContainer = dropContainer;
-
+        this.worldName = dropContainer.getLocation().getWorld().getName();
         this.coordinates = dropContainer.getLocation();
 
-        if (dropContainer.getLocation().getWorld().getName().equals("world")) {
+        NamespacedKey worldKey = dropContainer.getLocation().getWorld().getKey();
+
+        if (worldKey.equals(NamespacedKey.minecraft("overworld"))) {
             this.worldName = "overworld";
-        } else {
-            this.worldName = dropContainer.getLocation().getWorld().getName();
         }
 
-        if (dropContainer.getLocation().getWorld().getName().equals("the_nether")) {
+        if (worldKey.equals(NamespacedKey.minecraft("the_nether"))) {
             this.worldName = "nether";
-        } else {
-            this.worldName = dropContainer.getLocation().getWorld().getName();
         }
 
-        if (dropContainer.getLocation().getWorld().getName().equals("the_end")) {
+        if (worldKey.equals(NamespacedKey.minecraft("the_end"))) {
             this.worldName = "end";
-        } else {
-            this.worldName = dropContainer.getLocation().getWorld().getName();
         }
 
         this.worldName = this.worldName.toUpperCase();

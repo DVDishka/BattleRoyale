@@ -1,6 +1,7 @@
 package ru.dvdishka.battleroyale.logic;
 
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public class ConfigVariables {
     public static int maxFinalZoneMove = 100;
     public static int zoneMoveTimeOut = 10;
     public static int startBoxY = 200;
-    public static List<World> dropSpawnWorlds = List.of(Bukkit.getWorld("world"));
+    public static List<World> dropSpawnWorlds = List.of(Bukkit.getWorld(NamespacedKey.minecraft("overworld")));
     public static int minDropSpawnY = 40;
     public static int maxDropSpawnY = 100;
     public static int dropOpenTime = 90;

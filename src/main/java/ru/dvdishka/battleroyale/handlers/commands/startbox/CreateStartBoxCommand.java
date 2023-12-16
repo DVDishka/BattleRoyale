@@ -20,10 +20,10 @@ public class CreateStartBoxCommand implements CommandInterface {
 
         Common.isStartBox = true;
         Location startBoxLocation = new Location(
-                Bukkit.getWorld("world"),
-                Bukkit.getServer().getWorld("world").getSpawnLocation().getX(),
+                Common.overWorld,
+                Common.overWorld.getSpawnLocation().getX(),
                 ConfigVariables.startBoxY,
-                Bukkit.getServer().getWorld("world").getSpawnLocation().getZ());
+                Common.overWorld.getSpawnLocation().getZ());
 
         Chunk startBoxChunk = startBoxLocation.getChunk();
 
@@ -35,39 +35,39 @@ public class CreateStartBoxCommand implements CommandInterface {
             for (int x = chunkX; x < chunkX + 16; x++) {
                 for (int z = chunkZ; z < chunkZ + 16; z++) {
 
-                    new Location(Bukkit.getWorld("world"), x, ConfigVariables.startBoxY, z).getBlock().setType(Material.BEDROCK);
+                    new Location(Common.overWorld, x, ConfigVariables.startBoxY, z).getBlock().setType(Material.BEDROCK);
                 }
             }
 
             for (int y = ConfigVariables.startBoxY; y < ConfigVariables.startBoxY + 7; y++) {
 
                 for (int x = chunkX; x < chunkX + 16; x++) {
-                    new Location(Bukkit.getWorld("world"), x, y, chunkZ).getBlock().setType(Material.BEDROCK);
+                    new Location(Common.overWorld, x, y, chunkZ).getBlock().setType(Material.BEDROCK);
                 }
 
                 for (int x = chunkX; x < chunkX + 16; x++) {
-                    new Location(Bukkit.getWorld("world"), x, y, chunkZ + 15).getBlock().setType(Material.BEDROCK);
+                    new Location(Common.overWorld, x, y, chunkZ + 15).getBlock().setType(Material.BEDROCK);
                 }
 
                 for (int z = chunkZ; z < chunkZ + 16; z++) {
-                    new Location(Bukkit.getWorld("world"), chunkX, y, z).getBlock().setType(Material.BEDROCK);
+                    new Location(Common.overWorld, chunkX, y, z).getBlock().setType(Material.BEDROCK);
                 }
 
                 for (int z = chunkZ; z < chunkZ + 16; z++) {
-                    new Location(Bukkit.getWorld("world"), chunkX + 15, y, z).getBlock().setType(Material.BEDROCK);
+                    new Location(Common.overWorld, chunkX + 15, y, z).getBlock().setType(Material.BEDROCK);
                 }
             }
         });
 
         Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
-            Bukkit.getWorld("world").setSpawnLocation(chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8);
-            Bukkit.getWorld("world").setGameRule(GameRule.SPAWN_RADIUS, 1);
+            Common.overWorld.setSpawnLocation(chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8);
+            Common.overWorld.setGameRule(GameRule.SPAWN_RADIUS, 1);
         });
 
         for (Player player : Bukkit.getOnlinePlayers()) {
 
             Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-                player.teleportAsync(new Location(Bukkit.getWorld("world"), chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8));
+                player.teleportAsync(new Location(Common.overWorld, chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8));
             });
         }
 

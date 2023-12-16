@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -95,8 +96,8 @@ public class ZoneStageHandler implements Listener  {
     private void firstZoneStage() {
 
         int timeOut = ConfigVariables.timeOuts.get(0);
-        final int oldZoneCenterX = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockX();
-        final int oldZoneCenterZ = Bukkit.getWorld("world").getWorldBorder().getCenter().getBlockZ();
+        final int oldZoneCenterX = Common.overWorld.getWorldBorder().getCenter().getBlockX();
+        final int oldZoneCenterZ = Common.overWorld.getWorldBorder().getCenter().getBlockZ();
         int previousZoneDiameter = ConfigVariables.defaultWorldBorderDiameter;
 
         final int nextZoneCenterX = Zone.getInstance().generateRandomZoneCenterX(
@@ -204,7 +205,7 @@ public class ZoneStageHandler implements Listener  {
 
             Common.isPortalLocked = true;
 
-            if (!world.getName().equals("world")) {
+            if (!world.getKey().equals(NamespacedKey.minecraft("overworld"))) {
                 for (Player player : world.getPlayers()) {
                     Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> player.setHealth(0));
                 }

@@ -159,7 +159,7 @@ public class Timer {
 
         String pvpText;
 
-        if (!Bukkit.getWorld("world").getPVP())  {
+        if (!Common.overWorld.getPVP())  {
             pvpText = ChatColor.BOLD + "PVP: " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "NO";
         } else {
             pvpText = ChatColor.BOLD + "PVP: " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + "YES";

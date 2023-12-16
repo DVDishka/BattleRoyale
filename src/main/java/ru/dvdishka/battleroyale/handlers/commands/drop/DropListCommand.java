@@ -6,6 +6,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
@@ -37,26 +38,6 @@ public class DropListCommand implements CommandInterface {
 
         for (DropContainer dropContainer : DropContainer.getContainerList()) {
 
-            String worldName = dropContainer.getLocation().getWorld().getName();
-            TextColor worldNameColor = NamedTextColor.WHITE;
-
-            if (worldName.equals("world")) {
-                worldName = "overworld";
-                worldNameColor = NamedTextColor.DARK_GREEN;
-            }
-
-            if (worldName.equals("the_nether")) {
-                worldName = "nether";
-                worldNameColor = NamedTextColor.DARK_RED;
-            }
-
-            if (worldName.equals("the_end")) {
-                worldName = "end";
-                worldNameColor = NamedTextColor.DARK_PURPLE;
-            }
-
-            worldName = worldName.toUpperCase();
-
             Component followButton = Component.empty();
 
             followButton = followButton
@@ -78,8 +59,7 @@ public class DropListCommand implements CommandInterface {
                             .color(NamedTextColor.GOLD)
                             .decorate(TextDecoration.BOLD))
                     .append(Component.newline())
-                    .append(Component.text(worldName)
-                            .color(worldNameColor))
+                    .append(dropContainer.getWorldComponent())
                     .append(Component.space())
                     .append(Component.text("X:"))
                     .append(Component.space())

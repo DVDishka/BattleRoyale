@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.Team;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Initialization;
+import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.ui.Timer;
 
 import java.io.File;

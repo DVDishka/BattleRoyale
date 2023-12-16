@@ -97,26 +97,7 @@ public class DropContainer {
 
             if (Common.players.contains(player.getName())) {
 
-                String worldName = this.getLocation().getWorld().getName();
-                TextColor worldNameColor = NamedTextColor.WHITE;
-
-                if (worldName.equals("world")) {
-                    worldName = "overworld";
-                    worldNameColor = NamedTextColor.DARK_GREEN;
-                }
-
-                if (worldName.equals("the_nether")) {
-                    worldName = "nether";
-                    worldNameColor = NamedTextColor.DARK_RED;
-                }
-
-                if (worldName.equals("the_end")) {
-                    worldName = "end";
-                    worldNameColor = NamedTextColor.DARK_PURPLE;
-                }
-
-                worldName = worldName.toUpperCase();
-
+                Component worldComponent = this.getWorldComponent();
                 Component header = Component.empty();
                 Component text = Component.empty();
 
@@ -126,8 +107,7 @@ public class DropContainer {
                                 .decorate(TextDecoration.BOLD));
 
                 text = text
-                        .append(Component.text(worldName)
-                                .color(worldNameColor))
+                        .append(worldComponent)
                         .append(Component.space())
                         .append(Component.text("X:"))
                         .append(Component.space())
@@ -224,5 +204,31 @@ public class DropContainer {
 
     public DropContainerInventory getInventory() {
         return inventory;
+    }
+
+    public Component getWorldComponent() {
+
+        String worldName = this.getLocation().getWorld().getName();
+        NamespacedKey worldKey = this.getLocation().getWorld().getKey();
+        TextColor worldNameColor = NamedTextColor.WHITE;
+
+        if (worldKey.equals(NamespacedKey.minecraft("overworld"))) {
+            worldName = "overworld";
+            worldNameColor = NamedTextColor.DARK_GREEN;
+        }
+
+        if (worldKey.equals(NamespacedKey.minecraft("the_nether"))) {
+            worldName = "nether";
+            worldNameColor = NamedTextColor.DARK_RED;
+        }
+
+        if (worldKey.equals(NamespacedKey.minecraft("the_end"))) {
+            worldName = "the_end";
+            worldNameColor = NamedTextColor.DARK_PURPLE;
+        }
+
+        worldName = worldName.toUpperCase();
+
+        return Component.text(worldName).color(worldNameColor);
     }
 }

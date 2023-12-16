@@ -26,7 +26,7 @@ public class WinBar {
         return instance;
     }
 
-    public void register(String winTeamName, NamedTextColor winTeamColor) {
+    public void register(String winTeamName) {
 
         this.winBar = Bukkit.createBossBar("", BarColor.BLUE, BarStyle.SOLID);
         this.winBar.setVisible(true);

@@ -53,26 +53,6 @@ public class DropHandler implements Listener {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
 
-            String worldName = dropContainer.getLocation().getWorld().getName();
-            TextColor worldNameColor = NamedTextColor.WHITE;
-
-            if (worldName.equals("world")) {
-                worldName = "overworld";
-                worldNameColor = NamedTextColor.DARK_GREEN;
-            }
-
-            if (worldName.equals("the_nether")) {
-                worldName = "nether";
-                worldNameColor = NamedTextColor.DARK_RED;
-            }
-
-            if (worldName.equals("the_end")) {
-                worldName = "end";
-                worldNameColor = NamedTextColor.DARK_PURPLE;
-            }
-
-            worldName = worldName.toUpperCase();
-
             Component header = Component.empty();
             Component text = Component.empty();
 
@@ -97,8 +77,7 @@ public class DropHandler implements Listener {
                             .color(NamedTextColor.GOLD)
                             .decorate(TextDecoration.BOLD));
             text = text
-                    .append(Component.text(worldName)
-                            .color(worldNameColor))
+                    .append(dropContainer.getWorldComponent())
                     .append(Component.space())
                     .append(Component.text("X:"))
                     .append(Component.space())

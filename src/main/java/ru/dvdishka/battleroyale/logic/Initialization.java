@@ -5,6 +5,7 @@ import dev.jorel.commandapi.IStringTooltip;
 import dev.jorel.commandapi.StringTooltip;
 import dev.jorel.commandapi.arguments.*;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -261,8 +262,10 @@ public class Initialization {
                 List<World> worlds = new ArrayList<>();
 
                 for (String worldName : dropSpawnWorlds) {
-                    if (Bukkit.getWorld(worldName) != null) {
-                        worlds.add(Bukkit.getWorld(worldName));
+                    if (Bukkit.getWorld(NamespacedKey.minecraft(worldName)) != null) {
+                        worlds.add(Bukkit.getWorld(NamespacedKey.minecraft(worldName)));
+                    } else if (Bukkit.getWorld(NamespacedKey.fromString(worldName)) != null) {
+                        worlds.add(Bukkit.getWorld(NamespacedKey.fromString(worldName)));
                     } else {
                         Logger.getLogger().warn("Wrong dropSpawnWorld \"" + worldName + "\"");
                     }

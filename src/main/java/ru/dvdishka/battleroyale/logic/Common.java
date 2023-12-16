@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,7 @@ import java.util.logging.Logger;
 public class Common {
 
     public static Plugin plugin;
+    public static World overWorld = Bukkit.getWorld(NamespacedKey.minecraft("overworld"));
     public static final Logger logger = Bukkit.getLogger();
 
     public static boolean isFolia = false;
@@ -64,10 +66,10 @@ public class Common {
         Zone.getInstance().setVariables(
                 ConfigVariables.defaultWorldBorderDiameter,
                 ConfigVariables.defaultWorldBorderDiameter,
-                Bukkit.getWorld("world").getSpawnLocation().getBlockX(),
-                Bukkit.getWorld("world").getSpawnLocation().getBlockZ(),
-                Bukkit.getWorld("world").getSpawnLocation().getBlockX(),
-                Bukkit.getWorld("world").getSpawnLocation().getBlockZ());
+                Common.overWorld.getSpawnLocation().getBlockX(),
+                Common.overWorld.getSpawnLocation().getBlockZ(),
+                Common.overWorld.getSpawnLocation().getBlockX(),
+                Common.overWorld.getSpawnLocation().getBlockZ());
 
         if (Radar.isInitialized()) {
             Radar.getInstance().movingZoneChar = "=";

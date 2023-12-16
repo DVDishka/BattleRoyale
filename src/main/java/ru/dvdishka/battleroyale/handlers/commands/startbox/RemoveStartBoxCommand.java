@@ -15,10 +15,10 @@ public class RemoveStartBoxCommand implements CommandInterface {
 
         Common.isStartBox = false;
         Location startBoxLocation = new Location(
-                Bukkit.getWorld("world"),
-                Bukkit.getServer().getWorld("world").getSpawnLocation().getX(),
+                Common.overWorld,
+                Common.overWorld.getSpawnLocation().getX(),
                 ConfigVariables.startBoxY,
-                Bukkit.getServer().getWorld("world").getSpawnLocation().getZ());
+                Common.overWorld.getSpawnLocation().getZ());
 
         Scheduler.getScheduler().runRegionTask(Common.plugin, startBoxLocation, (scheduledTask) -> {
 
@@ -30,26 +30,26 @@ public class RemoveStartBoxCommand implements CommandInterface {
             for (int x = chunkX; x < chunkX + 16; x++) {
                 for (int z = chunkZ; z < chunkZ + 16; z++) {
 
-                    new Location(Bukkit.getWorld("world"), x, ConfigVariables.startBoxY, z).getBlock().setType(Material.AIR);
+                    new Location(Common.overWorld, x, ConfigVariables.startBoxY, z).getBlock().setType(Material.AIR);
                 }
             }
 
             for (int y = ConfigVariables.startBoxY; y < ConfigVariables.startBoxY + 7; y++) {
 
                 for (int x = chunkX; x < chunkX + 16; x++) {
-                    new Location(Bukkit.getWorld("world"), x, y, chunkZ).getBlock().setType(Material.AIR);
+                    new Location(Common.overWorld, x, y, chunkZ).getBlock().setType(Material.AIR);
                 }
 
                 for (int x = chunkX; x < chunkX + 16; x++) {
-                    new Location(Bukkit.getWorld("world"), x, y, chunkZ + 15).getBlock().setType(Material.AIR);
+                    new Location(Common.overWorld, x, y, chunkZ + 15).getBlock().setType(Material.AIR);
                 }
 
                 for (int z = chunkZ; z < chunkZ + 16; z++) {
-                    new Location(Bukkit.getWorld("world"), chunkX, y, z).getBlock().setType(Material.AIR);
+                    new Location(Common.overWorld, chunkX, y, z).getBlock().setType(Material.AIR);
                 }
 
                 for (int z = chunkZ; z < chunkZ + 16; z++) {
-                    new Location(Bukkit.getWorld("world"), chunkX + 15, y, z).getBlock().setType(Material.AIR);
+                    new Location(Common.overWorld, chunkX + 15, y, z).getBlock().setType(Material.AIR);
                 }
             }
         });

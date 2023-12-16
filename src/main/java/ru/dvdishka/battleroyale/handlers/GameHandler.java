@@ -36,7 +36,7 @@ public class GameHandler implements Listener {
 
         Common.isWinStage = true;
 
-        WinBar.getInstance().register(event.getTeamName(), NamedTextColor.nearestTo(event.getTeamColor()));
+        WinBar.getInstance().register(event.getTeamName());
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
