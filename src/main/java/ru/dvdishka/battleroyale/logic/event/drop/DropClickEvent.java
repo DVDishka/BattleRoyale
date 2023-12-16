@@ -1,4 +1,4 @@
-package ru.dvdishka.battleroyale.logic.event;
+package ru.dvdishka.battleroyale.logic.event.drop;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

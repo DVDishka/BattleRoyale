@@ -1,8 +1,10 @@
 package ru.dvdishka.battleroyale.logic;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import java.util.HashSet;
 import java.util.Random;
 
 public class Zone {
@@ -14,7 +16,9 @@ public class Zone {
     private int oldZoneCenterZ;
     private int newZoneCenterZ;
 
+    private boolean isActive = true;
     private volatile boolean isZoneMoving = false;
+    private HashSet<ScheduledTask> currentMoveTasks = new HashSet<>();
 
     private static Zone instance = null;
 
@@ -42,6 +46,14 @@ public class Zone {
         return instance;
     }
 
+    public static void unregister() {
+
+        try {
+            instance.stopMoving();
+            instance = null;
+        } catch (Exception ignored) {}
+    }
+
     public void setVariables(int oldZoneDiameter, int newZoneDiameter, int oldZoneCenterX, int oldZoneCenterZ, int newZoneCenterX, int newZoneCenterZ) {
 
         this.oldZoneDiameter = oldZoneDiameter;
@@ -53,6 +65,10 @@ public class Zone {
     }
 
     public void changeBorders(int oldZoneDiameter, int newZoneDiameter, long timeSeconds, int oldZoneCenterX, int oldZoneCenterZ, int newZoneCenterX, int newZoneCenterZ) {
+
+        if (!isActive) {
+            return;
+        }
 
         double borderSizeStep = ((double) (newZoneDiameter - oldZoneDiameter)) / (timeSeconds * 2);
         double borderCenterStepX = ((double) (newZoneCenterX - oldZoneCenterX)) / (timeSeconds * 2);
@@ -70,6 +86,7 @@ public class Zone {
         this.newZoneCenterZ = newZoneCenterZ;
 
         this.isZoneMoving = true;
+        this.currentMoveTasks.clear();
 
         for (long i = 0; i < timeSeconds * 2; i++) {
 
@@ -87,7 +104,7 @@ public class Zone {
                 delay = 1;
             }
 
-            Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+            ScheduledTask moveTask = Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
                 if (delay / 10 != timeSeconds * 2 - 1) {
                     for (World world : Bukkit.getWorlds()) {
                         world.getWorldBorder().setSize(borderSize);
@@ -101,6 +118,8 @@ public class Zone {
                     this.isZoneMoving = false;
                 }
             }, delay);
+
+            this.currentMoveTasks.add(moveTask);
         }
     }
 
@@ -108,9 +127,6 @@ public class Zone {
 
         int nextZoneCenterX = new Random().nextInt(currentZoneCenterX - previousZoneRadius + nextZoneRadius,
                 currentZoneCenterX + previousZoneRadius - nextZoneRadius + 1);
-        Logger.getLogger().devWarn("X: " + String.valueOf((currentZoneCenterX - previousZoneRadius + nextZoneRadius)) + " - " +
-                String.valueOf(currentZoneCenterX + previousZoneRadius - nextZoneRadius + 1));
-        Logger.getLogger().devWarn(String.valueOf(nextZoneCenterX));
 
         return nextZoneCenterX;
     }
@@ -119,14 +135,15 @@ public class Zone {
 
         int nextZoneCenterZ = new Random().nextInt(currentZoneCenterZ - previousZoneRadius + nextZoneRadius,
                 currentZoneCenterZ + previousZoneRadius - nextZoneRadius + 1);
-        Logger.getLogger().devWarn("Z: " + String.valueOf((currentZoneCenterZ - previousZoneRadius + nextZoneRadius)) + " - " +
-                String.valueOf(currentZoneCenterZ + previousZoneRadius - nextZoneRadius + 1));
-        Logger.getLogger().devWarn(String.valueOf(nextZoneCenterZ));
 
         return nextZoneCenterZ;
     }
 
     public void moveZone(int xMove, int zMove, int duration, int steps) {
+
+        if (!isActive) {
+            return;
+        }
 
         int step = duration * 20 / steps;
 
@@ -136,7 +153,7 @@ public class Zone {
 
             final int delay = i;
 
-            Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+            ScheduledTask moveTask = Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
 
                 if (!Common.isGameStarted) {
                     return;
@@ -160,7 +177,18 @@ public class Zone {
                     isZoneMoving = false;
                 }
             }, delay);
+
+            this.currentMoveTasks.add(moveTask);
         }
+    }
+
+    public void stopMoving() {
+        this.isActive = false;
+        this.isZoneMoving = false;
+        for (ScheduledTask moveTask : this.currentMoveTasks) {
+            moveTask.cancel();
+        }
+        this.currentMoveTasks.clear();
     }
 
     public boolean isZoneMoving() {

@@ -114,6 +114,10 @@ public class DropBar {
 
     public void update() {
 
+        if (dropContainer == null) {
+            return;
+        }
+
         Component actionBar = Component.text(worldName)
                 .decorate(TextDecoration.BOLD)
                 .append(Component.space())

@@ -56,8 +56,7 @@ public class InviteTeamCommand implements CommandInterface {
                     .append(Component.text(invitedPlayer.getName())
                             .decorate(TextDecoration.BOLD))
                     .append(Component.space())
-                    .append(Component.text("has been invited to your team!"))
-                    .append(Component.newline());
+                    .append(Component.text("has been invited to your team!"));
 
             Common.sendNotification(header, text, (Player) sender);
         }

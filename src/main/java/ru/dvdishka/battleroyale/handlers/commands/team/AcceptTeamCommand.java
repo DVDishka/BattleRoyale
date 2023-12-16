@@ -36,6 +36,10 @@ public class AcceptTeamCommand implements CommandInterface {
             return;
         }
 
+        if (Team.invites.get(newTeamName) == null || !Team.invites.get(newTeamName).contains(newMemberName)) {
+            return;
+        }
+
         Team.invites.get(newTeamName).remove(newMemberName);
 
         newTeam.addMember(newMemberName);

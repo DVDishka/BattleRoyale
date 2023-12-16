@@ -21,8 +21,8 @@ public class ConfigVariables {
     public static int zoneMoveTimeOut = 10;
     public static int startBoxY = 200;
     public static List<World> dropSpawnWorlds = List.of(Bukkit.getWorld("world"));
-    public static int minDropSpawnY = 10;
-    public static int maxDropSpawnY = 256;
+    public static int minDropSpawnY = 40;
+    public static int maxDropSpawnY = 100;
     public static int dropOpenTime = 90;
     public static String dropTypesFile = "plugins/BattleRoyale/dropTypes.yml";
 

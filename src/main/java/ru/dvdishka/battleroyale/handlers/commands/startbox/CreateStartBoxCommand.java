@@ -14,6 +14,10 @@ public class CreateStartBoxCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
+        for (World world : Bukkit.getWorlds()) {
+            world.setPVP(false);
+        }
+
         Common.isStartBox = true;
         Location startBoxLocation = new Location(
                 Bukkit.getWorld("world"),

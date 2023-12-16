@@ -54,6 +54,7 @@ public class StartCommand implements CommandInterface {
 
             world.setPVP(false);
             world.setTime(ConfigVariables.timeGameStart);
+            world.getWorldBorder().setCenter(world.getSpawnLocation());
             world.getWorldBorder().setSize(ConfigVariables.defaultWorldBorderDiameter, 1);
         }
 
@@ -76,7 +77,7 @@ public class StartCommand implements CommandInterface {
             Radar.getInstance().addViewer(player);
 
             Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 200 , 1, false, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 100 , 1, false, false));
             });
 
             int powerNumber = new Random().nextInt(0, SuperPower.values().length);

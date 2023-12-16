@@ -25,8 +25,8 @@ import ru.dvdishka.battleroyale.logic.Zone;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainerStage;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
-import ru.dvdishka.battleroyale.logic.event.DropClickEvent;
-import ru.dvdishka.battleroyale.logic.event.DropCreateEvent;
+import ru.dvdishka.battleroyale.logic.event.drop.DropClickEvent;
+import ru.dvdishka.battleroyale.logic.event.drop.DropCreateEvent;
 
 import java.util.Random;
 
@@ -35,7 +35,7 @@ public class DropHandler implements Listener {
     @EventHandler
     public void onDropCreateEvent(DropCreateEvent event) {
 
-        if (!Common.isGameStarted) {
+        if (!Common.isGameStarted || DropType.getDropTypes().isEmpty()) {
             return;
         }
 
@@ -125,10 +125,6 @@ public class DropHandler implements Listener {
 
             Common.sendNotification(header, text, player);
         }
-
-        Logger.getLogger().warn(String.valueOf(dropContainer.getLocation().getBlockX()));
-        Logger.getLogger().warn(String.valueOf(dropContainer.getLocation().getBlockY()));
-        Logger.getLogger().warn(String.valueOf(dropContainer.getLocation().getBlockZ()));
     }
 
     @EventHandler

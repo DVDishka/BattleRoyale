@@ -78,18 +78,20 @@ public class DropType implements ConfigurationSerializable {
 
             ItemStack deserializedItem = new ItemStack(itemMaterial, itemAmount);
 
-            Map<String, Object> serializedItemEnchantments = dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".enchantments").getValues(false);
+            try {
+                Map<String, Object> serializedItemEnchantments = dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".enchantments").getValues(false);
 
-            for (Map.Entry<String, Object> serializedEnchantment : serializedItemEnchantments.entrySet()) {
+                for (Map.Entry<String, Object> serializedEnchantment : serializedItemEnchantments.entrySet()) {
 
-                Enchantment itemDeserializedEnchantment = Enchantment.getByKey(NamespacedKey.minecraft(((String) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".enchantments." + serializedEnchantment.getKey()).get("name")).toLowerCase()));
-                int itemDeserializedEnchantmentLevel = (int) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".enchantments." + serializedEnchantment.getKey()).get("level");
+                    Enchantment itemDeserializedEnchantment = Enchantment.getByKey(NamespacedKey.minecraft(((String) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".enchantments." + serializedEnchantment.getKey()).get("name")).toLowerCase()));
+                    int itemDeserializedEnchantmentLevel = (int) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".enchantments." + serializedEnchantment.getKey()).get("level");
 
-                ItemMeta itemMeta = deserializedItem.getItemMeta();
-                itemMeta.addEnchant(itemDeserializedEnchantment, itemDeserializedEnchantmentLevel, true);
+                    ItemMeta itemMeta = deserializedItem.getItemMeta();
+                    itemMeta.addEnchant(itemDeserializedEnchantment, itemDeserializedEnchantmentLevel, true);
 
-                deserializedItem.setItemMeta(itemMeta);
-            }
+                    deserializedItem.setItemMeta(itemMeta);
+                }
+            } catch (Exception ignored) {}
 
             deserializedItems.add(deserializedItem);
         }

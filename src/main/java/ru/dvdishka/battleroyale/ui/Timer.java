@@ -12,6 +12,8 @@ import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.Scheduler;
 
+import java.util.ArrayList;
+
 public class Timer {
 
     private static Timer instance = null;
@@ -20,7 +22,8 @@ public class Timer {
     private int timeSeconds = 0;
     private ZonePhase zonePhase;
 
-    ScheduledTask lastSecondsTimerTask = null;
+    private ScheduledTask lastSecondsTimerTask = null;
+    private ArrayList<ScheduledTask> timerUpdateTasks = new ArrayList<>();
 
     private Timer() {}
 
@@ -33,9 +36,15 @@ public class Timer {
 
     public void startTimer(int timeSeconds, ZonePhase zonePhase, boolean callEvent) {
 
+        if (this.timer == null) {
+            return;
+        }
+
         if (lastSecondsTimerTask != null) {
             lastSecondsTimerTask.cancel();
         }
+
+        this.timerUpdateTasks.clear();;
 
         this.timeSeconds = timeSeconds;
         this.zonePhase = zonePhase;
@@ -66,7 +75,7 @@ public class Timer {
 
         for (int i = changePeriod; i <= time; i += changePeriod) {
 
-            Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+            ScheduledTask timerUpdateTask = Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
 
                 if (!Common.isGameStarted) {
                     return;
@@ -78,6 +87,8 @@ public class Timer {
                     this.timer.setProgress(1);
                 }
             }, i);
+
+            this.timerUpdateTasks.add(timerUpdateTask);
         }
 
         updateTimerTitle();
@@ -100,6 +111,10 @@ public class Timer {
         try {
             this.timer.removeAll();
             this.timer.setVisible(false);
+            instance = null;
+            for (ScheduledTask timerUpdateTask : timerUpdateTasks) {
+                timerUpdateTask.cancel();
+            }
         } catch (Exception ignored) {}
     }
 

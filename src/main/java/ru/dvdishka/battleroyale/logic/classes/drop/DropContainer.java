@@ -207,12 +207,12 @@ public class DropContainer {
 
         Scheduler.getScheduler().runSyncRepeatingTask(Common.plugin, (scheduledTask) -> {
             if (timeToOpen > 0) {
-                for (Player player : this.location.getNearbyPlayers(50)) {
+                for (Player player : this.location.getNearbyPlayers(25)) {
                     player.playSound(player, Sound.UI_BUTTON_CLICK, 100, 1);
                 }
                 this.timeToOpen--;
             } else {
-                for (Player player : this.location.getNearbyPlayers(50)) {
+                for (Player player : this.location.getNearbyPlayers(25)) {
                     player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1000, 10);
                     player.playSound(player, Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1000, 1);
                 }

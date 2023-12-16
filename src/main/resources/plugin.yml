@@ -6,3 +6,21 @@ prefix: BattleRoyale
 authors: [ dvdishka ]
 description: BattleRoyale plugin
 website: dvdcraft.ru
+
+permissions:
+  battleroyale.*:
+    default: op
+    children:
+      battleroyale.start_stop:
+        default: op
+      battleroyale.start_box:
+        default: op
+      battleroyale.team.*:
+        default: true
+        children:
+          battleroyale.team.create:
+            default: true
+      battleroyale.revive.*:
+        default: op
+      battleroyale.drop.create:
+        default: op

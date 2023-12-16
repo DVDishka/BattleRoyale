@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import ru.dvdishka.battleroyale.logic.*;
 import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
-import ru.dvdishka.battleroyale.logic.event.DropCreateEvent;
+import ru.dvdishka.battleroyale.logic.event.drop.DropCreateEvent;
 import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
 import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
@@ -22,7 +22,7 @@ public class ZoneStageHandler implements Listener  {
     @org.bukkit.event.EventHandler
     public void onNextGameStageEvent(NextGameStageEvent event) {
 
-        if (!Common.isGameStarted) {
+        if (!Common.isGameStarted && !Common.isWinStage) {
             return;
         }
 

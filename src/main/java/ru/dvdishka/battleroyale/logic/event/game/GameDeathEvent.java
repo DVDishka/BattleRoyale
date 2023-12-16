@@ -1,11 +1,11 @@
-package ru.dvdishka.battleroyale.logic.event;
+package ru.dvdishka.battleroyale.logic.event.game;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class DeathEvent extends Event {
+public class GameDeathEvent extends Event {
 
     private final Player player;
 
@@ -20,7 +20,7 @@ public class DeathEvent extends Event {
         return handlerList;
     }
 
-    public DeathEvent(Player player) {
+    public GameDeathEvent(Player player) {
         this.player = player;
     }
 

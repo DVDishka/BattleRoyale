@@ -2,26 +2,19 @@ package ru.dvdishka.battleroyale.handlers;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Sound;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import ru.dvdishka.battleroyale.logic.Common;
-import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.Scheduler;
 import ru.dvdishka.battleroyale.logic.Team;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
-import ru.dvdishka.battleroyale.logic.event.DeathEvent;
-import ru.dvdishka.battleroyale.logic.event.ReviveDeathEvent;
+import ru.dvdishka.battleroyale.logic.event.game.GameDeathEvent;
+import ru.dvdishka.battleroyale.logic.event.game.ReviveDeathEvent;
 import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
 
@@ -80,58 +73,6 @@ public class EventHandler implements Listener {
     }
 
     @org.bukkit.event.EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-
-        ArrayList<String> aliveTeams;
-        Player player = event.getPlayer();
-
-        aliveTeams = getAliveTeams(player);
-
-        Team playerTeam = Team.getTeam(player);
-
-        // IF ONLY ONE TEAM LEFT
-        if (aliveTeams.size() == 1) {
-
-            // IF THIS PLAYER QUIT WHEN THERE ARE NO ALIVE PLAYERS IN HIS TEAM AND ONLY ONE OTHER TEAM LEFT
-            if (playerTeam == null || !aliveTeams.contains(playerTeam.getName())) {
-
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-                    player.setGameMode(GameMode.SPECTATOR);
-                });
-
-                Common.deadPlayers.add(player.getName());
-
-                if (playerTeam != null) {
-                    Team.deadTeams.add(playerTeam.getName());
-                }
-
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-
-                    if (playerTeam != null) {
-                        Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
-                            onlinePlayer.sendTitle(ChatColor.RED + "Team " + playerTeam.getName() + " is eliminated!", "");
-                        });
-                    } else {
-                        Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
-                            onlinePlayer.sendTitle(ChatColor.RED + "Team " + player.getName() + " is eliminated!", "");
-                        });
-                    }
-                }
-
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
-                        if (Common.players.contains(onlinePlayer.getName())) {
-                            onlinePlayer.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_6, 1000, 0);
-                        }
-                        onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
-                    });
-                }
-            }
-        }
-    }
-
-    @org.bukkit.event.EventHandler
     public void onDeath(PlayerDeathEvent event) {
 
         if (Common.isGameStarted) {
@@ -142,109 +83,8 @@ public class EventHandler implements Listener {
             }
             if (!Common.isRevivalEnabled) {
 
-                Bukkit.getPluginManager().callEvent(new DeathEvent(event.getPlayer()));
+                Bukkit.getPluginManager().callEvent(new GameDeathEvent(event.getPlayer()));
             }
         }
-    }
-
-    @org.bukkit.event.EventHandler
-    public void onReviveDeath(ReviveDeathEvent event) {}
-
-    @org.bukkit.event.EventHandler
-    public void onGameDeath(DeathEvent event) {
-
-        Player player = event.getPlayer();
-        Team playerTeam = Team.getTeam(event.getPlayer());
-        boolean isTeamDead = true;
-
-        Common.deadPlayers.add(event.getPlayer().getName());
-
-        if (playerTeam != null) {
-            for (String teamMate : playerTeam.getMembers()) {
-                if (!Common.deadPlayers.contains(teamMate)) {
-                    isTeamDead = false;
-                    break;
-                }
-            }
-        }
-
-        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-            player.setGameMode(GameMode.SPECTATOR);
-        });
-
-        ArrayList<String> aliveTeams = new ArrayList<>();
-
-        if (isTeamDead) {
-
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-
-                if (onlinePlayer.getGameMode().equals(GameMode.SURVIVAL) && !onlinePlayer.getName().equals(player.getName())) {
-                    if (Team.getTeam(onlinePlayer) != null) {
-                        if (!aliveTeams.contains(onlinePlayer.getName())) {
-                            aliveTeams.add(Team.getTeam(onlinePlayer).getName());
-                        }
-                    } else {
-                        aliveTeams.add(onlinePlayer.getName());
-                    }
-                }
-
-                if (playerTeam != null) {
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
-                        onlinePlayer.sendTitle(ChatColor.RED + "Team " + playerTeam.getName() + " is eliminated!", "");
-                    });
-                } else {
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-                        onlinePlayer.sendTitle(ChatColor.RED + "Team " + player.getName() + " is eliminated!", "");
-                    });
-                }
-            }
-
-            if (playerTeam != null) {
-                Team.deadTeams.add(playerTeam.getName());
-            }
-
-            if (aliveTeams.size() == 1) {
-
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
-                        if (Common.players.contains(onlinePlayer.getName())) {
-                            onlinePlayer.playSound(onlinePlayer, Sound.ITEM_GOAT_HORN_SOUND_6, 1000, 0);
-                        }
-                        onlinePlayer.sendTitle(ChatColor.GREEN + "Team " + aliveTeams.get(0) + " wins!", "", 10, 100, 10);
-                    });
-                }
-
-                Timer.getInstance().unregister();
-
-                BossBar bossBar = Bukkit.createBossBar("Team " + aliveTeams.get(0) + " wins!", BarColor.PINK, BarStyle.SOLID);
-
-                Logger.getLogger().log("Team " + aliveTeams.get(0) + " wins!");
-            }
-        }
-        if (!isTeamDead) {
-            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-                player.kick(Component.text("You are out and your team is not yet!"));
-            });
-        }
-    }
-
-    private static ArrayList<String> getAliveTeams(Player notCheckedPlayer) {
-
-        ArrayList<String> aliveTeams = new ArrayList<>();
-
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-
-            if (onlinePlayer.getGameMode().equals(GameMode.SURVIVAL) && !onlinePlayer.getName().equals(notCheckedPlayer.getName())) {
-                if (Team.getTeam(onlinePlayer) != null) {
-                    if (!aliveTeams.contains(onlinePlayer.getName())) {
-                        aliveTeams.add(Team.getTeam(onlinePlayer).getName());
-                    }
-                } else {
-                    aliveTeams.add(onlinePlayer.getName());
-                }
-            }
-        }
-        return aliveTeams;
     }
 }

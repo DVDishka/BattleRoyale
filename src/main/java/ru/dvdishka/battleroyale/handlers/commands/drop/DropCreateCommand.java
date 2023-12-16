@@ -8,7 +8,7 @@ import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
-import ru.dvdishka.battleroyale.logic.event.DropCreateEvent;
+import ru.dvdishka.battleroyale.logic.event.drop.DropCreateEvent;
 
 public class DropCreateCommand implements CommandInterface {
 

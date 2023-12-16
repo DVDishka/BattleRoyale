@@ -10,8 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import ru.dvdishka.battleroyale.handlers.DropHandler;
-import ru.dvdishka.battleroyale.handlers.StartElytraHandler;
+import ru.dvdishka.battleroyale.handlers.*;
 import ru.dvdishka.battleroyale.handlers.commands.drop.*;
 import ru.dvdishka.battleroyale.handlers.commands.ReviveCommand;
 import ru.dvdishka.battleroyale.handlers.commands.StartCommand;
@@ -19,11 +18,9 @@ import ru.dvdishka.battleroyale.handlers.commands.StopCommand;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.CreateStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.RemoveStartBoxCommand;
-import ru.dvdishka.battleroyale.handlers.EventHandler;
 import ru.dvdishka.battleroyale.handlers.commands.team.*;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
-import ru.dvdishka.battleroyale.handlers.ZoneStageHandler;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -569,6 +566,7 @@ public class Initialization {
         Bukkit.getPluginManager().registerEvents(new ZoneStageHandler(), plugin);
         Bukkit.getPluginManager().registerEvents(new DropHandler(), plugin);
         Bukkit.getPluginManager().registerEvents(new StartElytraHandler(), plugin);
+        Bukkit.getPluginManager().registerEvents(new GameHandler(), plugin);
     }
 
     public static int loadIntConfigValueSafely(FileConfiguration config, String path, int defaultValue) {

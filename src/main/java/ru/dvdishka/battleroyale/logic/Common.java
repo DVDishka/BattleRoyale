@@ -18,6 +18,7 @@ import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
 import ru.dvdishka.battleroyale.ui.DropBar;
 import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
+import ru.dvdishka.battleroyale.ui.WinBar;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class Common {
     public static volatile boolean isBreak = false;
     public static volatile boolean isRevivalEnabled = true;
     public static volatile boolean isPVPEnabled = false;
+    public static volatile boolean isWinStage = false;
 
     public static int zoneStage = -1;
     public static boolean isStartBox = false;
@@ -56,23 +58,20 @@ public class Common {
         Common.isPortalLocked = false;
         Common.isRevivalEnabled = true;
         Common.isPVPEnabled = false;
+        Common.isWinStage = false;
 
-        Zone.getInstance().setZoneMoving(false);
+        Zone.unregister();
         Zone.getInstance().setVariables(
                 ConfigVariables.defaultWorldBorderDiameter,
                 ConfigVariables.defaultWorldBorderDiameter,
-                0,
-                0,
-                0,
-                0);
+                Bukkit.getWorld("world").getSpawnLocation().getBlockX(),
+                Bukkit.getWorld("world").getSpawnLocation().getBlockZ(),
+                Bukkit.getWorld("world").getSpawnLocation().getBlockX(),
+                Bukkit.getWorld("world").getSpawnLocation().getBlockZ());
 
         if (Radar.isInitialized()) {
             Radar.getInstance().movingZoneChar = "=";
             Radar.getInstance().unregister();
-        }
-
-        for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-            team.unregister();
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -83,6 +82,7 @@ public class Common {
 
         Scheduler.cancelTasks(Common.plugin);
 
+        WinBar.getInstance().unregister();
         Timer.getInstance().unregister();
         for (DropBar dropBar : List.copyOf(DropBar.getInstances())) {
             dropBar.unregister();
@@ -160,9 +160,8 @@ public class Common {
             Component message = Component.empty();
 
             message = message
-                    .append(Component.newline())
                     .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
+                            .color(NamedTextColor.DARK_AQUA)
                             .decorate(TextDecoration.BOLD))
                     .append(Component.newline());
 
@@ -181,9 +180,8 @@ public class Common {
 
             message = message
                     .append(Component.text("-".repeat(26))
-                            .color(NamedTextColor.RED)
-                            .decorate(TextDecoration.BOLD))
-                    .append(Component.newline());
+                            .color(NamedTextColor.DARK_AQUA)
+                            .decorate(TextDecoration.BOLD));
 
             player.sendMessage(message);
 
