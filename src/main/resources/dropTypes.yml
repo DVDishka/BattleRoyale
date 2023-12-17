@@ -1,18 +1,271 @@
-1:
+attack_potions:
   items:
     1:
-      material: "diamond_sword"
+      material: potion
+      amount: 1
+      effects:
+        1:
+          name: strength
+          level: 3
+          duration: 20
+    2:
+      material: splash_potion
+      amount: 1
+      effects:
+        1:
+          name: weakness
+          level: 4
+          duration: 60
+    3:
+      material: splash_potion
+      amount: 1
+      effects:
+        1:
+          name: weakness
+          level: 4
+          duration: 60
+    4:
+      material: splash_potion
+      amount: 1
+      effects:
+        1:
+          name: weakness
+          level: 4
+          duration: 60
+    5:
+      material: splash_potion
+      amount: 1
+      effects:
+        1:
+          name: darkness
+          level: 1
+          duration: 90
+    6:
+      material: splash_potion
+      amount: 1
+      effects:
+        1:
+          name: darkness
+          level: 1
+          duration: 90
+    7:
+      material: splash_potion
+      amount: 1
+      effects:
+        1:
+          name: darkness
+          level: 1
+          duration: 90
+    8:
+      material: lingering_potion
+      amount: 1
+      effects:
+        1:
+          name: instant_damage
+          level: 3
+    9:
+      material: lingering_potion
+      amount: 1
+      effects:
+        1:
+          name: instant_damage
+          level: 3
+    10:
+      material: lingering_potion
+      amount: 1
+      effects:
+        1:
+          name: instant_damage
+          level: 3
+    11:
+      material: lingering_potion
+      amount: 1
+      effects:
+        1:
+          name: poison
+          level: 3
+          duration: 8
+    12:
+      material: lingering_potion
+      amount: 1
+      effects:
+        1:
+          name: poison
+          level: 3
+          duration: 8
+    13:
+      material: lingering_potion
+      amount: 1
+      effects:
+        1:
+          name: poison
+          level: 3
+          duration: 8
+weapons:
+  items:
+    1:
+      material: diamond_sword
       amount: 1
       enchantments:
         1:
-          name: "sharpness"
-          level: 3
-2:
-  items:
-    1:
-      material: "diamond_pickaxe"
+          name: sharpness
+          level: 2
+        2:
+          name: fire_aspect
+          level: 1
+    2:
+      material: diamond_axe
       amount: 1
       enchantments:
         1:
-          name: "sharpness"
+          name: sharpness
           level: 3
+    3:
+      material: bow
+      amount: 1
+      enchantments:
+        1:
+          name: infinity
+          level: 1
+    4:
+      material: bow
+      amount: 1
+      enchantments:
+        1:
+          name: flame
+          level: 1
+    5:
+      material: tipped_arrow
+      amount: 4
+      effects:
+        1:
+          name: darkness
+          level: 1
+          duration: 45
+    6:
+      material: tipped_arrow
+      amount: 4
+      effects:
+        1:
+          name: instant_damage
+          level: 2
+    7:
+      material: tipped_arrow
+      amount: 4
+      effects:
+        1:
+          name: poison
+          level: 3
+          duration: 8
+    8:
+      material: tipped_arrow
+      amount: 4
+      effects:
+        1:
+          name: wither
+          level: 2
+          duration: 8
+    9:
+      material: tipped_arrow
+      amount: 16
+      effects:
+        1:
+          name: nausea
+          level: 1
+          duration: 45
+    10:
+      material: arrow
+      amount: 64
+armor:
+  items:
+    1:
+      material: diamond_helmet
+      amount: 1
+      enchantments:
+        1:
+          name: protection
+          level: 4
+    2:
+      material: diamond_chestplate
+      amount: 1
+      enchantments:
+        1:
+          name: thorns
+          level: 2
+    3:
+      material: diamond_leggings
+      amount: 1
+      enchantments:
+        1:
+          name: protection
+          level: 3
+    4:
+      material: diamond_boots
+      amount: 1
+      enchantments:
+        1:
+          name: feather_falling
+          level: 3
+    5:
+      material: stick
+      amount: 1
+      enchantments:
+        1:
+          name: knockback
+          level: 5
+    6:
+      material: potion
+      amount: 1
+      effects:
+        1:
+          name: regeneration
+          level: 4
+          duration: 15
+    7:
+      material: potion
+      amount: 1
+      effects:
+        1:
+          name: resistance
+          level: 4
+          duration: 15
+    8:
+      material: potion
+      amount: 1
+      effects:
+        1:
+          name: health_boost
+          level: 6
+          duration: 90
+    9:
+      material: potion
+      amount: 1
+      effects:
+        1:
+          name: absorption
+          level: 4
+          duration: 40
+    10:
+      material: potion
+      amount: 1
+      effects:
+        1:
+          name: saturation
+          level: 4
+          duration: 40
+    11:
+      material: potion
+      amount: 1
+      effects:
+        1:
+          name: saturation
+          level: 4
+          duration: 40
+    12:
+      material: potion
+      amount: 1
+      effects:
+        1:
+          name: saturation
+          level: 4
+          duration: 40

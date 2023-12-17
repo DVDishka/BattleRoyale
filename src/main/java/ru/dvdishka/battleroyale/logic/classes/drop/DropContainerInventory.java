@@ -1,5 +1,7 @@
 package ru.dvdishka.battleroyale.logic.classes.drop;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +12,9 @@ public class DropContainerInventory implements InventoryHolder {
     private final Inventory inventory;
 
     public DropContainerInventory() {
-        this.inventory = Common.plugin.getServer().createInventory(this, 54);
+        this.inventory = Common.plugin.getServer().createInventory(this, 54, Component
+                .text("Drop container")
+                .color(NamedTextColor.LIGHT_PURPLE));
     }
 
     @Override

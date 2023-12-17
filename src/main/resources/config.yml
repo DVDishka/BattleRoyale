@@ -1,12 +1,12 @@
 game:
   # A zone from which movement to the first zone begins
-  defaultWorldBorderRadius: 5000
+  defaultWorldBorderRadius: 2500
   # Zone radius (blocks) (must be in descending order)
   zones: [1000, 750, 500, 350, 250, 100]
   # Zone duration (seconds) (the amount of time it will take to reach the corresponding zone after the previous one) (first time is between defaultWorldBorderRadius and first zone)
-  times: [1500, 1200, 900, 600, 300, 200]
+  times: [900, 600, 300, 300, 300, 120]
   # Timeout between zones (seconds) (amount of zones + 1) (first timeOut is between defaultWorldBorderRadius and first zone)
-  timeOuts: [1800, 750, 600, 450, 300, 150, 100]
+  timeOuts: [1800, 900, 600, 450, 300, 150, 100]
   # Zone number after which PVP will be enabled (0 - zones.size + 1) 0 to enable pvp immediately, zones.size + 1 disable pvp for the entire game
   pvpEnableZone: 1
   # Zone number after which revival will be disabled (0 - zones.size + 1) 0 to disable reviving, zones.size + 1 to allow reviving for every zone
@@ -23,8 +23,8 @@ drop:
   dropTypesFile: "plugins/BattleRoyale/dropTypes.yml"
   # Time after which the drop container will be opened after first click (seconds)
   dropOpenTime: 90
-  # Worlds where drop containers will appear (world/the_nether/the_end or custom_namespace:custom_world_name)
-  dropSpawnWorlds: [ "world" ]
+  # Worlds where drop containers will appear (overworld/the_nether/the_end or custom_namespace:custom_world_name)
+  dropSpawnWorlds: [ "overworld" ]
 
 
 finalZone:

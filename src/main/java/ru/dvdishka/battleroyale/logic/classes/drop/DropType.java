@@ -7,6 +7,10 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Logger;
@@ -69,12 +73,16 @@ public class DropType implements ConfigurationSerializable {
             Map<String, Object> serializedItem = dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey()).getValues(false);
 
             Material itemMaterial = Material.getMaterial(((String) serializedItem.get("material")).toUpperCase());
-            int itemAmount = (int) serializedItem.get("amount");
+
+            int itemAmount = 1;
+            try {
+                itemAmount = (int) serializedItem.get("amount");
+            } catch (Exception ignored) {}
 
             if (itemMaterial == null) {
                 Logger.getLogger().warn("Wrong material name in " + ConfigVariables.dropTypesFile + ": " + (String) serializedItem.get("material"));
+                continue;
             }
-            assert itemMaterial != null;
 
             ItemStack deserializedItem = new ItemStack(itemMaterial, itemAmount);
 
@@ -84,10 +92,38 @@ public class DropType implements ConfigurationSerializable {
                 for (Map.Entry<String, Object> serializedEnchantment : serializedItemEnchantments.entrySet()) {
 
                     Enchantment itemDeserializedEnchantment = Enchantment.getByKey(NamespacedKey.minecraft(((String) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".enchantments." + serializedEnchantment.getKey()).get("name")).toLowerCase()));
-                    int itemDeserializedEnchantmentLevel = (int) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".enchantments." + serializedEnchantment.getKey()).get("level");
+
+                    int itemDeserializedEnchantmentLevel = 1;
+                    try {
+                        itemDeserializedEnchantmentLevel = (int) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".enchantments." + serializedEnchantment.getKey()).get("level");
+                    } catch (Exception ignored) {}
 
                     ItemMeta itemMeta = deserializedItem.getItemMeta();
                     itemMeta.addEnchant(itemDeserializedEnchantment, itemDeserializedEnchantmentLevel, true);
+
+                    deserializedItem.setItemMeta(itemMeta);
+                }
+            } catch (Exception ignored) {}
+
+            try {
+                Map<String, Object> serializedItemEffects = dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".effects").getValues(false);
+
+                for (Map.Entry<String, Object> serializedEffect : serializedItemEffects.entrySet()) {
+
+                    PotionEffectType itemDeserializedEffect = PotionEffectType.getByKey(NamespacedKey.minecraft(((String) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".effects." + serializedEffect.getKey()).get("name")).toLowerCase()));
+
+                    int itemDeserializedEffectLevel = 0;
+                    try {
+                        itemDeserializedEffectLevel = -1 + (int) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".effects." + serializedEffect.getKey()).get("level");
+                    } catch (Exception ignored) {}
+
+                    int itemDeserializedEffectDuration = 0;
+                    try {
+                        itemDeserializedEffectDuration = 20 * (int) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".effects." + serializedEffect.getKey()).get("duration");
+                    } catch (Exception ignored) {}
+
+                    PotionMeta itemMeta = (PotionMeta) deserializedItem.getItemMeta();
+                    itemMeta.addCustomEffect(new PotionEffect(itemDeserializedEffect, itemDeserializedEffectDuration, itemDeserializedEffectLevel), false);
 
                     deserializedItem.setItemMeta(itemMeta);
                 }
