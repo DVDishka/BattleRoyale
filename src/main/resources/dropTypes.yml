@@ -6,7 +6,7 @@ attack_potions:
       effects:
         1:
           name: strength
-          level: 3
+          level: 2
           duration: 20
     2:
       material: splash_potion
@@ -14,7 +14,7 @@ attack_potions:
       effects:
         1:
           name: weakness
-          level: 4
+          level: 3
           duration: 60
     3:
       material: splash_potion
@@ -22,7 +22,7 @@ attack_potions:
       effects:
         1:
           name: weakness
-          level: 4
+          level: 3
           duration: 60
     4:
       material: splash_potion
@@ -30,7 +30,7 @@ attack_potions:
       effects:
         1:
           name: weakness
-          level: 4
+          level: 3
           duration: 60
     5:
       material: splash_potion
@@ -83,7 +83,7 @@ attack_potions:
       effects:
         1:
           name: poison
-          level: 3
+          level: 2
           duration: 8
     12:
       material: lingering_potion
@@ -91,7 +91,7 @@ attack_potions:
       effects:
         1:
           name: poison
-          level: 3
+          level: 2
           duration: 8
     13:
       material: lingering_potion
@@ -99,7 +99,7 @@ attack_potions:
       effects:
         1:
           name: poison
-          level: 3
+          level: 2
           duration: 8
 weapons:
   items:
@@ -155,7 +155,7 @@ weapons:
       effects:
         1:
           name: poison
-          level: 3
+          level: 2
           duration: 8
     8:
       material: tipped_arrow
@@ -184,9 +184,9 @@ armor:
       enchantments:
         1:
           name: protection
-          level: 4
+          level: 2
     2:
-      material: diamond_chestplate
+      material: iron_chestplate
       amount: 1
       enchantments:
         1:
@@ -198,7 +198,7 @@ armor:
       enchantments:
         1:
           name: protection
-          level: 3
+          level: 2
     4:
       material: diamond_boots
       amount: 1
@@ -212,14 +212,14 @@ armor:
       enchantments:
         1:
           name: knockback
-          level: 5
+          level: 3
     6:
       material: potion
       amount: 1
       effects:
         1:
           name: regeneration
-          level: 4
+          level: 2
           duration: 15
     7:
       material: potion
@@ -227,7 +227,7 @@ armor:
       effects:
         1:
           name: resistance
-          level: 4
+          level: 2
           duration: 15
     8:
       material: potion
@@ -235,7 +235,7 @@ armor:
       effects:
         1:
           name: health_boost
-          level: 6
+          level: 3
           duration: 90
     9:
       material: potion
@@ -243,7 +243,7 @@ armor:
       effects:
         1:
           name: absorption
-          level: 4
+          level: 2
           duration: 40
     10:
       material: potion

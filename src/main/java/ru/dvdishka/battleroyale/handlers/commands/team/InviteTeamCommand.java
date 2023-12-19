@@ -53,8 +53,7 @@ public class InviteTeamCommand implements CommandInterface {
                             .decorate(TextDecoration.BOLD));
 
             text = text
-                    .append(Component.text(invitedPlayer.getName())
-                            .decorate(TextDecoration.BOLD))
+                    .append(Component.text(invitedPlayer.getName()))
                     .append(Component.space())
                     .append(Component.text("has been invited to your team!"));
 
