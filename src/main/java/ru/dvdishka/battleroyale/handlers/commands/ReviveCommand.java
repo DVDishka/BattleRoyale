@@ -12,10 +12,6 @@ public class ReviveCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
-        if (!sender.isOp()) {
-            return;
-        }
-
         Player revivePlayer = (Player) args.get("player");
 
         Common.deadPlayers.remove(revivePlayer.getName());
@@ -24,7 +20,8 @@ public class ReviveCommand implements CommandInterface {
 
             Team.deadTeams.remove(Team.getTeam(revivePlayer.getName()).getName());
 
-            returnSuccess(revivePlayer.getName() + " has been revived!", sender);
         } catch (Exception ignored) {}
+
+        returnSuccess(revivePlayer.getName() + " has been revived!", sender);
     }
 }

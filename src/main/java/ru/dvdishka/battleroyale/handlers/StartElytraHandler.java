@@ -32,47 +32,7 @@ public class StartElytraHandler implements Listener {
 
                 Player player = Bukkit.getPlayer(playerName);
 
-                try {
-                    banPlayerElytraTasks.get(player.getName()).cancel();
-                } catch (Exception ignored) {}
-
-                startElytraEnabled.put(playerName, Boolean.TRUE);
-
-                ItemStack startElytra = new ItemStack(Material.ELYTRA);
-                ItemMeta startElytraMeta = startElytra.getItemMeta();
-
-                startElytraMeta.getPersistentDataContainer()
-                        .set(NamespacedKey.fromString("start_elytra"), PersistentDataType.BOOLEAN, true);
-                startElytraMeta.displayName(Component
-                        .text("hang glider")
-                        .color(NamedTextColor.LIGHT_PURPLE)
-                        .decorate(TextDecoration.BOLD));
-                startElytra.setItemMeta(startElytraMeta);
-
-                {
-                    Component header = Component.empty();
-                    Component text = Component.empty();
-
-                    header = header
-                            .append(Component.text("HANG GLIDER")
-                                    .color(NamedTextColor.LIGHT_PURPLE)
-                                    .decorate(TextDecoration.BOLD));
-                    text = text
-                            .append(Component.text("You got a"))
-                            .append(Component.space())
-                            .append(Component.text("HANG GLIDER")
-                                    .color(NamedTextColor.GOLD))
-                            .append(Component.newline())
-                            .append(Component.text("-".repeat(27))
-                                    .color(NamedTextColor.YELLOW))
-                            .append(Component.newline())
-                            .append(Component.text("It will be deleted from your inventory after landing")
-                                    .color(NamedTextColor.RED));
-
-                    Common.sendNotification(header, text, player);
-                }
-
-                player.getInventory().setChestplate(startElytra);
+                giveStartElytra(player);
 
             } catch (Exception ignored) {}
         }

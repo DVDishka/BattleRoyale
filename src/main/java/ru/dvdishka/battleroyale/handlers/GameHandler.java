@@ -179,7 +179,10 @@ public class GameHandler implements Listener {
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
-            if (Common.players.contains(onlinePlayer.getName()) && !onlinePlayer.getName().equals(notCheckedPlayer.getName())) {
+            if (Common.players.contains(onlinePlayer.getName()) &&
+                    !onlinePlayer.getName().equals(notCheckedPlayer.getName()) &&
+                    !Common.deadPlayers.contains(onlinePlayer.getName())) {
+
                 if (Team.getTeam(onlinePlayer) != null) {
                     if (!aliveTeams.contains(onlinePlayer.getName())) {
                         aliveTeams.add(Team.getTeam(onlinePlayer).getName());

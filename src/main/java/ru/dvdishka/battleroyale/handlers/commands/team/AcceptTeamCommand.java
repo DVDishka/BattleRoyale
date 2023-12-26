@@ -16,7 +16,13 @@ public class AcceptTeamCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
+        String newTeamName = (String) args.get("team");
+
         Common.buttonSound((Player) sender);
+
+        if (!Team.invites.containsKey(newTeamName) || !Team.invites.get(newTeamName).contains(sender.getName())) {
+            return;
+        }
 
         if (Common.isGameStarted) {
             returnFailure("You can not accept an invitation while the game is on!", sender);
@@ -24,8 +30,6 @@ public class AcceptTeamCommand implements CommandInterface {
         }
 
         String newMemberName = sender.getName();
-        String newTeamName = (String) args.get("team");
-
         Player newMember = (Player) sender;
 
         Team oldTeam = Team.getTeam(newMemberName);

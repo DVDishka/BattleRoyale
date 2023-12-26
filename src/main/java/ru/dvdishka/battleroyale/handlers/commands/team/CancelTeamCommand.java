@@ -16,17 +16,22 @@ public class CancelTeamCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
+        String teamName = (String) args.get("team");
+
         Common.buttonSound((Player) sender);
 
-        if (Team.get((String) args.get("team")) == null) {
+        if (!Team.invites.containsKey(teamName) || !Team.invites.get(teamName).contains(sender.getName())) {
+            return;
+        }
 
+        if (Team.get(teamName) == null) {
             returnFailure("Wrong team name!", sender);
             return;
         }
 
-        Team team = Team.getTeam((String) args.get("team"));
+        Team team = Team.getTeam(teamName);
 
-        Team.invites.get((String) args.get("team")).remove(sender.getName());
+        Team.invites.get(teamName).remove(sender.getName());
 
         try {
 

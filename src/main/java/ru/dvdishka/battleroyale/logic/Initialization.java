@@ -338,61 +338,13 @@ public class Initialization {
 
         CommandTree commandTree = new CommandTree("battleRoyale");
 
+        // TEAM
         {
-            commandTree.then(new LiteralArgument("start").withPermission(Permission.START_STOP.getPermission())
-
-                    .executes((commandSender, commandArguments) -> {
-
-                        new StartCommand().execute(commandSender, commandArguments);
-                    })
-            );
-        }
-
-        {
-            commandTree.then(new LiteralArgument("stop").withPermission(Permission.START_STOP.getPermission())
-
-                    .executes((commandSender, commandArguments) -> {
-
-                        new StopCommand().execute(commandSender, commandArguments);
-                    })
-            );
-        }
-
-        {
-            commandTree.then(new LiteralArgument("startBox").withPermission(Permission.START_BOX.getPermission())
+            commandTree.then(new LiteralArgument("team")
 
                     .then(new LiteralArgument("create")
 
-                            .executes((commandSender, commandArguments) -> {
-
-                                new CreateStartBoxCommand().execute(commandSender, commandArguments);
-                            })
-                    )
-
-                    .then(new LiteralArgument("remove")
-
-                            .executes((commandSender, commandArguments) -> {
-
-                                new RemoveStartBoxCommand().execute(commandSender, commandArguments);
-                            })
-                    )
-
-                    .then(new LiteralArgument("open")
-
-                            .executes((commandSender, commandArguments) -> {
-
-                                new OpenStartBoxCommand().execute(commandSender, commandArguments);
-                            })
-                    )
-            );
-        }
-
-        {
-            commandTree.then(new LiteralArgument("team").withPermission(Permission.TEAM_CREATE.getPermission())
-
-                    .then(new LiteralArgument("create")
-
-                            .then(new StringArgument("teamName").withPermission(Permission.TEAM_CREATE.getPermission())
+                            .then(new StringArgument("teamName")
 
                                     .executesPlayer((commandSender, commandArguments) -> {
 
@@ -422,36 +374,39 @@ public class Initialization {
             );
         }
 
+        // ACCEPT OR CANCEL
         {
-            commandTree.then(new LiteralArgument("accept")
+            {
+                commandTree.then(new LiteralArgument("accept")
 
-                    .then(new StringArgument("team")
+                        .then(new StringArgument("team")
 
-                            .executesPlayer((commandSender, commandArguments) -> {
+                                .executesPlayer((commandSender, commandArguments) -> {
 
-                                new AcceptTeamCommand().execute(commandSender, commandArguments);
-                            })
-                    )
-            );
+                                    new AcceptTeamCommand().execute(commandSender, commandArguments);
+                                })
+                        )
+                );
+            }
+
+            {
+                commandTree.then(new LiteralArgument("cancel")
+
+                        .then(new StringArgument("team")
+
+                                .executesPlayer((commandSender, commandArguments) -> {
+
+                                    new CancelTeamCommand().execute(commandSender, commandArguments);
+                                })
+                        )
+                );
+            }
         }
 
         {
-            commandTree.then(new LiteralArgument("cancel")
+            commandTree.then(new LiteralArgument("revive").withPermission(Permission.REVIVE_KILL.getPermission())
 
-                    .then(new StringArgument("team")
-
-                            .executesPlayer((commandSender, commandArguments) -> {
-
-                                new CancelTeamCommand().execute(commandSender, commandArguments);
-                            })
-                    )
-            );
-        }
-
-        {
-            commandTree.then(new LiteralArgument("revive").withPermission(Permission.REVIVE.getPermission())
-
-                    .then(new PlayerArgument("player").withPermission(Permission.REVIVE.getPermission())
+                    .then(new PlayerArgument("player")
 
                             .executes((commandSender, commandArguments) -> {
 
@@ -461,6 +416,7 @@ public class Initialization {
             );
         }
 
+        // DROP
         {
             commandTree.then(new LiteralArgument("drop")
 
@@ -468,58 +424,6 @@ public class Initialization {
 
                         new DropListCommand().execute(commandSender, commandArguments);
                     })
-
-                    .then(new LiteralArgument("create").withPermission(Permission.DROP.getPermission())
-
-                            .then(new StringArgument("dropTypeName")
-                                    .includeSuggestions(ArgumentSuggestions.stringsWithTooltipsCollection(commandSenderSuggestionInfo -> {
-
-                                        Collection<IStringTooltip> suggestions = new ArrayList<>();
-
-                                        for (DropType dropType : DropType.getDropTypes()) {
-
-                                            String tooltip = "";
-
-                                            for (ItemStack itemStack : dropType.getItems()) {
-                                                if (itemStack != null) {
-                                                    tooltip = tooltip.concat(itemStack.getType().getKey().value() + ("(") + itemStack.getAmount() + ") ");
-                                                }
-                                            }
-
-                                            suggestions.add(StringTooltip.ofString(dropType.getName(), tooltip));
-                                        }
-
-                                        return suggestions;
-                                    }))
-                                    .setOptional(true)
-
-                                    .executes((commandSender, commandArguments) -> {
-
-                                        new DropCreateCommand().execute(commandSender, commandArguments);
-                                    })
-                            )
-                    )
-
-                    .then(new LiteralArgument("delete").withPermission(Permission.DROP.getPermission())
-
-                            .then(new TextArgument("dropName")
-                                    .includeSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
-
-                                        ArrayList<String> suggestions = new ArrayList<>();
-
-                                        for (DropContainer dropContainer : DropContainer.getContainerList()) {
-
-                                            suggestions.add("\"" + dropContainer.getName() + "\"");
-                                        }
-
-                                        return suggestions;
-                                    }))
-                                    .executes((commandSender, commandArguments) -> {
-
-                                        new DropDeleteCommand().execute(commandSender, commandArguments);
-                                    })
-                            )
-                    )
 
                     .then(new LiteralArgument("list")
 
@@ -556,6 +460,116 @@ public class Initialization {
 
                                 new DropUnFollowCommand().execute(commandSender, commandArguments);
                             })
+                    )
+            );
+        }
+
+        // ADMIN
+        {
+            commandTree.then(new LiteralArgument("admin")
+
+                    // GAME
+                    .then(new LiteralArgument("game").withPermission(Permission.START_STOP.getPermission())
+
+                            .then(new LiteralArgument("start")
+
+                                    .executes((commandSender, commandArguments) -> {
+
+                                        new StartCommand().execute(commandSender, commandArguments);
+                                    })
+                            )
+
+                            .then(new LiteralArgument("stop")
+
+                                    .executes((commandSender, commandArguments) -> {
+
+                                        new StopCommand().execute(commandSender, commandArguments);
+                                    })
+                            )
+                    )
+
+                    // START BOX
+                    .then(new LiteralArgument("startBox").withPermission(Permission.START_BOX.getPermission())
+
+                            .then(new LiteralArgument("create")
+
+                                    .executes((commandSender, commandArguments) -> {
+
+                                        new CreateStartBoxCommand().execute(commandSender, commandArguments);
+                                    })
+                            )
+
+                            .then(new LiteralArgument("remove")
+
+                                    .executes((commandSender, commandArguments) -> {
+
+                                        new RemoveStartBoxCommand().execute(commandSender, commandArguments);
+                                    })
+                            )
+
+                            .then(new LiteralArgument("open")
+
+                                    .executes((commandSender, commandArguments) -> {
+
+                                        new OpenStartBoxCommand().execute(commandSender, commandArguments);
+                                    })
+                            )
+                    )
+
+                    .then(new LiteralArgument("drop").withPermission(Permission.DROP.getPermission())
+
+                            .then(new LiteralArgument("create")
+
+                                    .then(new StringArgument("dropTypeName")
+                                            .includeSuggestions(ArgumentSuggestions.stringsWithTooltipsCollection(commandSenderSuggestionInfo -> {
+
+                                                Collection<IStringTooltip> suggestions = new ArrayList<>();
+
+                                                for (DropType dropType : DropType.getDropTypes()) {
+
+                                                    String tooltip = "";
+
+                                                    for (ItemStack itemStack : dropType.getItems()) {
+                                                        if (itemStack != null) {
+                                                            tooltip = tooltip.concat(itemStack.getType().getKey().value() + ("(") + itemStack.getAmount() + ") ");
+                                                        }
+                                                    }
+
+                                                    suggestions.add(StringTooltip.ofString(dropType.getName(), tooltip));
+                                                }
+
+                                                return suggestions;
+                                            }))
+                                            .setOptional(true)
+
+                                            .executes((commandSender, commandArguments) -> {
+
+                                                new DropCreateCommand().execute(commandSender, commandArguments);
+                                            })
+                                    )
+                            )
+
+                            .then(new LiteralArgument("delete")
+
+                                    .then(new TextArgument("dropName")
+                                            .includeSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+
+                                                ArrayList<String> suggestions = new ArrayList<>();
+
+                                                for (DropContainer dropContainer : DropContainer.getContainerList()) {
+
+                                                    suggestions.add("\"" + dropContainer.getName() + "\"");
+                                                }
+
+                                                return suggestions;
+                                            }))
+
+                                            .executes((commandSender, commandArguments) -> {
+
+                                                new DropDeleteCommand().execute(commandSender, commandArguments);
+                                            })
+                                    )
+                            )
                     )
             );
         }
