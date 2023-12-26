@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import ru.dvdishka.battleroyale.logic.*;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
@@ -166,7 +167,11 @@ public class GameHandler implements Listener {
     }
 
     @EventHandler
-    public void onReviveDeath(ReviveDeathEvent event) {}
+    public void onReviveRespawn(PlayerRespawnEvent event) {
+        if (Common.isRevivalEnabled) {
+            StartElytraHandler.giveStartElytra(event.getPlayer());
+        }
+    }
 
     public static ArrayList<String> getAliveTeams(Player notCheckedPlayer) {
 

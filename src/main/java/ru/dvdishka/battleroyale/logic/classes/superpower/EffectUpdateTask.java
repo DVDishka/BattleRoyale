@@ -18,20 +18,21 @@ public class EffectUpdateTask implements Runnable {
         for (Map.Entry<String, SuperPower> playerPower : Common.playersPower.entrySet()) {
             if (Bukkit.getOfflinePlayer(playerPower.getKey()).isOnline()) {
 
-                Player player = Bukkit.getPlayer(playerPower.getKey());
-                assert player != null;
+                try {
+                    Player player = Bukkit.getPlayer(playerPower.getKey());
 
-                List<PotionEffectType> effectTypes = playerPower.getValue().getEffects();
-                List<Integer> amplifiers = playerPower.getValue().getAmplifiers();
+                    List<PotionEffectType> effectTypes = playerPower.getValue().getEffects();
+                    List<Integer> amplifiers = playerPower.getValue().getAmplifiers();
 
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-                    for (int i = 0; i < effectTypes.size(); i++) {
-                        if (!player.hasPotionEffect(effectTypes.get(i)) || player.getPotionEffect(effectTypes.get(i)) != null
-                                && player.getPotionEffect(effectTypes.get(i)).getAmplifier() < amplifiers.get(i)) {
-                            player.addPotionEffect(new PotionEffect(effectTypes.get(i), 99999999, amplifiers.get(i), false, false, true));
+                    Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
+                        for (int i = 0; i < effectTypes.size(); i++) {
+                            if (!player.hasPotionEffect(effectTypes.get(i)) || player.getPotionEffect(effectTypes.get(i)) != null
+                                    && player.getPotionEffect(effectTypes.get(i)).getAmplifier() < amplifiers.get(i)) {
+                                player.addPotionEffect(new PotionEffect(effectTypes.get(i), 99999999, amplifiers.get(i), false, false, true));
+                            }
                         }
-                    }
-                });
+                    });
+                } catch (Exception ignored) {}
             }
         }
     }

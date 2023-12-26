@@ -18,6 +18,7 @@ import ru.dvdishka.battleroyale.handlers.commands.StartCommand;
 import ru.dvdishka.battleroyale.handlers.commands.StopCommand;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.CreateStartBoxCommand;
+import ru.dvdishka.battleroyale.handlers.commands.startbox.OpenStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.RemoveStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.team.*;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
@@ -360,7 +361,7 @@ public class Initialization {
         {
             commandTree.then(new LiteralArgument("startBox").withPermission(Permission.START_BOX.getPermission())
 
-                    .then(new LiteralArgument("create").withPermission(Permission.START_BOX.getPermission())
+                    .then(new LiteralArgument("create")
 
                             .executes((commandSender, commandArguments) -> {
 
@@ -368,11 +369,19 @@ public class Initialization {
                             })
                     )
 
-                    .then(new LiteralArgument("remove").withPermission(Permission.START_BOX.getPermission())
+                    .then(new LiteralArgument("remove")
 
                             .executes((commandSender, commandArguments) -> {
 
                                 new RemoveStartBoxCommand().execute(commandSender, commandArguments);
+                            })
+                    )
+
+                    .then(new LiteralArgument("open")
+
+                            .executes((commandSender, commandArguments) -> {
+
+                                new OpenStartBoxCommand().execute(commandSender, commandArguments);
                             })
                     )
             );

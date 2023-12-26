@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import ru.dvdishka.battleroyale.handlers.StartElytraHandler;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.CreateStartBoxCommand;
-import ru.dvdishka.battleroyale.handlers.commands.startbox.RemoveStartBoxCommand;
+import ru.dvdishka.battleroyale.handlers.commands.startbox.OpenStartBoxCommand;
 import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
 import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
@@ -94,10 +94,10 @@ public class StartCommand implements CommandInterface {
                     Component.text("by DVDishka"));
         }
 
-        StartElytraHandler.giveStartElytra();
+        StartElytraHandler.giveEveryoneStartElytra();
 
         new CreateStartBoxCommand().execute(sender, null);
-        new RemoveStartBoxCommand().execute(sender, null);
+        new OpenStartBoxCommand().execute(sender, null);
 
         Logger.getLogger().log("Battleroyale has been started");
 
