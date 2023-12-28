@@ -21,8 +21,8 @@ public class EffectUpdateTask implements Runnable {
                 try {
                     Player player = Bukkit.getPlayer(playerPower.getKey());
 
-                    List<PotionEffectType> effectTypes = playerPower.getValue().getEffects();
-                    List<Integer> amplifiers = playerPower.getValue().getAmplifiers();
+                    List<PotionEffectType> effectTypes = playerPower.getValue().getEffectTypes();
+                    List<Integer> amplifiers = playerPower.getValue().getEffectTypeAmplifiers();
 
                     Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
                         for (int i = 0; i < effectTypes.size(); i++) {

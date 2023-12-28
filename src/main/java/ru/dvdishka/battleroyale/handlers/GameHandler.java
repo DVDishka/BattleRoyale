@@ -7,6 +7,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
+import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -100,18 +101,18 @@ public class GameHandler implements Listener {
     @org.bukkit.event.EventHandler
     public void onGameDeath(GameDeathEvent event) {
 
-        Player player = event.getPlayer();
-        Team playerTeam = Team.getTeam(event.getPlayer());
+        String playerName = event.getPlayerName();
+        Team playerTeam = Team.getTeam(playerName);
         boolean isTeamDead = true;
 
-        String playerTeamName = player.getName();
+        String playerTeamName = playerName;
         TextColor playerTeamColor = NamedTextColor.WHITE;
         if (playerTeam != null) {
             playerTeamName = playerTeam.getName();
             playerTeamColor = playerTeam.getColor();
         }
 
-        Common.deadPlayers.add(event.getPlayer().getName());
+        Common.deadPlayers.add(playerName);
 
         for (Player onlinePayer : Bukkit.getOnlinePlayers()) {
             if (Common.players.contains(onlinePayer.getName())) {
@@ -120,7 +121,7 @@ public class GameHandler implements Listener {
                 Component text = Component.empty();
 
                 header = header
-                        .append(Component.text(event.getPlayer().getName())
+                        .append(Component.text(playerName)
                                 .decorate(TextDecoration.BOLD));
 
                 text = text
@@ -140,11 +141,16 @@ public class GameHandler implements Listener {
             }
         }
 
-        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-            player.setGameMode(GameMode.SPECTATOR);
-        });
+        if (Bukkit.getPlayer(playerName) != null) {
 
-        ArrayList<String> aliveTeams = getAliveTeams(player);
+            Player player = Bukkit.getPlayer(playerName);
+
+            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
+                player.setGameMode(GameMode.SPECTATOR);
+            });
+        }
+
+        ArrayList<String> aliveTeams = getAliveTeams(playerName);
 
         if (isTeamDead) {
 
@@ -160,9 +166,15 @@ public class GameHandler implements Listener {
                 Bukkit.getPluginManager().callEvent(new TeamWinEvent(aliveTeams.get(0), winTeamColor));
             }
         } else {
-            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-                player.kick(Component.text("You are out and your team is not yet!"));
-            });
+
+            if (Bukkit.getPlayer(playerName) != null) {
+
+                Player player = Bukkit.getPlayer(playerName);
+
+                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
+                    player.kick(Component.text("You are out and your team is not yet!"));
+                });
+            }
         }
     }
 
@@ -173,14 +185,14 @@ public class GameHandler implements Listener {
         }
     }
 
-    public static ArrayList<String> getAliveTeams(Player notCheckedPlayer) {
+    public static ArrayList<String> getAliveTeams(String notCheckedPlayer) {
 
         ArrayList<String> aliveTeams = new ArrayList<>();
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 
             if (Common.players.contains(onlinePlayer.getName()) &&
-                    !onlinePlayer.getName().equals(notCheckedPlayer.getName()) &&
+                    !onlinePlayer.getName().equals(notCheckedPlayer) &&
                     !Common.deadPlayers.contains(onlinePlayer.getName())) {
 
                 if (Team.getTeam(onlinePlayer) != null) {

@@ -4,7 +4,6 @@ import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -20,7 +19,6 @@ import org.bukkit.metadata.MetadataValue;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
 import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
-import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.Zone;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainerStage;
@@ -70,7 +68,7 @@ public class DropHandler implements Listener {
                     .append(Component.text("[DELETE]")
                             .color(NamedTextColor.RED)
                             .decorate(TextDecoration.BOLD)
-                            .clickEvent(ClickEvent.runCommand("/battleroyale drop delete " + "\"" + dropContainer.getName() + "\"")));
+                            .clickEvent(ClickEvent.runCommand("/battleroyale admin drop delete " + "\"" + dropContainer.getName() + "\"")));
 
             header = header
                     .append(Component.text("New drop container!")
@@ -96,7 +94,7 @@ public class DropHandler implements Listener {
                     .append(Component.newline())
                     .append(followButton);
 
-            if (player.hasPermission(Permission.DROP.getStringPermission())) {
+            if (player.hasPermission(Permission.DROP_EDIT.getStringPermission())) {
                 text = text
                         .append(Component.space())
                         .append(deleteButton);

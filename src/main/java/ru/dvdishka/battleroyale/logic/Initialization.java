@@ -13,14 +13,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import ru.dvdishka.battleroyale.handlers.*;
 import ru.dvdishka.battleroyale.handlers.commands.drop.*;
-import ru.dvdishka.battleroyale.handlers.commands.ReviveCommand;
-import ru.dvdishka.battleroyale.handlers.commands.StartCommand;
-import ru.dvdishka.battleroyale.handlers.commands.StopCommand;
+import ru.dvdishka.battleroyale.handlers.commands.player.KillCommand;
+import ru.dvdishka.battleroyale.handlers.commands.player.ReviveCommand;
+import ru.dvdishka.battleroyale.handlers.commands.game.StartCommand;
+import ru.dvdishka.battleroyale.handlers.commands.game.StopCommand;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.CreateStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.OpenStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.RemoveStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.team.*;
+import ru.dvdishka.battleroyale.handlers.superpowerhandler.NoFallDamageHandler;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
 
@@ -404,7 +406,7 @@ public class Initialization {
         }
 
         {
-            commandTree.then(new LiteralArgument("revive").withPermission(Permission.REVIVE_KILL.getPermission())
+            commandTree.then(new LiteralArgument("revive").withPermission(Permission.PLAYER_EDIT.getPermission())
 
                     .then(new PlayerArgument("player")
 
@@ -516,11 +518,12 @@ public class Initialization {
                             )
                     )
 
-                    .then(new LiteralArgument("drop").withPermission(Permission.DROP.getPermission())
+                    .then(new LiteralArgument("drop").withPermission(Permission.DROP_EDIT.getPermission())
 
                             .then(new LiteralArgument("create")
 
                                     .then(new StringArgument("dropTypeName")
+
                                             .includeSuggestions(ArgumentSuggestions.stringsWithTooltipsCollection(commandSenderSuggestionInfo -> {
 
                                                 Collection<IStringTooltip> suggestions = new ArrayList<>();
@@ -571,6 +574,57 @@ public class Initialization {
                                     )
                             )
                     )
+
+                    .then(new LiteralArgument("player").setListed(false).withPermission(Permission.PLAYER_EDIT.getPermission())
+
+                        .then(new LiteralArgument("revive")
+
+                                .then(new StringArgument("player")
+
+                                        .replaceSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+
+                                            ArrayList<String> deadPlayers = new ArrayList<>();
+
+                                            for (String playerName : Common.players) {
+                                                if (Common.deadPlayers.contains(playerName)) {
+                                                    deadPlayers.add(playerName);
+                                                }
+                                            }
+
+                                            return deadPlayers;
+                                        }))
+
+                                        .executes((commandSender, commandArguments) -> {
+
+                                            new ReviveCommand().execute(commandSender, commandArguments);
+                                        })
+                                )
+                        )
+
+                        .then(new LiteralArgument("kill")
+
+                                .then(new StringArgument("player")
+
+                                        .replaceSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+
+                                            ArrayList<String> alivePlayers = new ArrayList<>();
+
+                                            for (String playerName : Common.players) {
+                                                if (!Common.deadPlayers.contains(playerName)) {
+                                                    alivePlayers.add(playerName);
+                                                }
+                                            }
+
+                                            return alivePlayers;
+                                        }))
+
+                                        .executes((commandSender, commandArguments) -> {
+
+                                            new KillCommand().execute(commandSender, commandArguments);
+                                        })
+                                )
+                        )
+                    )
             );
         }
 
@@ -593,6 +647,7 @@ public class Initialization {
         Bukkit.getPluginManager().registerEvents(new DropHandler(), plugin);
         Bukkit.getPluginManager().registerEvents(new StartElytraHandler(), plugin);
         Bukkit.getPluginManager().registerEvents(new GameHandler(), plugin);
+        Bukkit.getPluginManager().registerEvents(new NoFallDamageHandler(), plugin);
     }
 
     public static int loadIntConfigValueSafely(FileConfiguration config, String path, int defaultValue) {

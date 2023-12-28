@@ -1,4 +1,4 @@
-package ru.dvdishka.battleroyale.handlers.commands;
+package ru.dvdishka.battleroyale.handlers.commands.game;
 
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.Component;
@@ -36,7 +36,7 @@ public class StartCommand implements CommandInterface {
     public void execute(CommandSender sender, CommandArguments args) {
 
         if (Common.isGameStarted) {
-            returnFailure("You need to stop battleroyale to start it again \"/battleroyale stop\"", sender);
+            returnFailure("You need to stop battleroyale to start it again \"/battleroyale admin stop\"", sender);
             return;
         }
 

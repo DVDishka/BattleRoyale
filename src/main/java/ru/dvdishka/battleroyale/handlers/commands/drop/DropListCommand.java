@@ -4,9 +4,7 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
@@ -52,7 +50,7 @@ public class DropListCommand implements CommandInterface {
                     .append(Component.text("[DELETE]")
                             .color(NamedTextColor.RED)
                             .decorate(TextDecoration.BOLD)
-                            .clickEvent(ClickEvent.runCommand("/battleroyale drop delete " + "\"" + dropContainer.getName() + "\"")));
+                            .clickEvent(ClickEvent.runCommand("/battleroyale admin drop delete " + "\"" + dropContainer.getName() + "\"")));
 
             message = message
                     .append(Component.text("=".repeat(24))
@@ -78,7 +76,7 @@ public class DropListCommand implements CommandInterface {
                     .append(Component.newline())
                     .append(followButton);
 
-            if (sender.hasPermission(Permission.DROP.getStringPermission())) {
+            if (sender.hasPermission(Permission.DROP_EDIT.getStringPermission())) {
                 message = message
                         .append(Component.space())
                         .append(deleteButton);

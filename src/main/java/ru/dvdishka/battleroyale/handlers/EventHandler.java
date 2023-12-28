@@ -27,12 +27,19 @@ public class EventHandler implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
 
         if (Common.isGameStarted) {
+
             if (Common.deadPlayers.contains(event.getPlayer().getName()) &&
                     Team.getTeam(event.getPlayer()) != null &&
                     !Team.deadTeams.contains(Team.getTeam(event.getPlayer()).getName())) {
 
                 Scheduler.getScheduler().runPlayerTask(Common.plugin, event.getPlayer(), (scheduledTask) -> {
                     event.getPlayer().kick(Component.text("You are out and your team is not yet!"));
+                });
+            }
+
+            else if (Common.deadPlayers.contains(event.getPlayer().getName())) {
+                Scheduler.getScheduler().runPlayerTask(Common.plugin, event.getPlayer(), (scheduledTask) -> {
+                    event.getPlayer().setGameMode(GameMode.SPECTATOR);
                 });
             }
         }
@@ -83,7 +90,7 @@ public class EventHandler implements Listener {
             }
             if (!Common.isRevivalEnabled) {
 
-                Bukkit.getPluginManager().callEvent(new GameDeathEvent(event.getPlayer()));
+                Bukkit.getPluginManager().callEvent(new GameDeathEvent(event.getPlayer().getName()));
             }
         }
     }

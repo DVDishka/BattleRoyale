@@ -1,4 +1,4 @@
-package ru.dvdishka.battleroyale.handlers.commands;
+package ru.dvdishka.battleroyale.handlers.commands.game;
 
 import dev.jorel.commandapi.executors.CommandArguments;
 import org.bukkit.command.CommandSender;
