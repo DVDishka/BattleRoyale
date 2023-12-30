@@ -20,11 +20,16 @@ start:
 
 drop:
   # Drop container content configuration file
-  dropTypesFile: "plugins/BattleRoyale/dropTypes.yml"
+  dropTypesFile: plugins/BattleRoyale/dropTypes.yml
   # Time after which the drop container will be opened after first click (seconds)
   dropOpenTime: 90
   # Worlds where drop containers will appear (overworld/the_nether/the_end or custom_namespace:custom_world_name)
-  dropSpawnWorlds: [ "overworld" ]
+  dropSpawnWorlds: [ overworld ]
+
+
+superpower:
+  # Superpowers configuration file
+  superPowersFile: plugins/BattleRoyale/superpowers.yml
 
 
 finalZone:

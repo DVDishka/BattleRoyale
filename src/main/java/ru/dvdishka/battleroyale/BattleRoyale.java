@@ -22,6 +22,10 @@ public final class BattleRoyale extends JavaPlugin {
 
         Common.plugin = this;
 
+        for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+            team.unregister();
+        }
+
         if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").toFile().exists()) {
             Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").toFile().mkdirs();
         }
@@ -30,19 +34,41 @@ public final class BattleRoyale extends JavaPlugin {
             this.saveDefaultConfig();
         }
 
+        Initialization.initConfig(this.getConfig());
+        Initialization.checkDependencies();
+        Initialization.initCommands();
+        Initialization.initEventHandlers(this);
+
         if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").resolve("dropTypes.yml").toFile().exists()) {
             this.saveResource("dropTypes.yml", false);
         }
 
-        for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-            team.unregister();
+        if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").resolve("superpowers.yml").toFile().exists()) {
+            this.saveResource("superpowers.yml", false);
         }
 
-        Initialization.checkDependencies();
-        Initialization.initConfig(this.getConfig());
-        Initialization.initCommands();
-        Initialization.initEventHandlers(this);
+        if (!new File(ConfigVariables.dropTypesFile).exists()) {
+            try {
+                if (!new File(ConfigVariables.dropTypesFile).createNewFile()) {
+                    Logger.getLogger().warn("Failed to create " + ConfigVariables.dropTypesFile);
+                }
+            } catch (Exception e) {
+                Logger.getLogger().warn("Failed to create " + ConfigVariables.dropTypesFile);
+            }
+        }
+
+        if (!new File(ConfigVariables.superPowersFile).exists()) {
+            try {
+                if (!new File(ConfigVariables.superPowersFile).createNewFile()) {
+                    Logger.getLogger().warn("Failed to create " + ConfigVariables.superPowersFile);
+                }
+            } catch (Exception e) {
+                Logger.getLogger().warn("Failed to create " + ConfigVariables.superPowersFile);
+            }
+        }
+
         Initialization.initDropTypes(new File(ConfigVariables.dropTypesFile));
+        Initialization.initSuperPowers(new File(ConfigVariables.superPowersFile));
 
         CommandAPI.onEnable();
 

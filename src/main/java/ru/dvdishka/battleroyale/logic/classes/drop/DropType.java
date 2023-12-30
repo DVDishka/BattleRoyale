@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Logger;
 
@@ -20,7 +21,7 @@ import java.util.Random;
 import java.util.*;
 
 
-public class DropType implements ConfigurationSerializable {
+public class DropType {
 
     private final String name;
     private final ArrayList<ItemStack> items;
@@ -133,41 +134,5 @@ public class DropType implements ConfigurationSerializable {
         }
 
         dropTypes.add(new DropType(deserializedItems, dropTypeName));
-    }
-
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-
-        HashMap<String, Object> map = new HashMap<>();
-
-        ArrayList<Map<String, Object>> serializedItems = new ArrayList<>();
-
-        for (ItemStack item : items) {
-
-            HashMap<String, Object> serializedItem = new HashMap<>();
-
-            serializedItem.put("material", item.getType().name());
-            serializedItem.put("amount", item.getAmount());
-
-            ArrayList<HashMap<String, Object>> serializedEnchantments = new ArrayList<>();
-
-            for (Map.Entry<Enchantment, Integer> enchantment : item.getEnchantments().entrySet()) {
-
-                HashMap<String, Object> serializedEnchantment = new HashMap<>();
-
-                serializedEnchantment.put("name", enchantment.getKey().getKey().getKey());
-                serializedEnchantment.put("level", enchantment.getValue());
-
-                serializedEnchantments.add(serializedEnchantment);
-            }
-
-            serializedItem.put("enchantments", serializedEnchantments);
-
-            serializedItems.add(serializedItem);
-        }
-
-        map.put("items", serializedItems);
-
-        return map;
     }
 }

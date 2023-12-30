@@ -16,6 +16,11 @@ public class ReviveCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
+        if (!Common.isGameStarted) {
+            returnFailure("You can not revive player while the game is not started", sender);
+            return;
+        }
+
         String revivePlayerName = (String) args.get("player");
 
         if (!Common.deadPlayers.contains(revivePlayerName)) {

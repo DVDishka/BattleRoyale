@@ -80,8 +80,9 @@ public class StartCommand implements CommandInterface {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 100 , 1, false, false));
             });
 
-            int powerNumber = new Random().nextInt(0, SuperPower.values().length);
-            SuperPower.values()[powerNumber].setToPlayer(player);
+            if (!SuperPower.isEmpty()) {
+                SuperPower.getRandom().setToPlayer(player);
+            }
 
             player.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_0, 1000, 0);
 

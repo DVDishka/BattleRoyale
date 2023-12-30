@@ -9,15 +9,18 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import ru.dvdishka.battleroyale.handlers.*;
 import ru.dvdishka.battleroyale.handlers.commands.drop.*;
+import ru.dvdishka.battleroyale.handlers.commands.player.ClearSuperPowerCommand;
 import ru.dvdishka.battleroyale.handlers.commands.player.KillCommand;
 import ru.dvdishka.battleroyale.handlers.commands.player.ReviveCommand;
 import ru.dvdishka.battleroyale.handlers.commands.game.StartCommand;
 import ru.dvdishka.battleroyale.handlers.commands.game.StopCommand;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
+import ru.dvdishka.battleroyale.handlers.commands.player.SetSuperPowerCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.CreateStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.OpenStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.RemoveStartBoxCommand;
@@ -25,6 +28,7 @@ import ru.dvdishka.battleroyale.handlers.commands.team.*;
 import ru.dvdishka.battleroyale.handlers.superpowerhandler.NoFallDamageHandler;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
+import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -67,8 +71,13 @@ public class Initialization {
                 boolean biggerThenDefaultRadius = false;
                 int lastValue = 1000000000;
 
+                ArrayList<Integer> defaultZones = new ArrayList<>();
+                for (int defaultZone : ConfigVariables.zones) {
+                    defaultZones.add(defaultZone / 2);
+                }
+
                 ArrayList<Integer> zones = new ArrayList<>();
-                for (int zoneRadius : loadIntListConfigValueSafely(config, "game.zones", ConfigVariables.zones)) {
+                for (int zoneRadius : loadIntListConfigValueSafely(config, "game.zones", defaultZones)) {
                     if (lastValue <= zoneRadius) {
                         isOrdered = false;
                         break;
@@ -157,7 +166,7 @@ public class Initialization {
                 boolean lessThenNull = false;
 
                 ArrayList<Integer> timeOuts = new ArrayList<>();
-                for (int timeOut : loadIntListConfigValueSafely(config, "game.timeOuts", ConfigVariables.times)) {
+                for (int timeOut : loadIntListConfigValueSafely(config, "game.timeOuts", ConfigVariables.timeOuts)) {
                     if (timeOut <= 0) {
                         lessThenNull = true;
                         break;
@@ -258,7 +267,7 @@ public class Initialization {
             {
                 List<String> worldNames = new ArrayList<>();
                 for (World world : ConfigVariables.dropSpawnWorlds) {
-                    worldNames.add(world.getName());
+                    worldNames.add(world.getKey().getKey());
                 }
 
                 List<String> dropSpawnWorlds = loadStringListConfigValueSafely(config, "drop.dropSpawnWorlds", worldNames);
@@ -275,6 +284,14 @@ public class Initialization {
                 }
 
                 ConfigVariables.dropSpawnWorlds = worlds;
+            }
+        }
+
+        // SUPERPOWER SECTION
+        {
+            // SUPERPOWER FILE LOADING
+            {
+                ConfigVariables.superPowersFile = loadStringConfigValueSafely(config, "superpower.superPowersFile", ConfigVariables.superPowersFile);
             }
         }
 
@@ -468,7 +485,7 @@ public class Initialization {
 
         // ADMIN
         {
-            commandTree.then(new LiteralArgument("admin")
+            commandTree.then(new LiteralArgument("admin").withPermission(Permission.ADMIN.getPermission())
 
                     // GAME
                     .then(new LiteralArgument("game").withPermission(Permission.START_STOP.getPermission())
@@ -577,53 +594,118 @@ public class Initialization {
 
                     .then(new LiteralArgument("player").setListed(false).withPermission(Permission.PLAYER_EDIT.getPermission())
 
-                        .then(new LiteralArgument("revive")
+                            .then(new LiteralArgument("revive")
 
-                                .then(new StringArgument("player")
+                                    .then(new StringArgument("player")
 
-                                        .replaceSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+                                            .replaceSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
 
-                                            ArrayList<String> deadPlayers = new ArrayList<>();
+                                                ArrayList<String> deadPlayers = new ArrayList<>();
 
-                                            for (String playerName : Common.players) {
-                                                if (Common.deadPlayers.contains(playerName)) {
-                                                    deadPlayers.add(playerName);
+                                                for (String playerName : Common.players) {
+                                                    if (Common.deadPlayers.contains(playerName)) {
+                                                        deadPlayers.add(playerName);
+                                                    }
                                                 }
-                                            }
 
-                                            return deadPlayers;
-                                        }))
+                                                return deadPlayers;
+                                            }))
 
-                                        .executes((commandSender, commandArguments) -> {
+                                            .executes((commandSender, commandArguments) -> {
 
-                                            new ReviveCommand().execute(commandSender, commandArguments);
-                                        })
-                                )
-                        )
+                                                new ReviveCommand().execute(commandSender, commandArguments);
+                                            })
+                                    )
+                            )
 
-                        .then(new LiteralArgument("kill")
+                            .then(new LiteralArgument("kill")
 
-                                .then(new StringArgument("player")
+                                    .then(new StringArgument("player")
 
-                                        .replaceSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+                                            .replaceSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
 
-                                            ArrayList<String> alivePlayers = new ArrayList<>();
+                                                ArrayList<String> alivePlayers = new ArrayList<>();
 
-                                            for (String playerName : Common.players) {
-                                                if (!Common.deadPlayers.contains(playerName)) {
-                                                    alivePlayers.add(playerName);
+                                                for (String playerName : Common.players) {
+                                                    if (!Common.deadPlayers.contains(playerName)) {
+                                                        alivePlayers.add(playerName);
+                                                    }
                                                 }
-                                            }
 
-                                            return alivePlayers;
-                                        }))
+                                                return alivePlayers;
+                                            }))
 
-                                        .executes((commandSender, commandArguments) -> {
+                                            .executes((commandSender, commandArguments) -> {
 
-                                            new KillCommand().execute(commandSender, commandArguments);
-                                        })
-                                )
-                        )
+                                                new KillCommand().execute(commandSender, commandArguments);
+                                            })
+                                    )
+                            )
+
+                            .then(new LiteralArgument("superpower")
+
+                                    .then(new LiteralArgument("clear")
+
+                                            .then(new StringArgument("player")
+
+                                                    .replaceSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+
+                                                        ArrayList<String> battleRoyalePlayers = new ArrayList<>();
+
+                                                        for (Player player : Bukkit.getOnlinePlayers()) {
+                                                            if (Common.playersPower.containsKey(player.getName())) {
+                                                                battleRoyalePlayers.add(player.getName());
+                                                            }
+                                                        }
+
+                                                        return battleRoyalePlayers;
+                                                    }))
+
+                                                    .executes((commandSender, commandArguments) -> {
+
+                                                        new ClearSuperPowerCommand().execute(commandSender, commandArguments);
+                                                    })
+                                            )
+                                    )
+
+                                    .then(new LiteralArgument("set")
+
+                                            .then(new StringArgument("superpower")
+
+                                                    .replaceSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+
+                                                        ArrayList<String> superPowerNames = new ArrayList<>();
+
+                                                        for (SuperPower superPower : SuperPower.getSuperPowers()) {
+                                                            superPowerNames.add(superPower.getName());
+                                                        }
+
+                                                        return superPowerNames;
+                                                    }))
+
+                                                    .then(new StringArgument("player")
+
+                                                            .replaceSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+
+                                                                ArrayList<String> battleRoyalePlayers = new ArrayList<>();
+
+                                                                for (Player player : Bukkit.getOnlinePlayers()) {
+                                                                    if (Common.players.contains(player.getName())) {
+                                                                        battleRoyalePlayers.add(player.getName());
+                                                                    }
+                                                                }
+
+                                                                return battleRoyalePlayers;
+                                                            }))
+
+                                                            .executes(((commandSender, commandArguments) -> {
+
+                                                                new SetSuperPowerCommand().execute(commandSender, commandArguments);
+                                                            }))
+                                                    )
+                                            )
+                                    )
+                            )
                     )
             );
         }
@@ -635,8 +717,17 @@ public class Initialization {
 
         FileConfiguration dropTypesConfig = YamlConfiguration.loadConfiguration(file);
 
-        for (Map.Entry<String, Object> dropTypeMap : dropTypesConfig.getValues(false).entrySet()) {
-            DropType.deserialize(dropTypesConfig.getConfigurationSection(dropTypeMap.getKey()), dropTypeMap.getKey());
+        for (Map.Entry<String, Object> dropType : dropTypesConfig.getValues(false).entrySet()) {
+            DropType.deserialize(dropTypesConfig.getConfigurationSection(dropType.getKey()), dropType.getKey());
+        }
+    }
+
+    public static void initSuperPowers(File file) {
+
+        FileConfiguration superPowersConfig = YamlConfiguration.loadConfiguration(file);
+
+        for (Map.Entry<String, Object> superPower : superPowersConfig.getValues(false).entrySet()) {
+            SuperPower.deserialize(superPowersConfig.getConfigurationSection(superPower.getKey()), superPower.getKey());
         }
     }
 

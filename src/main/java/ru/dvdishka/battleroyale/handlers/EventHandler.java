@@ -62,8 +62,9 @@ public class EventHandler implements Listener {
                     player.removePotionEffect(effect.getType());
                 }
 
-                int powerNumber = new Random().nextInt(0, SuperPower.values().length);
-                SuperPower.values()[powerNumber].setToPlayer(player);
+                if (!SuperPower.isEmpty()) {
+                    SuperPower.getRandom().setToPlayer(player);
+                }
 
                 Common.players.add(player.getName());
             }

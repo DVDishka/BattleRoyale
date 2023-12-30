@@ -15,12 +15,7 @@ permissions:
         default: op
       battleroyale.start_box:
         default: op
-      battleroyale.team.*:
-        default: true
-        children:
-          battleroyale.team.create:
-            default: true
-      battleroyale.revive.*:
+      battleroyale.player_edit:
         default: op
-      battleroyale.drop.create:
+      battleroyale.drop_edit:
         default: op

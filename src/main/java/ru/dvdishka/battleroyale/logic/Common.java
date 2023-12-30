@@ -77,9 +77,7 @@ public class Common {
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            for (PotionEffect potionEffectType : player.getActivePotionEffects()) {
-                player.removePotionEffect(potionEffectType.getType());
-            }
+            SuperPower.clearPlayerSuperPower(player);
         }
 
         Scheduler.cancelTasks(Common.plugin);

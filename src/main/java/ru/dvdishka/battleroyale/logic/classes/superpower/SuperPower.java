@@ -3,41 +3,27 @@ package ru.dvdishka.battleroyale.logic.classes.superpower;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public enum SuperPower {
+public class SuperPower {
 
-    Runner(List.of(PotionEffectType.JUMP, PotionEffectType.SPEED), List.of(1, 1),
-            List.of(CustomEffectType.NO_FALL_DAMAGE), List.of(0)
-            , "Runner"),
+    private final List<PotionEffectType> effectTypes;
+    private final List<Integer> effectTypeAmplifiers;
+    private final List<CustomEffectType> customEffectTypes;
+    private final List<Integer> customEffectTypeAmplifiers;
+    private final String name;
 
-    Miner(List.of(PotionEffectType.FAST_DIGGING), List.of(4), "Miner"),
-
-    AquaMan(List.of(PotionEffectType.FIRE_RESISTANCE, PotionEffectType.WATER_BREATHING, PotionEffectType.DOLPHINS_GRACE), List.of(0, 0, 3), "Aqua-man"),
-
-    Cat(List.of(PotionEffectType.NIGHT_VISION, PotionEffectType.INVISIBILITY, PotionEffectType.LUCK), List.of(0, 0, 4), "Cat"),
-
-    Husky(List.of(PotionEffectType.HEALTH_BOOST), List.of(2), "Husky"),
-
-    Tank(List.of(PotionEffectType.DAMAGE_RESISTANCE, PotionEffectType.SLOW), List.of(0, 0), "Tank"),
-
-    Healer(List.of(PotionEffectType.REGENERATION), List.of(0, 0), "Healer"),
-
-    BountyHunter(List.of(PotionEffectType.INCREASE_DAMAGE, PotionEffectType.GLOWING), List.of(0, 0), "Bounty Hunter");
-
-    SuperPower(List<PotionEffectType> effectTypes, List<Integer> effectTypeAmplifiers, String name) {
-
-        this.effectTypes = effectTypes;
-        this.customEffectTypes = new ArrayList<>();
-        this.effectTypeAmplifiers = effectTypeAmplifiers;
-        this.customEffectTypeAmplifiers = new ArrayList<>();
-        this.name = name;
-    }
+    private static final ArrayList<SuperPower> superPowers = new ArrayList<>();
 
     SuperPower(List<PotionEffectType> effectTypes, List<Integer> effectTypeAmplifiers,
                List<CustomEffectType> customEffectTypes, List<Integer> customEffectTypeAmplifiers,
@@ -50,11 +36,34 @@ public enum SuperPower {
         this.name = name;
     }
 
-    private final List<PotionEffectType> effectTypes;
-    private final List<Integer> effectTypeAmplifiers;
-    private final List<CustomEffectType> customEffectTypes;
-    private final List<Integer> customEffectTypeAmplifiers;
-    private final String name;
+    public static ArrayList<SuperPower> getSuperPowers() {
+        return superPowers;
+    }
+
+    public static SuperPower getByName(String name) {
+
+        for (SuperPower superPower : superPowers) {
+            if (name.toUpperCase().equals(superPower.getName())) {
+                return superPower;
+            }
+        }
+        return null;
+    }
+
+    public static SuperPower getRandom() {
+
+        if (superPowers.isEmpty()) {
+            return null;
+        }
+
+        int superPowerNumber = new Random().nextInt(0, superPowers.size());
+
+        return superPowers.get(superPowerNumber);
+    }
+
+    public static boolean isEmpty() {
+        return superPowers.isEmpty();
+    }
 
     public static SuperPower getPlayerSuperPower(String playerName) {
         return Common.playersPower.get(playerName);
@@ -62,6 +71,32 @@ public enum SuperPower {
 
     public static SuperPower getPlayerSuperPower(Player player) {
         return Common.playersPower.get(player.getName());
+    }
+
+    public static void clearPlayerSuperPower(String playerName) {
+
+        Common.playersPower.remove(playerName);
+
+        try {
+            SuperPower playerSuperPower = SuperPower.getPlayerSuperPower(playerName);
+
+            for (PotionEffectType potionEffectType : playerSuperPower.getEffectTypes()) {
+                Bukkit.getPlayer(playerName).removePotionEffect(potionEffectType);
+            }
+        } catch (Exception ignored) {}
+    }
+
+    public static void clearPlayerSuperPower(Player player) {
+
+        try {
+            SuperPower playerSuperPower = SuperPower.getPlayerSuperPower(player);
+
+            for (PotionEffectType potionEffectType : playerSuperPower.getEffectTypes()) {
+                player.removePotionEffect(potionEffectType);
+            }
+        } catch (Exception ignored) {}
+
+        Common.playersPower.remove(player.getName());
     }
 
     public void setToPlayer(Player player) {
@@ -95,7 +130,7 @@ public enum SuperPower {
                             .decorate(TextDecoration.BOLD));
         }
 
-        for (int i = 0; i < customEffectTypeAmplifiers.size(); i++) {
+        for (int i = 0; i < customEffectTypes.size(); i++) {
 
             text = text
                     .append(Component.newline())
@@ -130,5 +165,60 @@ public enum SuperPower {
 
     public String getName() {
         return this.name;
+    }
+
+    public static void deserialize(ConfigurationSection superPowerConfig, String superPowerName) {
+
+        Map<String, Object> serializedEffects = superPowerConfig.getConfigurationSection("effects").getValues(false);
+
+        ArrayList<PotionEffectType> deserializedEffectTypes = new ArrayList<>();
+        ArrayList<CustomEffectType> deserializedCustomEffectTypes = new ArrayList<>();
+        ArrayList<Integer> deserializedEffectTypeAmplifiers = new ArrayList<>();
+        ArrayList<Integer> deserializedCustomEffectTypeAmplifiers = new ArrayList<>();
+
+        for (Map.Entry<String, Object> serializedEffectWithNumber : serializedEffects.entrySet()) {
+
+            Map<String, Object> serializedEffect = superPowerConfig.getConfigurationSection("effects." + serializedEffectWithNumber.getKey()).getValues(false);
+
+            String effectName = (String) serializedEffect.get("name");
+            int effectAmplifier = 1;
+            try {
+                effectAmplifier = (int) serializedEffect.get("level") - 1;
+            } catch (Exception ignored) {}
+
+            PotionEffectType minecraftEffectType = PotionEffectType.getByKey(NamespacedKey.minecraft(effectName));
+            if (minecraftEffectType == null) {
+                minecraftEffectType = PotionEffectType.getByName(effectName.toUpperCase());
+            }
+            PotionEffectType effectType = PotionEffectType.getByKey(NamespacedKey.fromString(effectName));
+            CustomEffectType customEffectType = null;
+            try {
+                customEffectType = CustomEffectType.valueOf(effectName.toUpperCase());
+            } catch (Exception ignored) {}
+
+            if (minecraftEffectType == null && effectType == null && customEffectType == null) {
+                Logger.getLogger().warn("Wrong effect name in superpowers config + \"" + effectName + "\"");
+                continue;
+            }
+
+            if (customEffectType != null) {
+                deserializedCustomEffectTypes.add(customEffectType);
+                deserializedCustomEffectTypeAmplifiers.add(effectAmplifier);
+            }
+
+            else if (minecraftEffectType != null) {
+                deserializedEffectTypes.add(minecraftEffectType);
+                deserializedEffectTypeAmplifiers.add(effectAmplifier);
+            }
+
+            else if (effectType != null) {
+                deserializedEffectTypes.add(effectType);
+                deserializedEffectTypeAmplifiers.add(effectAmplifier);
+            }
+        }
+
+        superPowers.add(new SuperPower(deserializedEffectTypes, deserializedEffectTypeAmplifiers,
+                deserializedCustomEffectTypes, deserializedCustomEffectTypeAmplifiers,
+                superPowerName.toUpperCase()));
     }
 }

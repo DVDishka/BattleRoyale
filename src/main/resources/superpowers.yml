@@ -1,0 +1,61 @@
+runner:
+  effects:
+    1:
+      name: jump
+      level: 2
+    2:
+      name: speed
+      level: 2
+    3:
+      name: no_fall_damage
+      level: 1
+miner:
+  effects:
+    1:
+      name: fast_digging
+      level: 5
+aqua_man:
+  effects:
+    1:
+      name: fire_resistance
+      level: 1
+    2:
+      name: water_breathing
+      level: 1
+    3:
+      name: dolphins_grace
+      level: 4
+cat:
+  effects:
+    1:
+      name: night_vision
+      level: 1
+    2:
+      name: invisibility
+      level: 1
+    3:
+      name: luck
+      level: 5
+husky:
+  effects:
+    1:
+      name: health_boost
+      level: 3
+tank:
+  effects:
+    1:
+      name: damage_resistance
+      level: 1
+healer:
+  effects:
+    1:
+      name: regeneration
+      level: 1
+bounty_hunter:
+  effects:
+    1:
+      name: increase_damage
+      level: 1
+    2:
+      name: glowing
+      level: 1

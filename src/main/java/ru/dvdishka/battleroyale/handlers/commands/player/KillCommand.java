@@ -12,6 +12,11 @@ public class KillCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
+        if (!Common.isGameStarted) {
+            returnFailure("You can not kill player while the game is not started", sender);
+            return;
+        }
+
         String killedPlayer = (String) args.get("player");
 
         if (!Common.players.contains(killedPlayer)) {
