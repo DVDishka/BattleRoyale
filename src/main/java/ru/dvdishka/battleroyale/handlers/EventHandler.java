@@ -24,54 +24,6 @@ import java.util.Random;
 public class EventHandler implements Listener {
 
     @org.bukkit.event.EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-
-        if (Common.isGameStarted) {
-
-            if (Common.deadPlayers.contains(event.getPlayer().getName()) &&
-                    Team.getTeam(event.getPlayer()) != null &&
-                    !Team.deadTeams.contains(Team.getTeam(event.getPlayer()).getName())) {
-
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, event.getPlayer(), (scheduledTask) -> {
-                    event.getPlayer().kick(Component.text("You are out and your team is not yet!"));
-                });
-            }
-
-            else if (Common.deadPlayers.contains(event.getPlayer().getName())) {
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, event.getPlayer(), (scheduledTask) -> {
-                    event.getPlayer().setGameMode(GameMode.SPECTATOR);
-                });
-            }
-        }
-
-        if (Common.isGameStarted) {
-            Timer.getInstance().addViewer(event.getPlayer());
-            Radar.getInstance().addViewer(event.getPlayer());
-        }
-
-        Player player = event.getPlayer();
-
-        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-
-            if (!Common.players.contains(player.getName()) && Common.isGameStarted) {
-
-                player.setGameMode(GameMode.SURVIVAL);
-
-                ArrayList<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
-                for (PotionEffect effect : effects) {
-                    player.removePotionEffect(effect.getType());
-                }
-
-                if (!SuperPower.isEmpty()) {
-                    SuperPower.getRandom().setToPlayer(player);
-                }
-
-                Common.players.add(player.getName());
-            }
-        });
-    }
-
-    @org.bukkit.event.EventHandler
     public void onPortal(PlayerPortalEvent event) {
 
         if (Common.isPortalLocked) {

@@ -422,19 +422,6 @@ public class Initialization {
             }
         }
 
-        {
-            commandTree.then(new LiteralArgument("revive").withPermission(Permission.PLAYER_EDIT.getPermission())
-
-                    .then(new PlayerArgument("player")
-
-                            .executes((commandSender, commandArguments) -> {
-
-                                new ReviveCommand().execute(commandSender, commandArguments);
-                            })
-                    )
-            );
-        }
-
         // DROP
         {
             commandTree.then(new LiteralArgument("drop")

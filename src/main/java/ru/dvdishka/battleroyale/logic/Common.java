@@ -48,6 +48,7 @@ public class Common {
     public static HashSet<String> deadPlayers = new HashSet<>();
     public static HashSet<String> players = new HashSet<>();
     public static HashMap<String, SuperPower> playersPower = new HashMap<>();
+    public static HashSet<String> reviveQueue = new HashSet<>();
 
     public static void resetVariables() {
 
@@ -61,6 +62,7 @@ public class Common {
         Common.isRevivalEnabled = true;
         Common.isPVPEnabled = false;
         Common.isWinStage = false;
+        Common.reviveQueue.clear();
 
         Zone.unregister();
         Zone.getInstance().setVariables(
