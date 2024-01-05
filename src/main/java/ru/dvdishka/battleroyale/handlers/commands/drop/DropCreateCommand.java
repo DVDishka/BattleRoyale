@@ -5,9 +5,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.Common;
-import ru.dvdishka.battleroyale.logic.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
 import ru.dvdishka.battleroyale.logic.event.drop.DropCreateEvent;
 
 public class DropCreateCommand implements CommandInterface {
@@ -15,7 +15,7 @@ public class DropCreateCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
-        if (!Common.isGameStarted) {
+        if (!GameVariables.isGameStarted) {
             returnFailure("Drop can not be spawned if the game is not running", sender);
             return;
         }

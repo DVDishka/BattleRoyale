@@ -1,5 +1,8 @@
 package ru.dvdishka.battleroyale.logic;
 
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
+
 public class Logger {
 
     public static Logger getLogger() {
@@ -7,22 +10,22 @@ public class Logger {
     }
 
     public void log(String text) {
-        Common.plugin.getLogger().info(text);
+        PluginVariables.plugin.getLogger().info(text);
     }
 
     public void devLog(String text) {
         if (ConfigVariables.betterLogging) {
-            Common.plugin.getLogger().info(text);
+            PluginVariables.plugin.getLogger().info(text);
         }
     }
 
     public void warn(String text) {
-        Common.plugin.getLogger().warning(text);
+        PluginVariables.plugin.getLogger().warning(text);
     }
 
     public void devWarn(String text) {
         if (ConfigVariables.betterLogging) {
-            Common.plugin.getLogger().warning(text);
+            PluginVariables.plugin.getLogger().warning(text);
         }
     }
 }

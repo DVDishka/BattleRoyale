@@ -5,9 +5,10 @@ import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.Common;
-import ru.dvdishka.battleroyale.logic.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
 public class CreateStartBoxCommand implements CommandInterface {
 
@@ -18,56 +19,56 @@ public class CreateStartBoxCommand implements CommandInterface {
             world.setPVP(false);
         }
 
-        Common.isStartBox = true;
+        GameVariables.isStartBox = true;
         Location startBoxLocation = new Location(
-                Common.overWorld,
-                Common.overWorld.getSpawnLocation().getX(),
+                PluginVariables.overWorld,
+                PluginVariables.overWorld.getSpawnLocation().getX(),
                 ConfigVariables.startBoxY,
-                Common.overWorld.getSpawnLocation().getZ());
+                PluginVariables.overWorld.getSpawnLocation().getZ());
 
         Chunk startBoxChunk = startBoxLocation.getChunk();
 
         int chunkX = startBoxChunk.getX() * 16;
         int chunkZ = startBoxChunk.getZ() * 16;
 
-        Scheduler.getScheduler().runRegionTask(Common.plugin, startBoxLocation, (scheduledTask) -> {
+        Scheduler.getScheduler().runRegionTask(PluginVariables.plugin, startBoxLocation, (scheduledTask) -> {
 
             for (int x = chunkX; x < chunkX + 16; x++) {
                 for (int z = chunkZ; z < chunkZ + 16; z++) {
 
-                    new Location(Common.overWorld, x, ConfigVariables.startBoxY, z).getBlock().setType(Material.BEDROCK);
+                    new Location(PluginVariables.overWorld, x, ConfigVariables.startBoxY, z).getBlock().setType(Material.BEDROCK);
                 }
             }
 
             for (int y = ConfigVariables.startBoxY; y < ConfigVariables.startBoxY + 7; y++) {
 
                 for (int x = chunkX; x < chunkX + 16; x++) {
-                    new Location(Common.overWorld, x, y, chunkZ).getBlock().setType(Material.BEDROCK);
+                    new Location(PluginVariables.overWorld, x, y, chunkZ).getBlock().setType(Material.BEDROCK);
                 }
 
                 for (int x = chunkX; x < chunkX + 16; x++) {
-                    new Location(Common.overWorld, x, y, chunkZ + 15).getBlock().setType(Material.BEDROCK);
+                    new Location(PluginVariables.overWorld, x, y, chunkZ + 15).getBlock().setType(Material.BEDROCK);
                 }
 
                 for (int z = chunkZ; z < chunkZ + 16; z++) {
-                    new Location(Common.overWorld, chunkX, y, z).getBlock().setType(Material.BEDROCK);
+                    new Location(PluginVariables.overWorld, chunkX, y, z).getBlock().setType(Material.BEDROCK);
                 }
 
                 for (int z = chunkZ; z < chunkZ + 16; z++) {
-                    new Location(Common.overWorld, chunkX + 15, y, z).getBlock().setType(Material.BEDROCK);
+                    new Location(PluginVariables.overWorld, chunkX + 15, y, z).getBlock().setType(Material.BEDROCK);
                 }
             }
         });
 
-        Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
-            Common.overWorld.setSpawnLocation(chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8);
-            Common.overWorld.setGameRule(GameRule.SPAWN_RADIUS, 1);
+        Scheduler.getScheduler().runSync(PluginVariables.plugin, (scheduledTask) -> {
+            PluginVariables.overWorld.setSpawnLocation(chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8);
+            PluginVariables.overWorld.setGameRule(GameRule.SPAWN_RADIUS, 1);
         });
 
         for (Player player : Bukkit.getOnlinePlayers()) {
 
-            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
-                player.teleportAsync(new Location(Common.overWorld, chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8));
+            Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> {
+                player.teleportAsync(new Location(PluginVariables.overWorld, chunkX + 8, ConfigVariables.startBoxY + 1, chunkZ + 8));
             });
         }
 

@@ -1,19 +1,17 @@
-package ru.dvdishka.battleroyale.logic;
+package ru.dvdishka.battleroyale.logic.common;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.scoreboard.Team;
+import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.logic.Zone;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
 import ru.dvdishka.battleroyale.ui.DropBar;
@@ -21,57 +19,34 @@ import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
 import ru.dvdishka.battleroyale.ui.WinBar;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class Common {
 
-    public static Plugin plugin;
-    public static World overWorld = Bukkit.getWorld(NamespacedKey.minecraft("overworld"));
-    public static final Logger logger = Bukkit.getLogger();
-
-    public static boolean isFolia = false;
-
-    public static volatile boolean isGameStarted = false;
-    public static volatile boolean isBreak = false;
-    public static volatile boolean isRevivalEnabled = true;
-    public static volatile boolean isPVPEnabled = false;
-    public static volatile boolean isWinStage = false;
-
-    public static int zoneStage = -1;
-    public static boolean isStartBox = false;
-    public static volatile boolean isPortalLocked = false;
-
-    public static HashSet<String> deadPlayers = new HashSet<>();
-    public static HashSet<String> players = new HashSet<>();
-    public static HashMap<String, SuperPower> playersPower = new HashMap<>();
-    public static HashSet<String> reviveQueue = new HashSet<>();
-
     public static void resetVariables() {
 
-        Common.isGameStarted = false;
-        Common.zoneStage = -1;
-        Common.deadPlayers.clear();
-        Common.players.clear();
+        GameVariables.isGameStarted = false;
+        GameVariables.zoneStage = -1;
+        PlayerVariables.deadPlayers.clear();
+        PlayerVariables.players.clear();
         ru.dvdishka.battleroyale.logic.Team.deadTeams.clear();
-        Common.playersPower.clear();
-        Common.isPortalLocked = false;
-        Common.isRevivalEnabled = true;
-        Common.isPVPEnabled = false;
-        Common.isWinStage = false;
-        Common.reviveQueue.clear();
+        SuperPower.clearPlayers();
+        GameVariables.isPortalLocked = false;
+        GameVariables.isRevivalEnabled = true;
+        GameVariables.isPVPEnabled = false;
+        GameVariables.isWinStage = false;
+
+        PlayerVariables.reviveQueue.clear();
+        PlayerVariables.killQueue.clear();
 
         Zone.unregister();
         Zone.getInstance().setVariables(
                 ConfigVariables.defaultWorldBorderDiameter,
                 ConfigVariables.defaultWorldBorderDiameter,
-                Common.overWorld.getSpawnLocation().getBlockX(),
-                Common.overWorld.getSpawnLocation().getBlockZ(),
-                Common.overWorld.getSpawnLocation().getBlockX(),
-                Common.overWorld.getSpawnLocation().getBlockZ());
+                PluginVariables.overWorld.getSpawnLocation().getBlockX(),
+                PluginVariables.overWorld.getSpawnLocation().getBlockZ(),
+                PluginVariables.overWorld.getSpawnLocation().getBlockX(),
+                PluginVariables.overWorld.getSpawnLocation().getBlockZ());
 
         if (Radar.isInitialized()) {
             Radar.getInstance().movingZoneChar = "=";
@@ -82,7 +57,7 @@ public class Common {
             SuperPower.clearPlayerSuperPower(player);
         }
 
-        Scheduler.cancelTasks(Common.plugin);
+        Scheduler.cancelTasks(PluginVariables.plugin);
 
         WinBar.getInstance().unregister();
         Timer.getInstance().unregister();

@@ -11,14 +11,17 @@ import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.handlers.StartElytraHandler;
 import ru.dvdishka.battleroyale.logic.Team;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.common.Common;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
+import ru.dvdishka.battleroyale.logic.common.PlayerVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
 public class ReviveCommand implements CommandInterface {
 
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
-        if (!Common.isGameStarted) {
+        if (!GameVariables.isGameStarted) {
             returnFailure("You can not revive player while the game is not started", sender);
             return;
         }
@@ -26,21 +29,21 @@ public class ReviveCommand implements CommandInterface {
         String revivePlayerName = (String) args.get("player");
         Player revivePlayer = Bukkit.getPlayer(revivePlayerName);
 
-        if (!Common.deadPlayers.contains(revivePlayerName)) {
+        if (!PlayerVariables.isDead(revivePlayerName)) {
             returnFailure("This player is not dead", sender);
             return;
         }
 
-        Common.deadPlayers.remove(revivePlayerName);
+        PlayerVariables.removeDead(revivePlayerName);
 
-        for (String playerName : Common.players) {
+        for (Player player : PlayerVariables.getOnlinePlayers()) {
 
             Common.sendNotification(
                     Component.text(revivePlayerName)
                             .decorate(TextDecoration.BOLD),
                     Component.text("Has been revived")
                             .color(NamedTextColor.GREEN),
-                    Bukkit.getPlayer(playerName));
+                    player);
         }
 
         try {
@@ -51,10 +54,10 @@ public class ReviveCommand implements CommandInterface {
 
         if (revivePlayer != null) {
             revivePlayer.setGameMode(GameMode.SURVIVAL);
-            revivePlayer.teleport(Common.overWorld.getSpawnLocation());
+            revivePlayer.teleport(PluginVariables.overWorld.getSpawnLocation());
             StartElytraHandler.giveStartElytra(revivePlayer);
         } else {
-            Common.reviveQueue.add(revivePlayerName);
+            PlayerVariables.addReviveQueue(revivePlayerName);
         }
 
         returnSuccess(revivePlayerName + " has been revived!", sender);

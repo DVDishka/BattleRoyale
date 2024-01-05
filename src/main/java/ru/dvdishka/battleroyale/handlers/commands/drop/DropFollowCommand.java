@@ -4,8 +4,9 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.common.Common;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
 import ru.dvdishka.battleroyale.ui.DropBar;
 
 public class DropFollowCommand implements CommandInterface {
@@ -15,7 +16,7 @@ public class DropFollowCommand implements CommandInterface {
 
         Common.buttonSound((Player) sender);
 
-        if (!Common.isGameStarted) {
+        if (!GameVariables.isGameStarted) {
             returnFailure("You can not follow the drop container if the game is not running", sender);
             return;
         }

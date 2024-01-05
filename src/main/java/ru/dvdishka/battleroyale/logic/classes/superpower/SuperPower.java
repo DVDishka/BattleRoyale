@@ -6,16 +6,16 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
-import org.jetbrains.annotations.NotNull;
-import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.common.Common;
 import ru.dvdishka.battleroyale.logic.Logger;
 
 import java.util.*;
 
 public class SuperPower {
+
+    private static final HashMap<String, SuperPower> playerSuperPowers = new HashMap<>();
 
     private final List<PotionEffectType> effectTypes;
     private final List<Integer> effectTypeAmplifiers;
@@ -34,6 +34,14 @@ public class SuperPower {
         this.effectTypeAmplifiers = effectTypeAmplifiers;
         this.customEffectTypeAmplifiers = customEffectTypeAmplifiers;
         this.name = name;
+    }
+
+    public static Set<Map.Entry<String, SuperPower>> getPlayerNameSuperPowerEntrySet() {
+        return playerSuperPowers.entrySet();
+    }
+
+    public static void clearPlayers() {
+        playerSuperPowers.clear();
     }
 
     public static ArrayList<SuperPower> getSuperPowers() {
@@ -66,16 +74,16 @@ public class SuperPower {
     }
 
     public static SuperPower getPlayerSuperPower(String playerName) {
-        return Common.playersPower.get(playerName);
+        return playerSuperPowers.get(playerName);
     }
 
     public static SuperPower getPlayerSuperPower(Player player) {
-        return Common.playersPower.get(player.getName());
+        return playerSuperPowers.get(player.getName());
     }
 
     public static void clearPlayerSuperPower(String playerName) {
 
-        Common.playersPower.remove(playerName);
+        playerSuperPowers.remove(playerName);
 
         try {
             SuperPower playerSuperPower = SuperPower.getPlayerSuperPower(playerName);
@@ -96,12 +104,12 @@ public class SuperPower {
             }
         } catch (Exception ignored) {}
 
-        Common.playersPower.remove(player.getName());
+        playerSuperPowers.remove(player.getName());
     }
 
     public void setToPlayer(Player player) {
 
-        Common.playersPower.put(player.getName(), this);
+        playerSuperPowers.put(player.getName(), this);
 
         Component header = Component.empty();
         Component text = Component.empty();

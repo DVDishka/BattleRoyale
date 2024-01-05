@@ -3,15 +3,13 @@ package ru.dvdishka.battleroyale;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
-import ru.dvdishka.battleroyale.logic.Common;
-import ru.dvdishka.battleroyale.logic.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.common.Common;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Initialization;
 import ru.dvdishka.battleroyale.logic.Logger;
-import ru.dvdishka.battleroyale.ui.Timer;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
 import java.io.File;
 
@@ -20,7 +18,7 @@ public final class BattleRoyale extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        Common.plugin = this;
+        PluginVariables.plugin = this;
 
         for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
             team.unregister();
@@ -72,7 +70,7 @@ public final class BattleRoyale extends JavaPlugin {
 
         CommandAPI.onEnable();
 
-        Common.logger.info("BattleRoyale plugin has been enabled!");
+        PluginVariables.logger.info("BattleRoyale plugin has been enabled!");
     }
 
     public void onLoad() {
@@ -87,6 +85,6 @@ public final class BattleRoyale extends JavaPlugin {
 
         CommandAPI.onDisable();
 
-        Common.logger.info("BattleRoyale plugin has been disabled");
+        PluginVariables.logger.info("BattleRoyale plugin has been disabled");
     }
 }

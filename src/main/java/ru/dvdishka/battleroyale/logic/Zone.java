@@ -3,6 +3,9 @@ package ru.dvdishka.battleroyale.logic;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -104,7 +107,7 @@ public class Zone {
                 delay = 1;
             }
 
-            ScheduledTask moveTask = Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+            ScheduledTask moveTask = Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
                 if (delay / 10 != timeSeconds * 2 - 1) {
                     for (World world : Bukkit.getWorlds()) {
                         world.getWorldBorder().setSize(borderSize);
@@ -153,9 +156,9 @@ public class Zone {
 
             final int delay = i;
 
-            ScheduledTask moveTask = Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+            ScheduledTask moveTask = Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
 
-                if (!Common.isGameStarted) {
+                if (!GameVariables.isGameStarted) {
                     return;
                 }
 
@@ -228,59 +231,59 @@ public class Zone {
     }
 
     public int getCurrentZoneDiameter() {
-        return (int) Common.overWorld.getWorldBorder().getSize();
+        return (int) PluginVariables.overWorld.getWorldBorder().getSize();
     }
 
     public int getCurrentZoneCenterX() {
-        return Common.overWorld.getWorldBorder().getCenter().getBlockX();
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getBlockX();
     }
 
     public int getCurrentZoneCenterZ() {
-        return Common.overWorld.getWorldBorder().getCenter().getBlockZ();
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getBlockZ();
     }
 
     public int getCurrentLeftBorder() {
-        return Common.overWorld.getWorldBorder().getCenter().getBlockX() - (((int) Common.overWorld.getWorldBorder().getSize()) / 2);
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getBlockX() - (((int) PluginVariables.overWorld.getWorldBorder().getSize()) / 2);
     }
 
     public int getCurrentRightBorder() {
-        return Common.overWorld.getWorldBorder().getCenter().getBlockX() + (((int) Common.overWorld.getWorldBorder().getSize()) / 2);
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getBlockX() + (((int) PluginVariables.overWorld.getWorldBorder().getSize()) / 2);
     }
 
     public int getCurrentLowerBorder() {
-        return Common.overWorld.getWorldBorder().getCenter().getBlockZ() - (((int) Common.overWorld.getWorldBorder().getSize()) / 2);
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getBlockZ() - (((int) PluginVariables.overWorld.getWorldBorder().getSize()) / 2);
     }
 
     public int getCurrentUpperBorder() {
-        return Common.overWorld.getWorldBorder().getCenter().getBlockZ() + (((int) Common.overWorld.getWorldBorder().getSize()) / 2);
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getBlockZ() + (((int) PluginVariables.overWorld.getWorldBorder().getSize()) / 2);
     }
 
     public double getCurrentZoneFloatDiameter() {
-        return Common.overWorld.getWorldBorder().getSize();
+        return PluginVariables.overWorld.getWorldBorder().getSize();
     }
 
     public double getCurrentZoneFloatCenterX() {
-        return Common.overWorld.getWorldBorder().getCenter().getX();
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getX();
     }
 
     public double getCurrentZoneFloatCenterZ() {
-        return Common.overWorld.getWorldBorder().getCenter().getZ();
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getZ();
     }
 
     public double getCurrentLeftFloatBorder() {
-        return Common.overWorld.getWorldBorder().getCenter().getX() - ((Common.overWorld.getWorldBorder().getSize()) / 2);
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getX() - ((PluginVariables.overWorld.getWorldBorder().getSize()) / 2);
     }
 
     public double getCurrentRightFloatBorder() {
-        return Common.overWorld.getWorldBorder().getCenter().getX() + ((Common.overWorld.getWorldBorder().getSize()) / 2);
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getX() + ((PluginVariables.overWorld.getWorldBorder().getSize()) / 2);
     }
 
     public double getCurrentLowerFloatBorder() {
-        return Common.overWorld.getWorldBorder().getCenter().getZ() - ((Common.overWorld.getWorldBorder().getSize()) / 2);
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getZ() - ((PluginVariables.overWorld.getWorldBorder().getSize()) / 2);
     }
 
     public double getCurrentUpperFloatBorder() {
-        return Common.overWorld.getWorldBorder().getCenter().getBlockZ() + ((Common.overWorld.getWorldBorder().getSize()) / 2);
+        return PluginVariables.overWorld.getWorldBorder().getCenter().getBlockZ() + ((PluginVariables.overWorld.getWorldBorder().getSize()) / 2);
     }
 
     public int getOldZoneDiameter() {

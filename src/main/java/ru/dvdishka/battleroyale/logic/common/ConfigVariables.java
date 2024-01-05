@@ -1,4 +1,4 @@
-package ru.dvdishka.battleroyale.logic;
+package ru.dvdishka.battleroyale.logic.common;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;

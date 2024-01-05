@@ -7,9 +7,10 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
 import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
-import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.Scheduler;
 
 import java.util.ArrayList;
@@ -57,13 +58,13 @@ public class Timer {
 
         if (callEvent) {
 
-            Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+            Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
 
                 Bukkit.getPluginManager().callEvent(new NextGameStageEvent());
             }, time);
         }
 
-        lastSecondsTimerTask = Scheduler.getScheduler().runSyncRepeatingTask(Common.plugin, (scheduledTask) -> {
+        lastSecondsTimerTask = Scheduler.getScheduler().runSyncRepeatingTask(PluginVariables.plugin, (scheduledTask) -> {
 
             this.timeSeconds--;
 
@@ -75,9 +76,9 @@ public class Timer {
 
         for (int i = changePeriod; i <= time; i += changePeriod) {
 
-            ScheduledTask timerUpdateTask = Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+            ScheduledTask timerUpdateTask = Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
 
-                if (!Common.isGameStarted) {
+                if (!GameVariables.isGameStarted) {
                     return;
                 }
 
@@ -159,7 +160,7 @@ public class Timer {
 
         String pvpText;
 
-        if (!Common.overWorld.getPVP())  {
+        if (!PluginVariables.overWorld.getPVP())  {
             pvpText = ChatColor.BOLD + "PVP: " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "NO";
         } else {
             pvpText = ChatColor.BOLD + "PVP: " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + "YES";
@@ -172,7 +173,7 @@ public class Timer {
 
         String reviveText;
 
-        if (Common.isRevivalEnabled) {
+        if (GameVariables.isRevivalEnabled) {
             reviveText = ChatColor.BOLD + "REVIVE: " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YES";
         } else {
             reviveText = ChatColor.BOLD + "REVIVE: " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + "NO";

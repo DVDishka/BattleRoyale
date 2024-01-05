@@ -7,8 +7,11 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.common.Common;
 import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
+import ru.dvdishka.battleroyale.logic.common.PlayerVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 import ru.dvdishka.battleroyale.ui.DropBar;
 
 import java.util.Collection;
@@ -85,7 +88,7 @@ public class DropContainer {
     public void delete() {
 
         this.getLocation().getBlock().setType(Material.AIR);
-        this.getLocation().getBlock().removeMetadata("dropContainer", Common.plugin);
+        this.getLocation().getBlock().removeMetadata("dropContainer", PluginVariables.plugin);
 
         for (DropBar dropBar : DropBar.getInstances()) {
             if (dropBar.getInformation() == this) {
@@ -93,37 +96,34 @@ public class DropContainer {
             }
         }
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : PlayerVariables.getOnlinePlayers()) {
 
-            if (Common.players.contains(player.getName())) {
+            Component worldComponent = this.getWorldComponent();
+            Component header = Component.empty();
+            Component text = Component.empty();
 
-                Component worldComponent = this.getWorldComponent();
-                Component header = Component.empty();
-                Component text = Component.empty();
+            header = header
+                    .append(Component.text("Drop container has been deleted!")
+                            .color(NamedTextColor.GOLD)
+                            .decorate(TextDecoration.BOLD));
 
-                header = header
-                        .append(Component.text("Drop container has been deleted!")
-                                .color(NamedTextColor.GOLD)
-                                .decorate(TextDecoration.BOLD));
-
-                text = text
-                        .append(worldComponent)
-                        .append(Component.space())
-                        .append(Component.text("X:"))
-                        .append(Component.space())
-                        .append(Component.text(this.getLocation().getBlockX()))
-                        .append(Component.space())
-                        .append(Component.text("Y:"))
-                        .append(Component.space())
-                        .append(Component.text(this.getLocation().getBlockY()))
-                        .append(Component.space())
-                        .append(Component.text("Z:"))
-                        .append(Component.space())
-                        .append(Component.text(this.getLocation().getBlockZ()));
+            text = text
+                    .append(worldComponent)
+                    .append(Component.space())
+                    .append(Component.text("X:"))
+                    .append(Component.space())
+                    .append(Component.text(this.getLocation().getBlockX()))
+                    .append(Component.space())
+                    .append(Component.text("Y:"))
+                    .append(Component.space())
+                    .append(Component.text(this.getLocation().getBlockY()))
+                    .append(Component.space())
+                    .append(Component.text("Z:"))
+                    .append(Component.space())
+                    .append(Component.text(this.getLocation().getBlockZ()));
 
 
-                Common.sendNotification(header, text, player);
-            }
+            Common.sendNotification(header, text, player);
         }
 
         dropContainers.remove(this.location);
@@ -140,7 +140,7 @@ public class DropContainer {
     @SuppressWarnings("UnusedAssignment")
     public static DropContainer parseFromString(String dropContainerString) {
 
-        if (!Common.isGameStarted) {
+        if (!GameVariables.isGameStarted) {
             return null;
         }
 
@@ -185,7 +185,7 @@ public class DropContainer {
 
         this.stage = DropContainerStage.OPENING_STAGE;
 
-        Scheduler.getScheduler().runSyncRepeatingTask(Common.plugin, (scheduledTask) -> {
+        Scheduler.getScheduler().runSyncRepeatingTask(PluginVariables.plugin, (scheduledTask) -> {
             if (timeToOpen > 0) {
                 for (Player player : this.location.getNearbyPlayers(25)) {
                     player.playSound(player, Sound.UI_BUTTON_CLICK, 100, 1);

@@ -18,35 +18,33 @@ import ru.dvdishka.battleroyale.handlers.commands.startbox.CreateStartBoxCommand
 import ru.dvdishka.battleroyale.handlers.commands.startbox.OpenStartBoxCommand;
 import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
+import ru.dvdishka.battleroyale.logic.common.*;
 import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.Common;
-import ru.dvdishka.battleroyale.logic.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Scheduler;
 import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
 import ru.dvdishka.battleroyale.logic.classes.superpower.EffectUpdateTask;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class StartCommand implements CommandInterface {
 
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
-        if (Common.isGameStarted) {
+        if (GameVariables.isGameStarted) {
             returnFailure("You need to stop battleroyale to start it again \"/battleroyale admin stop\"", sender);
             return;
         }
 
         Common.resetVariables();
-        Common.isGameStarted = true;
+        GameVariables.isGameStarted = true;
 
         Timer.getInstance().register();
         Radar.getInstance().register();
 
-        Scheduler.getScheduler().runAsyncRepeatingTask(Common.plugin, (scheduledTask) -> {
+        Scheduler.getScheduler().runAsyncRepeatingTask(PluginVariables.plugin, (scheduledTask) -> {
             new EffectUpdateTask().run();
         }, 20, 20);
 
@@ -60,15 +58,15 @@ public class StartCommand implements CommandInterface {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
 
-            Common.players.add(player.getName());
+            PlayerVariables.addBattleRoyalePlayer(player.getName());
 
-            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
+            Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> {
                 player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
             });
 
             ArrayList<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
             for (PotionEffect effect : effects) {
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
+                Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> {
                     player.removePotionEffect(effect.getType());
                 });
             }
@@ -76,7 +74,7 @@ public class StartCommand implements CommandInterface {
             Timer.getInstance().addViewer(player);
             Radar.getInstance().addViewer(player);
 
-            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
+            Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 100 , 1, false, false));
             });
 

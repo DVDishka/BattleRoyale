@@ -7,7 +7,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.common.Common;
 import ru.dvdishka.battleroyale.logic.Team;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
 

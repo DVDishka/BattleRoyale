@@ -29,6 +29,9 @@ import ru.dvdishka.battleroyale.handlers.superpowerhandler.NoFallDamageHandler;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.common.PlayerVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,9 +45,9 @@ public class Initialization {
 
         try {
             Class.forName("io.papermc.paper.threadedregions.scheduler.EntityScheduler");
-            Common.isFolia = true;
+            PluginVariables.isFolia = true;
         } catch (Exception e) {
-            Common.isFolia = false;
+            PluginVariables.isFolia = false;
         }
     }
 
@@ -589,8 +592,8 @@ public class Initialization {
 
                                                 ArrayList<String> deadPlayers = new ArrayList<>();
 
-                                                for (String playerName : Common.players) {
-                                                    if (Common.deadPlayers.contains(playerName)) {
+                                                for (String playerName : PlayerVariables.getBattleRoyalePlayers()) {
+                                                    if (PlayerVariables.isDead(playerName)) {
                                                         deadPlayers.add(playerName);
                                                     }
                                                 }
@@ -613,8 +616,8 @@ public class Initialization {
 
                                                 ArrayList<String> alivePlayers = new ArrayList<>();
 
-                                                for (String playerName : Common.players) {
-                                                    if (!Common.deadPlayers.contains(playerName)) {
+                                                for (String playerName : PlayerVariables.getBattleRoyalePlayers()) {
+                                                    if (!PlayerVariables.isDead(playerName)) {
                                                         alivePlayers.add(playerName);
                                                     }
                                                 }
@@ -640,7 +643,7 @@ public class Initialization {
                                                         ArrayList<String> battleRoyalePlayers = new ArrayList<>();
 
                                                         for (Player player : Bukkit.getOnlinePlayers()) {
-                                                            if (Common.playersPower.containsKey(player.getName())) {
+                                                            if (SuperPower.getPlayerSuperPower(player) == null) {
                                                                 battleRoyalePlayers.add(player.getName());
                                                             }
                                                         }
@@ -676,10 +679,8 @@ public class Initialization {
 
                                                                 ArrayList<String> battleRoyalePlayers = new ArrayList<>();
 
-                                                                for (Player player : Bukkit.getOnlinePlayers()) {
-                                                                    if (Common.players.contains(player.getName())) {
-                                                                        battleRoyalePlayers.add(player.getName());
-                                                                    }
+                                                                for (Player player : PlayerVariables.getOnlinePlayers()) {
+                                                                    battleRoyalePlayers.add(player.getName());
                                                                 }
 
                                                                 return battleRoyalePlayers;
@@ -732,7 +733,7 @@ public class Initialization {
         if (!config.contains(path)) {
             Logger.getLogger().warn("Failed to load " + path + " from BattleRoyale config file. Using default value...");
             config.set(path, defaultValue);
-            Common.plugin.saveConfig();
+            PluginVariables.plugin.saveConfig();
         }
         return config.getInt(path, defaultValue);
     }
@@ -741,7 +742,7 @@ public class Initialization {
         if (!config.contains(path)) {
             Logger.getLogger().warn("Failed to load " + path + " from BattleRoyale config file. Using default value...");
             config.set(path, defaultValue);
-            Common.plugin.saveConfig();
+            PluginVariables.plugin.saveConfig();
         }
         return config.getString(path, defaultValue);
     }
@@ -750,7 +751,7 @@ public class Initialization {
         if (!config.contains(path)) {
             Logger.getLogger().warn("Failed to load " + path + " from BattleRoyale config file. Using default value...");
             config.set(path, defaultValue);
-            Common.plugin.saveConfig();
+            PluginVariables.plugin.saveConfig();
         }
         return config.getBoolean(path, defaultValue);
     }
@@ -759,7 +760,7 @@ public class Initialization {
         if (!config.contains(path)) {
             Logger.getLogger().warn("Failed to load " + path + " from BattleRoyale config file. Using default value...");
             config.set(path, defaultValue);
-            Common.plugin.saveConfig();
+            PluginVariables.plugin.saveConfig();
         }
         return config.getIntegerList(path);
     }
@@ -768,7 +769,7 @@ public class Initialization {
         if (!config.contains(path)) {
             Logger.getLogger().warn("Failed to load " + path + " from BattleRoyale config file. Using default value...");
             config.set(path, defaultValue);
-            Common.plugin.saveConfig();
+            PluginVariables.plugin.saveConfig();
         }
         return config.getStringList(path);
     }

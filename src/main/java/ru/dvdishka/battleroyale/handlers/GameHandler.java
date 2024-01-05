@@ -7,18 +7,19 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
-import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import ru.dvdishka.battleroyale.logic.*;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
+import ru.dvdishka.battleroyale.logic.common.Common;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
+import ru.dvdishka.battleroyale.logic.common.PlayerVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 import ru.dvdishka.battleroyale.logic.event.game.GameDeathEvent;
-import ru.dvdishka.battleroyale.logic.event.game.ReviveDeathEvent;
 import ru.dvdishka.battleroyale.logic.event.game.TeamEliminateEvent;
 import ru.dvdishka.battleroyale.logic.event.game.TeamWinEvent;
 import ru.dvdishka.battleroyale.ui.Radar;
@@ -26,7 +27,6 @@ import ru.dvdishka.battleroyale.ui.Timer;
 import ru.dvdishka.battleroyale.ui.WinBar;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class GameHandler implements Listener {
 
@@ -36,34 +36,29 @@ public class GameHandler implements Listener {
         Zone.getInstance().stopMoving();
         Timer.getInstance().unregister();
 
-        Common.isWinStage = true;
+        GameVariables.isWinStage = true;
 
         WinBar.getInstance().register(event.getTeamName());
 
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        for (Player onlinePlayer : PlayerVariables.getOnlinePlayers()) {
 
-            if (Common.players.contains(onlinePlayer.getName())) {
+            Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, onlinePlayer, (scheduledTask) -> {
 
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
+                onlinePlayer.playSound(onlinePlayer, Sound.ITEM_GOAT_HORN_SOUND_1, 1000, 0);
 
-                    if (Common.players.contains(onlinePlayer.getName())) {
-                        onlinePlayer.playSound(onlinePlayer, Sound.ITEM_GOAT_HORN_SOUND_1, 1000, 0);
-                    }
+                Component header = Component.empty();
+                Component text = Component.empty();
 
-                    Component header = Component.empty();
-                    Component text = Component.empty();
+                header = header
+                        .append(Component.text(event.getTeamName())
+                                .color(event.getTeamColor())
+                                .decorate(TextDecoration.BOLD));
 
-                    header = header
-                            .append(Component.text(event.getTeamName())
-                                    .color(event.getTeamColor())
-                                    .decorate(TextDecoration.BOLD));
+                text = text
+                        .append(Component.text("Team wins"));
 
-                    text = text
-                            .append(Component.text("Team wins"));
-
-                    Common.sendNotification(header, text, onlinePlayer);
-                });
-            }
+                Common.sendNotification(header, text, onlinePlayer);
+            });
         }
 
         Logger.getLogger().log("Team " + event.getTeamName() + " wins!");
@@ -74,27 +69,24 @@ public class GameHandler implements Listener {
 
         Team.deadTeams.add(event.getTeamName());
 
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        for (Player onlinePlayer : PlayerVariables.getOnlinePlayers()) {
 
-            if (Common.players.contains(onlinePlayer.getName())) {
+            Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, onlinePlayer, (scheduledTask) -> {
 
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, onlinePlayer, (scheduledTask) -> {
+                Component header = Component.empty();
+                Component text = Component.empty();
 
-                    Component header = Component.empty();
-                    Component text = Component.empty();
+                header = header
+                        .append(Component.text(event.getTeamName())
+                                .color(event.getTeamColor())
+                                .decorate(TextDecoration.BOLD));
 
-                    header = header
-                            .append(Component.text(event.getTeamName())
-                                    .color(event.getTeamColor())
-                                    .decorate(TextDecoration.BOLD));
+                text = text
+                        .append(Component.text("Team is eliminated")
+                                .color(NamedTextColor.RED));
 
-                    text = text
-                            .append(Component.text("Team is eliminated")
-                                    .color(NamedTextColor.RED));
-
-                    Common.sendNotification(header, text, onlinePlayer);
-                });
-            }
+                Common.sendNotification(header, text, onlinePlayer);
+            });
         }
     }
 
@@ -112,29 +104,27 @@ public class GameHandler implements Listener {
             playerTeamColor = playerTeam.getColor();
         }
 
-        Common.deadPlayers.add(playerName);
+        PlayerVariables.addDead(playerName);
 
-        for (Player onlinePayer : Bukkit.getOnlinePlayers()) {
-            if (Common.players.contains(onlinePayer.getName())) {
+        for (Player onlinePayer : PlayerVariables.getOnlinePlayers()) {
 
-                Component header = Component.empty();
-                Component text = Component.empty();
+            Component header = Component.empty();
+            Component text = Component.empty();
 
-                header = header
-                        .append(Component.text(playerName)
-                                .decorate(TextDecoration.BOLD));
+            header = header
+                    .append(Component.text(playerName)
+                            .decorate(TextDecoration.BOLD));
 
-                text = text
-                        .append(Component.text("Player is eliminated!")
-                                .color(NamedTextColor.RED));
+            text = text
+                    .append(Component.text("Player is eliminated!")
+                            .color(NamedTextColor.RED));
 
-                Common.sendNotification(header, text, onlinePayer);
-            }
+            Common.sendNotification(header, text, onlinePayer);
         }
 
         if (playerTeam != null) {
             for (String teamMate : playerTeam.getMembers()) {
-                if (!Common.deadPlayers.contains(teamMate)) {
+                if (!PlayerVariables.isDead(teamMate)) {
                     isTeamDead = false;
                     break;
                 }
@@ -145,7 +135,7 @@ public class GameHandler implements Listener {
 
             Player player = Bukkit.getPlayer(playerName);
 
-            Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
+            Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> {
                 player.setGameMode(GameMode.SPECTATOR);
             });
         }
@@ -171,7 +161,7 @@ public class GameHandler implements Listener {
 
                 Player player = Bukkit.getPlayer(playerName);
 
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
+                Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> {
                     player.kick(Component.text("You are out and your team is not yet!"));
                 });
             }
@@ -180,7 +170,7 @@ public class GameHandler implements Listener {
 
     @EventHandler
     public void onReviveRespawn(PlayerRespawnEvent event) {
-        if (Common.isRevivalEnabled) {
+        if (GameVariables.isRevivalEnabled) {
             StartElytraHandler.giveStartElytra(event.getPlayer());
         }
     }
@@ -189,11 +179,10 @@ public class GameHandler implements Listener {
 
         ArrayList<String> aliveTeams = new ArrayList<>();
 
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        for (Player onlinePlayer : PlayerVariables.getOnlinePlayers()) {
 
-            if (Common.players.contains(onlinePlayer.getName()) &&
-                    !onlinePlayer.getName().equals(notCheckedPlayer) &&
-                    !Common.deadPlayers.contains(onlinePlayer.getName())) {
+            if (!onlinePlayer.getName().equals(notCheckedPlayer) &&
+                    !PlayerVariables.isDead(onlinePlayer.getName())) {
 
                 if (Team.getTeam(onlinePlayer) != null) {
                     if (!aliveTeams.contains(onlinePlayer.getName())) {
@@ -210,34 +199,34 @@ public class GameHandler implements Listener {
     @org.bukkit.event.EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
 
-        if (Common.isGameStarted) {
+        if (GameVariables.isGameStarted) {
 
-            if (Common.deadPlayers.contains(event.getPlayer().getName()) &&
+            if (PlayerVariables.isDead(event.getPlayer().getName()) &&
                     Team.getTeam(event.getPlayer()) != null &&
                     !Team.deadTeams.contains(Team.getTeam(event.getPlayer()).getName())) {
 
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, event.getPlayer(), (scheduledTask) -> {
+                Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, event.getPlayer(), (scheduledTask) -> {
                     event.getPlayer().kick(Component.text("You are out and your team is not yet!"));
                 });
             }
 
-            else if (Common.deadPlayers.contains(event.getPlayer().getName())) {
-                Scheduler.getScheduler().runPlayerTask(Common.plugin, event.getPlayer(), (scheduledTask) -> {
+            else if (PlayerVariables.isDead(event.getPlayer().getName())) {
+                Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, event.getPlayer(), (scheduledTask) -> {
                     event.getPlayer().setGameMode(GameMode.SPECTATOR);
                 });
             }
         }
 
-        if (Common.isGameStarted) {
+        if (GameVariables.isGameStarted) {
             Timer.getInstance().addViewer(event.getPlayer());
             Radar.getInstance().addViewer(event.getPlayer());
         }
 
         Player player = event.getPlayer();
 
-        Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> {
+        Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> {
 
-            if (!Common.players.contains(player.getName()) && Common.isGameStarted) {
+            if (!PlayerVariables.isBattleRoyalePlayer(player.getName()) && GameVariables.isGameStarted) {
 
                 player.setGameMode(GameMode.SURVIVAL);
 
@@ -250,17 +239,26 @@ public class GameHandler implements Listener {
                     SuperPower.getRandom().setToPlayer(player);
                 }
 
-                Common.players.add(player.getName());
+                PlayerVariables.addBattleRoyalePlayer(player.getName());
             }
         });
 
-        if (Common.reviveQueue.contains(player.getName())) {
+        if (PlayerVariables.isKillQueue(player.getName())) {
+
+            Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> {
+                player.setGameMode(GameMode.SPECTATOR);
+            });
+
+            PlayerVariables.removeKillQueue(player.getName());
+        }
+
+        if (PlayerVariables.isReviveQueue(player)) {
 
             player.setGameMode(GameMode.SURVIVAL);
-            player.teleport(Common.overWorld.getSpawnLocation());
+            player.teleport(PluginVariables.overWorld.getSpawnLocation());
             StartElytraHandler.giveStartElytra(player);
 
-            Common.reviveQueue.remove(player.getName());
+            PlayerVariables.removeReviveQueue(player);
         }
     }
 }

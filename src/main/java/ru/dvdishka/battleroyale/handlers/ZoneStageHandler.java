@@ -11,6 +11,10 @@ import org.bukkit.event.Listener;
 import ru.dvdishka.battleroyale.logic.*;
 import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
+import ru.dvdishka.battleroyale.logic.common.Common;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 import ru.dvdishka.battleroyale.logic.event.drop.DropCreateEvent;
 import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
 import ru.dvdishka.battleroyale.ui.Radar;
@@ -23,16 +27,16 @@ public class ZoneStageHandler implements Listener  {
     @org.bukkit.event.EventHandler
     public void onNextGameStageEvent(NextGameStageEvent event) {
 
-        if (!Common.isGameStarted && !Common.isWinStage) {
+        if (!GameVariables.isGameStarted && !GameVariables.isWinStage) {
             return;
         }
 
-        Common.zoneStage++;
+        GameVariables.zoneStage++;
 
         // REVIVE DISABLE LOGIC
-        if (Common.zoneStage == ConfigVariables.lastReviveZone) {
+        if (GameVariables.zoneStage == ConfigVariables.lastReviveZone) {
 
-            Common.isRevivalEnabled = false;
+            GameVariables.isRevivalEnabled = false;
 
             for (Player player : Bukkit.getOnlinePlayers()) {
 
@@ -52,9 +56,9 @@ public class ZoneStageHandler implements Listener  {
         }
 
         // PVP ENABLE LOGIC
-        if (Common.zoneStage == ConfigVariables.pvpEnableZone) {
+        if (GameVariables.zoneStage == ConfigVariables.pvpEnableZone) {
 
-            Common.isPVPEnabled = true;
+            GameVariables.isPVPEnabled = true;
 
             for (World world : Bukkit.getWorlds()) {
                 world.setPVP(true);
@@ -78,12 +82,12 @@ public class ZoneStageHandler implements Listener  {
         }
 
         // ZONE MOVING STAGE LOGIC
-        if (Common.zoneStage >= ConfigVariables.zones.size()) {
+        if (GameVariables.zoneStage >= ConfigVariables.zones.size()) {
             zoneMovingStage();
         }
 
         // FIRST ZONE STAGE LOGIC
-        else if (Common.zoneStage == 0) {
+        else if (GameVariables.zoneStage == 0) {
             firstZoneStage();
         }
 
@@ -96,71 +100,71 @@ public class ZoneStageHandler implements Listener  {
     private void firstZoneStage() {
 
         int timeOut = ConfigVariables.timeOuts.get(0);
-        final int oldZoneCenterX = Common.overWorld.getWorldBorder().getCenter().getBlockX();
-        final int oldZoneCenterZ = Common.overWorld.getWorldBorder().getCenter().getBlockZ();
+        final int oldZoneCenterX = PluginVariables.overWorld.getWorldBorder().getCenter().getBlockX();
+        final int oldZoneCenterZ = PluginVariables.overWorld.getWorldBorder().getCenter().getBlockZ();
         int previousZoneDiameter = ConfigVariables.defaultWorldBorderDiameter;
 
         final int nextZoneCenterX = Zone.getInstance().generateRandomZoneCenterX(
                 ConfigVariables.defaultWorldBorderDiameter / 2,
-                ConfigVariables.zones.get(Common.zoneStage) / 2,
+                ConfigVariables.zones.get(GameVariables.zoneStage) / 2,
                 oldZoneCenterX);
         final int nextZoneCenterZ = Zone.getInstance().generateRandomZoneCenterZ(
                 ConfigVariables.defaultWorldBorderDiameter / 2,
-                ConfigVariables.zones.get(Common.zoneStage) / 2,
+                ConfigVariables.zones.get(GameVariables.zoneStage) / 2,
                 oldZoneCenterZ);
 
         Zone.getInstance().setVariables(ConfigVariables.defaultWorldBorderDiameter,
-                ConfigVariables.zones.get(Common.zoneStage),
+                ConfigVariables.zones.get(GameVariables.zoneStage),
                 oldZoneCenterX,
                 oldZoneCenterZ,
                 nextZoneCenterX,
                 nextZoneCenterZ);
 
         // BREAK BOSS BAR TIMER TASK START
-        Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
-            Common.isBreak = true;
+        Scheduler.getScheduler().runSync(PluginVariables.plugin, (scheduledTask) -> {
+            GameVariables.isBreak = true;
             Timer.getInstance().startTimer(timeOut, ZonePhase.BREAK, false);
         });
 
         // ACTIVE BORDERS TASK START
-        Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+        Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
 
-            Common.isBreak = false;
+            GameVariables.isBreak = false;
 
             // CHANGE WORLD BORDER
             Zone.getInstance().changeBorders(
                     ConfigVariables.defaultWorldBorderDiameter,
-                    ConfigVariables.zones.get(Common.zoneStage),
-                    ConfigVariables.times.get(Common.zoneStage),
+                    ConfigVariables.zones.get(GameVariables.zoneStage),
+                    ConfigVariables.times.get(GameVariables.zoneStage),
                     oldZoneCenterX,
                     oldZoneCenterZ,
                     nextZoneCenterX,
                     nextZoneCenterZ);
 
             // ACTIVE BOSS BAR TIMER TASK START
-            Timer.getInstance().startTimer(ConfigVariables.times.get(Common.zoneStage), ZonePhase.ACTIVE, true);
+            Timer.getInstance().startTimer(ConfigVariables.times.get(GameVariables.zoneStage), ZonePhase.ACTIVE, true);
             }, timeOut * 20L);
     }
 
     public void mainNextStageLogic() {
 
-        int timeOut = ConfigVariables.timeOuts.get(Common.zoneStage);
-        int previousZoneDiameter = ConfigVariables.zones.get(Common.zoneStage - 1);
+        int timeOut = ConfigVariables.timeOuts.get(GameVariables.zoneStage);
+        int previousZoneDiameter = ConfigVariables.zones.get(GameVariables.zoneStage - 1);
 
         final int oldZoneCenterX = Zone.getInstance().getNewZoneCenterX();
         final int oldZoneCenterZ = Zone.getInstance().getNewZoneCenterZ();
 
         final int nextZoneCenterX = Zone.getInstance().generateRandomZoneCenterX(
                 previousZoneDiameter / 2,
-                ConfigVariables.zones.get(Common.zoneStage) / 2,
+                ConfigVariables.zones.get(GameVariables.zoneStage) / 2,
                 oldZoneCenterX);
         final int nextZoneCenterZ = Zone.getInstance().generateRandomZoneCenterZ(
                 previousZoneDiameter / 2,
-                ConfigVariables.zones.get(Common.zoneStage) / 2,
+                ConfigVariables.zones.get(GameVariables.zoneStage) / 2,
                 oldZoneCenterZ);
 
-        Zone.getInstance().setVariables(ConfigVariables.zones.get(Common.zoneStage - 1),
-                ConfigVariables.zones.get(Common.zoneStage),
+        Zone.getInstance().setVariables(ConfigVariables.zones.get(GameVariables.zoneStage - 1),
+                ConfigVariables.zones.get(GameVariables.zoneStage),
                 oldZoneCenterX,
                 oldZoneCenterZ,
                 nextZoneCenterX,
@@ -171,30 +175,30 @@ public class ZoneStageHandler implements Listener  {
         }
 
         // BREAK BOSS BAR TIMER TASK START
-        Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
+        Scheduler.getScheduler().runSync(PluginVariables.plugin, (scheduledTask) -> {
 
-            Common.isBreak = true;
+            GameVariables.isBreak = true;
 
             Timer.getInstance().startTimer(timeOut, ZonePhase.BREAK, false);
         });
 
         // ACTIVE BORDERS TASK START
-        Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+        Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
 
-            Common.isBreak = false;
+            GameVariables.isBreak = false;
 
             // CHANGE WORLD BORDER
             Zone.getInstance().changeBorders(
-                    ConfigVariables.zones.get(Common.zoneStage - 1),
-                    ConfigVariables.zones.get(Common.zoneStage),
-                    ConfigVariables.times.get(Common.zoneStage),
+                    ConfigVariables.zones.get(GameVariables.zoneStage - 1),
+                    ConfigVariables.zones.get(GameVariables.zoneStage),
+                    ConfigVariables.times.get(GameVariables.zoneStage),
                     oldZoneCenterX,
                     oldZoneCenterZ,
                     nextZoneCenterX,
                     nextZoneCenterZ);
 
             // ACTIVE BOSS BAR TIMER TASK START
-            Timer.getInstance().startTimer(ConfigVariables.times.get(Common.zoneStage), ZonePhase.ACTIVE, true);
+            Timer.getInstance().startTimer(ConfigVariables.times.get(GameVariables.zoneStage), ZonePhase.ACTIVE, true);
             }, timeOut * 20L);
     }
 
@@ -203,11 +207,11 @@ public class ZoneStageHandler implements Listener  {
         // KILL PLAYER IF NOT IN OVERWORLD AND LOCK PORTALS
         for (World world : Bukkit.getWorlds()) {
 
-            Common.isPortalLocked = true;
+            GameVariables.isPortalLocked = true;
 
             if (!world.getKey().equals(NamespacedKey.minecraft("overworld"))) {
                 for (Player player : world.getPlayers()) {
-                    Scheduler.getScheduler().runPlayerTask(Common.plugin, player, (scheduledTask) -> player.setHealth(0));
+                    Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> player.setHealth(0));
                 }
             }
         }
@@ -268,14 +272,14 @@ public class ZoneStageHandler implements Listener  {
                 Zone.getInstance().getNewZoneCenterZ() + z * moveLength);
 
         // BREAK BOSS BAR TIMER TASK START
-        Scheduler.getScheduler().runSync(Common.plugin, (scheduledTask) -> {
-            Common.isBreak = true;
+        Scheduler.getScheduler().runSync(PluginVariables.plugin, (scheduledTask) -> {
+            GameVariables.isBreak = true;
             Timer.getInstance().startTimer(ConfigVariables.zoneMoveTimeOut, ZonePhase.BREAK, false);
         });
 
         // MOVE BORDERS MOVING TASK START
-        Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
-            Common.isBreak = false;
+        Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
+            GameVariables.isBreak = false;
             Timer.getInstance().startTimer(ConfigVariables.finalZoneMoveDuration, ZonePhase.MOVE, true);
             Zone.getInstance().moveZone(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(moveLength));
         }, ConfigVariables.zoneMoveTimeOut * 20L);

@@ -14,8 +14,10 @@ import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.common.Common;
 import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.logic.common.PlayerVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
 import java.util.HashMap;
 
@@ -26,15 +28,9 @@ public class StartElytraHandler implements Listener {
 
     public static void giveEveryoneStartElytra() {
 
-        for (String playerName : Common.players) {
-
-            try {
-
-                Player player = Bukkit.getPlayer(playerName);
+        for (Player player : PlayerVariables.getOnlinePlayers()) {
 
                 giveStartElytra(player);
-
-            } catch (Exception ignored) {}
         }
     }
 
@@ -94,7 +90,7 @@ public class StartElytraHandler implements Listener {
 
             final String playerName = event.getEntity().getName();
 
-            ScheduledTask banPlayerElytraTask = Scheduler.getScheduler().runSyncDelayed(Common.plugin, (scheduledTask) -> {
+            ScheduledTask banPlayerElytraTask = Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
                 StartElytraHandler.startElytraEnabled.put(playerName, Boolean.FALSE);
             }, 1800);
 

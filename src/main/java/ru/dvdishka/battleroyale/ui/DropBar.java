@@ -7,12 +7,11 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
-import ru.dvdishka.battleroyale.logic.Common;
 import ru.dvdishka.battleroyale.logic.Scheduler;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainerStage;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,7 +43,7 @@ public class DropBar {
 
         final DropBar instance = instances.get(player.getName());
 
-        Scheduler.getScheduler().runSyncRepeatingTask(Common.plugin, (scheduledTask) -> {
+        Scheduler.getScheduler().runSyncRepeatingTask(PluginVariables.plugin, (scheduledTask) -> {
             instance.update();
             if (!instance.isActive) {
                 scheduledTask.cancel();
@@ -75,7 +74,7 @@ public class DropBar {
 
         if (isActive && !this.isActive) {
 
-            this.updateTask = Scheduler.getScheduler().runSyncRepeatingTask(Common.plugin, (scheduledTask) -> {
+            this.updateTask = Scheduler.getScheduler().runSyncRepeatingTask(PluginVariables.plugin, (scheduledTask) -> {
 
                 this.update();
             }, 10, 10);

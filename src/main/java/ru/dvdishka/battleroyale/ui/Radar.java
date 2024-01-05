@@ -9,8 +9,9 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.logic.Zone;
-import ru.dvdishka.battleroyale.logic.Common;
-import ru.dvdishka.battleroyale.logic.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class Radar {
                 Component.text("RADAR")
                         .color(NamedTextColor.RED)
                         .decorate(TextDecoration.BOLD),
-                Common.plugin);
+                PluginVariables.plugin);
 
         radarFirstPage.addUpdatableLine(player -> {
             updateMovingZoneColor();
@@ -140,7 +141,7 @@ public class Radar {
             return component;
         });
 
-        radarPager = new SidebarPager<>(List.of(radarFirstPage), 0, Common.plugin);
+        radarPager = new SidebarPager<>(List.of(radarFirstPage), 0, PluginVariables.plugin);
     }
 
     public static Radar getInstance() {
@@ -269,7 +270,7 @@ public class Radar {
             }
         }
 
-        else if (lineNumber == 2 || lineNumber == 8 || Common.zoneStage >= ConfigVariables.zones.size() && (lineNumber >= 2 && lineNumber <= 8)) {
+        else if (lineNumber == 2 || lineNumber == 8 || GameVariables.zoneStage >= ConfigVariables.zones.size() && (lineNumber >= 2 && lineNumber <= 8)) {
 
             if (lineNumber == playerRadarPositionZ) {
 
@@ -573,7 +574,7 @@ public class Radar {
             return (int) ((playerFloatX - zone.getCurrentLeftFloatBorder()) / segment + 1);
         }
 
-        else if (Common.zoneStage < ConfigVariables.zones.size()) {
+        else if (GameVariables.zoneStage < ConfigVariables.zones.size()) {
 
             if (playerX - zone.getNewLeftBorder() < 0) {
                 return 2;
@@ -629,7 +630,7 @@ public class Radar {
             return (int) ((playerFloatZ - zone.getCurrentLowerFloatBorder()) / segment + 1);
         }
 
-        else if (Common.zoneStage < ConfigVariables.zones.size()) {
+        else if (GameVariables.zoneStage < ConfigVariables.zones.size()) {
 
             if (playerZ - zone.getNewLowerBorder() < 0) {
                 return 2;

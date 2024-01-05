@@ -2,20 +2,20 @@ package ru.dvdishka.battleroyale.handlers.commands.team;
 
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.logic.Team;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.common.Common;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
 
 public class CreateTeamCommand implements CommandInterface {
 
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
-        if (Common.isGameStarted) {
+        if (GameVariables.isGameStarted) {
 
             returnFailure("You can not create team while the game is on!", sender);
             return;

@@ -9,7 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.logic.Team;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.common.Common;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
 
 public class AcceptTeamCommand implements CommandInterface {
 
@@ -24,7 +25,7 @@ public class AcceptTeamCommand implements CommandInterface {
             return;
         }
 
-        if (Common.isGameStarted) {
+        if (GameVariables.isGameStarted) {
             returnFailure("You can not accept an invitation while the game is on!", sender);
             return;
         }

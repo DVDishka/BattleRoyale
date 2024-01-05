@@ -3,7 +3,7 @@ package ru.dvdishka.battleroyale.handlers.commands.common;
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
-import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.common.Common;
 
 public interface CommandInterface {
 

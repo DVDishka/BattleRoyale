@@ -5,16 +5,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.Common;
-import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
 
 public class ClearSuperPowerCommand implements CommandInterface {
 
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
-        if (!Common.isGameStarted) {
+        if (!GameVariables.isGameStarted) {
             returnFailure("You can not change player's superpower while the game is not started", sender);
             return;
         }

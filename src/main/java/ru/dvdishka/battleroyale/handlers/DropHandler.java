@@ -17,12 +17,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
-import ru.dvdishka.battleroyale.logic.Common;
-import ru.dvdishka.battleroyale.logic.ConfigVariables;
+import ru.dvdishka.battleroyale.logic.common.Common;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Zone;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainerStage;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
+import ru.dvdishka.battleroyale.logic.common.GameVariables;
+import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 import ru.dvdishka.battleroyale.logic.event.drop.DropClickEvent;
 import ru.dvdishka.battleroyale.logic.event.drop.DropCreateEvent;
 
@@ -33,7 +35,7 @@ public class DropHandler implements Listener {
     @EventHandler
     public void onDropCreateEvent(DropCreateEvent event) {
 
-        if (!Common.isGameStarted || DropType.getDropTypes().isEmpty()) {
+        if (!GameVariables.isGameStarted || DropType.getDropTypes().isEmpty()) {
             return;
         }
 
@@ -44,7 +46,7 @@ public class DropHandler implements Listener {
         Skull dropContainerBlock = (Skull) dropContainer.getLocation().getBlock().getState();
         dropContainerBlock.setPlayerProfile(Bukkit.createProfile("FlyntCoal"));
 
-        MetadataValue dropContainerMetadataValue = new FixedMetadataValue(Common.plugin, dropContainer);
+        MetadataValue dropContainerMetadataValue = new FixedMetadataValue(PluginVariables.plugin, dropContainer);
         dropContainerBlock.setMetadata("dropContainer", dropContainerMetadataValue);
 
         dropContainerBlock.update();

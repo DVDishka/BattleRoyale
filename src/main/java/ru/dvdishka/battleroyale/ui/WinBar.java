@@ -1,14 +1,12 @@
 package ru.dvdishka.battleroyale.ui;
 
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import ru.dvdishka.battleroyale.logic.Common;
+import ru.dvdishka.battleroyale.logic.common.PlayerVariables;
 
 public class WinBar {
 
@@ -32,10 +30,8 @@ public class WinBar {
         this.winBar.setVisible(true);
         this.winBar.setProgress(1);
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (Common.players.contains(player.getName())) {
-                winBar.addPlayer(player);
-            }
+        for (Player player : PlayerVariables.getOnlinePlayers()) {
+            winBar.addPlayer(player);
         }
 
         this.winBar.setTitle(ChatColor.LIGHT_PURPLE + "WIN" +
