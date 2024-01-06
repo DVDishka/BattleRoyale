@@ -2,8 +2,11 @@ package ru.dvdishka.battleroyale.handlers;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.title.TitlePart;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -204,17 +207,11 @@ public class ZoneStageHandler implements Listener  {
 
     private void zoneMovingStage() {
 
-        // KILL PLAYER IF NOT IN OVERWORLD AND LOCK PORTALS
-        for (World world : Bukkit.getWorlds()) {
-
-            GameVariables.isPortalLocked = true;
-
-            if (!world.getKey().equals(NamespacedKey.minecraft("overworld"))) {
-                for (Player player : world.getPlayers()) {
-                    Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> player.setHealth(0));
-                }
-            }
+        // TELEPORT PLAYERS IF NOT IN OVERWORLD AND LOCK PORTALS
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            teleportPlayerToOverworld(player);
         }
+        GameVariables.isPortalLocked = true;
 
         int side = new Random().nextInt(0, 4);
         int moveLength = new Random().nextInt(ConfigVariables.minFinalZoneMove, ConfigVariables.maxFinalZoneMove + 1) / 10 * 10;
@@ -283,5 +280,46 @@ public class ZoneStageHandler implements Listener  {
             Timer.getInstance().startTimer(ConfigVariables.finalZoneMoveDuration, ZonePhase.MOVE, true);
             Zone.getInstance().moveZone(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(moveLength));
         }, ConfigVariables.zoneMoveTimeOut * 20L);
+    }
+
+    public static void teleportPlayerToOverworld(Player player) {
+
+        if (!player.getWorld().getKey().equals(PluginVariables.overWorld.getKey())) {
+
+            for (int i = 5; i > 0; i--) {
+
+                final TextColor numberColor;
+
+                if (i > 1 && i < 4) {
+                    numberColor = NamedTextColor.YELLOW;
+                } else if (i == 1) {
+                    numberColor = NamedTextColor.RED;
+                } else {
+                    numberColor = NamedTextColor.GREEN;
+                }
+
+                final int number = 5 - i;
+
+                Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
+                            player.sendTitlePart(TitlePart.TITLE, Component.text(number).color(numberColor).decorate(TextDecoration.BOLD));
+                            player.sendTitlePart(TitlePart.SUBTITLE,
+                                    Component.empty()
+                                            .append(Component.text("You will be teleported to"))
+                                            .append(Component.space())
+                                            .append(Component.text("OVERWORLD")
+                                                    .color(NamedTextColor.DARK_GREEN)));
+                            }, i * 20L);
+            }
+
+            Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
+
+                StartElytraHandler.giveStartElytra(player);
+
+                player.teleport(new Location(PluginVariables.overWorld,
+                        Zone.getInstance().getCurrentZoneCenterX(),
+                        PluginVariables.overWorld.getMaxHeight(),
+                        Zone.getInstance().getCurrentZoneCenterZ())
+                );}, 100);
+        }
     }
 }

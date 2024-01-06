@@ -119,6 +119,10 @@ public class Timer {
         } catch (Exception ignored) {}
     }
 
+    public ZonePhase getZonePhase() {
+        return zonePhase;
+    }
+
     private void updateTimerTitle() {
 
         if (zonePhase.equals(ZonePhase.BREAK)) {

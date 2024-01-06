@@ -13,6 +13,7 @@ public class ConfigVariables {
     public static List<Integer> times = Arrays.asList(900, 600, 300, 300, 300, 120);
     public static List<Integer> timeOuts = Arrays.asList(1800, 900, 600, 450, 300, 150, 100);
     public static int timeGameStart = 1200;
+    public static int maxTeamSize = 0;
     public static int pvpEnableZone = 1;
     public static int lastReviveZone = 1;
     public static int defaultWorldBorderDiameter = 5000;

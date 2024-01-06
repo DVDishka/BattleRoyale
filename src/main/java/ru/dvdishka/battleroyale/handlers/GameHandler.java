@@ -6,6 +6,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import ru.dvdishka.battleroyale.logic.*;
+import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
 import ru.dvdishka.battleroyale.logic.common.Common;
 import ru.dvdishka.battleroyale.logic.common.GameVariables;
@@ -259,6 +261,12 @@ public class GameHandler implements Listener {
             StartElytraHandler.giveStartElytra(player);
 
             PlayerVariables.removeReviveQueue(player);
+        }
+
+        if (!player.getWorld().getKey().equals(PluginVariables.overWorld.getKey()) &&
+                Timer.getInstance().getZonePhase().equals(ZonePhase.MOVE)) {
+
+            ZoneStageHandler.teleportPlayerToOverworld(player);
         }
     }
 }

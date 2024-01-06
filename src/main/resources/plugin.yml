@@ -19,3 +19,5 @@ permissions:
         default: op
       battleroyale.drop_edit:
         default: op
+      battleroyale.config:
+        default: op

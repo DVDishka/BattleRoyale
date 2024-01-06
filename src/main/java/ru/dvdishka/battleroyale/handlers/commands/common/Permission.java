@@ -8,7 +8,8 @@ public enum Permission {
     START_STOP(CommandPermission.fromString("battleroyale.start_stop")),
     START_BOX(CommandPermission.fromString("battleroyale.start_box")),
     PLAYER_EDIT(CommandPermission.fromString("battleroyale.player_edit")),
-    DROP_EDIT(CommandPermission.fromString("battleroyale.drop_edit")),;
+    DROP_EDIT(CommandPermission.fromString("battleroyale.drop_edit")),
+    CONFIG(CommandPermission.fromString("battleroyale.config"));
 
     private final CommandPermission commandPermission;
 

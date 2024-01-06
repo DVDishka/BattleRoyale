@@ -13,6 +13,11 @@ game:
   lastReviveZone: 1
 
 
+team:
+  # Maximum number of players in one team (0 to make it unlimited)
+  maxTeamSize: 0
+
+
 start:
   # Game time, which will be set at the start of the game
   timeGameStart: 1200

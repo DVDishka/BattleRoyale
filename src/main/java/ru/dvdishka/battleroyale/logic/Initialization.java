@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import ru.dvdishka.battleroyale.handlers.*;
+import ru.dvdishka.battleroyale.handlers.commands.config.ConfigReloadCommand;
 import ru.dvdishka.battleroyale.handlers.commands.drop.*;
 import ru.dvdishka.battleroyale.handlers.commands.player.ClearSuperPowerCommand;
 import ru.dvdishka.battleroyale.handlers.commands.player.KillCommand;
@@ -52,6 +53,13 @@ public class Initialization {
     }
 
     public static void initConfig(FileConfiguration config) {
+
+        // CHECK EXISTENCE
+        {
+            if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").resolve("config.yml").toFile().exists()) {
+                PluginVariables.plugin.saveDefaultConfig();
+            }
+        }
 
         // GAME SECTION
         {
@@ -229,6 +237,20 @@ public class Initialization {
                 }
                 else {
                     ConfigVariables.lastReviveZone = lastReviveZone;
+                }
+            }
+        }
+
+        // TEAM SECTION
+        {
+            // MAX TEAM SIZE LOADING
+            {
+                int maxTeamSize = loadIntConfigValueSafely(config, "team.maxTeamSize", ConfigVariables.maxTeamSize);
+
+                if (maxTeamSize < 0) {
+                    Logger.getLogger().warn("maxTeamSize must be >= 0. Using default value...");
+                } else {
+                    ConfigVariables.maxTeamSize = maxTeamSize;
                 }
             }
         }
@@ -695,6 +717,17 @@ public class Initialization {
                                     )
                             )
                     )
+
+                    .then(new LiteralArgument("config").withPermission(Permission.CONFIG.getPermission())
+
+                            .then(new LiteralArgument("reload")
+
+                                    .executes((commandSender, commandArguments) -> {
+
+                                        new ConfigReloadCommand().execute(commandSender, commandArguments);
+                                    })
+                            )
+                    )
             );
         }
 
@@ -702,6 +735,23 @@ public class Initialization {
     }
 
     public static void initDropTypes(File file) {
+
+        // CHECK EXISTENCE
+        {
+            if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").resolve("dropTypes.yml").toFile().exists()) {
+                PluginVariables.plugin.saveResource("dropTypes.yml", false);
+            }
+
+            if (!new File(ConfigVariables.dropTypesFile).exists()) {
+                try {
+                    if (!new File(ConfigVariables.dropTypesFile).createNewFile()) {
+                        Logger.getLogger().warn("Failed to create " + ConfigVariables.dropTypesFile);
+                    }
+                } catch (Exception e) {
+                    Logger.getLogger().warn("Failed to create " + ConfigVariables.dropTypesFile);
+                }
+            }
+        }
 
         FileConfiguration dropTypesConfig = YamlConfiguration.loadConfiguration(file);
 
@@ -711,6 +761,23 @@ public class Initialization {
     }
 
     public static void initSuperPowers(File file) {
+
+        // CHECK EXISTENCE
+        {
+            if (!Bukkit.getPluginsFolder().toPath().resolve("BattleRoyale").resolve("superpowers.yml").toFile().exists()) {
+                PluginVariables.plugin.saveResource("superpowers.yml", false);
+            }
+
+            if (!new File(ConfigVariables.superPowersFile).exists()) {
+                try {
+                    if (!new File(ConfigVariables.superPowersFile).createNewFile()) {
+                        Logger.getLogger().warn("Failed to create " + ConfigVariables.superPowersFile);
+                    }
+                } catch (Exception e) {
+                    Logger.getLogger().warn("Failed to create " + ConfigVariables.superPowersFile);
+                }
+            }
+        }
 
         FileConfiguration superPowersConfig = YamlConfiguration.loadConfiguration(file);
 
