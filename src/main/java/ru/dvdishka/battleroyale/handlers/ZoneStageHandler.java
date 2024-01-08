@@ -134,6 +134,11 @@ public class ZoneStageHandler implements Listener  {
 
             GameVariables.isBreak = false;
 
+            // SPAWN DROP CONTAINERS
+            for (World world : ConfigVariables.dropSpawnWorlds) {
+                Bukkit.getPluginManager().callEvent(new DropCreateEvent(DropType.getRandomType(), world));
+            }
+
             // CHANGE WORLD BORDER
             Zone.getInstance().changeBorders(
                     ConfigVariables.defaultWorldBorderDiameter,
@@ -173,10 +178,6 @@ public class ZoneStageHandler implements Listener  {
                 nextZoneCenterX,
                 nextZoneCenterZ);
 
-        for (World world : ConfigVariables.dropSpawnWorlds) {
-            Bukkit.getPluginManager().callEvent(new DropCreateEvent(DropType.getRandomType(), world));
-        }
-
         // BREAK BOSS BAR TIMER TASK START
         Scheduler.getScheduler().runSync(PluginVariables.plugin, (scheduledTask) -> {
 
@@ -189,6 +190,11 @@ public class ZoneStageHandler implements Listener  {
         Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
 
             GameVariables.isBreak = false;
+
+            // SPAWN DROP CONTAINERS
+            for (World world : ConfigVariables.dropSpawnWorlds) {
+                Bukkit.getPluginManager().callEvent(new DropCreateEvent(DropType.getRandomType(), world));
+            }
 
             // CHANGE WORLD BORDER
             Zone.getInstance().changeBorders(
