@@ -9,14 +9,14 @@ import java.util.List;
 
 public class ConfigVariables {
 
-    public static List<Integer> zones = Arrays.asList(2000, 1500, 1000, 700, 500, 200);
-    public static List<Integer> times = Arrays.asList(900, 600, 300, 300, 300, 120);
-    public static List<Integer> timeOuts = Arrays.asList(1800, 900, 600, 450, 300, 150, 100);
+    public static List<Integer> zones = Arrays.asList(1000, 800, 500, 200);
+    public static List<Integer> times = Arrays.asList(300, 300, 300, 300);
+    public static List<Integer> timeOuts = Arrays.asList(900, 450, 300, 120, 90);
     public static int timeGameStart = 1200;
     public static int maxTeamSize = 0;
     public static int pvpEnableZone = 1;
     public static int lastReviveZone = 1;
-    public static int defaultWorldBorderDiameter = 5000;
+    public static int defaultWorldBorderDiameter = 1500;
     public static int finalZoneMoveDuration = 120;
     public static int minFinalZoneMove = 50;
     public static int maxFinalZoneMove = 100;

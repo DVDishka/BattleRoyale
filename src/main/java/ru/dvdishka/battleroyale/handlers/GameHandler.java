@@ -226,24 +226,26 @@ public class GameHandler implements Listener {
 
         Player player = event.getPlayer();
 
-        Scheduler.getScheduler().runPlayerTask(PluginVariables.plugin, player, (scheduledTask) -> {
+        if (SuperPower.getPlayerSuperPower(player) == null) {
 
-            if (!PlayerVariables.isBattleRoyalePlayer(player.getName()) && GameVariables.isGameStarted) {
+            SuperPower.clearPlayerSuperPowerForced(player);
+        }
 
-                player.setGameMode(GameMode.SURVIVAL);
+        if (!PlayerVariables.isBattleRoyalePlayer(player.getName()) && GameVariables.isGameStarted) {
 
-                ArrayList<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
-                for (PotionEffect effect : effects) {
-                    player.removePotionEffect(effect.getType());
-                }
+            player.setGameMode(GameMode.SURVIVAL);
 
-                if (!SuperPower.isEmpty()) {
-                    SuperPower.getRandom().setToPlayer(player);
-                }
-
-                PlayerVariables.addBattleRoyalePlayer(player.getName());
+            ArrayList<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
+            for (PotionEffect effect : effects) {
+                player.removePotionEffect(effect.getType());
             }
-        });
+
+            if (!SuperPower.isEmpty()) {
+                SuperPower.getRandom().setToPlayer(player);
+            }
+
+            PlayerVariables.addBattleRoyalePlayer(player.getName());
+        }
 
         if (PlayerVariables.isKillQueue(player.getName())) {
 

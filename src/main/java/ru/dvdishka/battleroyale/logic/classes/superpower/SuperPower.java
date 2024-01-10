@@ -41,7 +41,10 @@ public class SuperPower {
     }
 
     public static void clearPlayers() {
-        playerSuperPowers.clear();
+
+        for (Map.Entry<String, SuperPower> playerSuperPower : playerSuperPowers.entrySet()) {
+            clearPlayerSuperPower(playerSuperPower.getKey());
+        }
     }
 
     public static ArrayList<SuperPower> getSuperPowers() {
@@ -83,8 +86,6 @@ public class SuperPower {
 
     public static void clearPlayerSuperPower(String playerName) {
 
-        playerSuperPowers.remove(playerName);
-
         try {
             SuperPower playerSuperPower = SuperPower.getPlayerSuperPower(playerName);
 
@@ -92,6 +93,8 @@ public class SuperPower {
                 Bukkit.getPlayer(playerName).removePotionEffect(potionEffectType);
             }
         } catch (Exception ignored) {}
+
+        playerSuperPowers.remove(playerName);
     }
 
     public static void clearPlayerSuperPower(Player player) {
@@ -105,6 +108,40 @@ public class SuperPower {
         } catch (Exception ignored) {}
 
         playerSuperPowers.remove(player.getName());
+    }
+
+    public static void clearPlayerSuperPowerForced(String playerName) {
+
+        try {
+
+            clearPlayerSuperPower(playerName);
+
+            Player player = Bukkit.getPlayer(playerName);
+
+            for (SuperPower superPower : SuperPower.getSuperPowers()) {
+
+                for (PotionEffectType potionEffectType : superPower.getEffectTypes()) {
+                    player.removePotionEffect(potionEffectType);
+                }
+            }
+
+        } catch (Exception ignored) {}
+    }
+
+    public static void clearPlayerSuperPowerForced(Player player) {
+
+        try {
+
+            clearPlayerSuperPower(player);
+
+            for (SuperPower superPower : SuperPower.getSuperPowers()) {
+
+                for (PotionEffectType potionEffectType : superPower.getEffectTypes()) {
+                    player.removePotionEffect(potionEffectType);
+                }
+            }
+
+        } catch (Exception ignored) {}
     }
 
     public void setToPlayer(Player player) {

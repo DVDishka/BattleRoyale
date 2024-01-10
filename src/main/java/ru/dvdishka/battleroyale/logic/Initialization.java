@@ -241,6 +241,63 @@ public class Initialization {
             }
         }
 
+        // FINAL ZONE SECTION
+        {
+            // FINAL ZONE MOVE DURATION LOADING
+            {
+                int finalZoneMoveDuration = loadIntConfigValueSafely(config, "finalZone.finalZoneMoveDuration", ConfigVariables.finalZoneMoveDuration);
+
+                if (finalZoneMoveDuration < 1) {
+                    Logger.getLogger().warn("finalZoneMoveDuration must be > 0. Using default value...");
+                }
+                else {
+                    ConfigVariables.finalZoneMoveDuration = finalZoneMoveDuration;
+                }
+            }
+
+            // MIN FINAL ZONE MOVE LOADING
+            {
+                int minFinalZoneMove = loadIntConfigValueSafely(config, "finalZone.minFinalZoneMove", ConfigVariables.minFinalZoneMove);
+
+                if (minFinalZoneMove < 1) {
+                    Logger.getLogger().warn("minFinalZoneMove must be > 0. Using default value...");
+                }
+                else {
+                    ConfigVariables.minFinalZoneMove = minFinalZoneMove;
+                }
+            }
+
+            // MAX FINAL ZONE MOVE LOADING
+            {
+                int maxFinalZoneMove = loadIntConfigValueSafely(config, "finalZone.maxFinalZoneMove", ConfigVariables.maxFinalZoneMove);
+
+                if (maxFinalZoneMove < 1) {
+                    Logger.getLogger().warn("maxFinalZoneMove must be > 0. Using default value...");
+                }
+                else if (maxFinalZoneMove < ConfigVariables.maxFinalZoneMove) {
+                    ConfigVariables.maxFinalZoneMove = ConfigVariables.minFinalZoneMove;
+                    Logger.getLogger().warn("maxFinalZoneMove must be >= minFinalZoneMove. Using default value...");
+                }
+                else {
+                    ConfigVariables.maxFinalZoneMove = maxFinalZoneMove;
+                }
+            }
+
+            // ZONE MOVE TIMEOUT LOADING
+            {
+                int zoneMoveTimeOut = loadIntConfigValueSafely(config, "finalZone.zoneMoveTimeOut", ConfigVariables.zoneMoveTimeOut);
+
+                if (zoneMoveTimeOut < 1) {
+                    Logger.getLogger().warn("zoneMoveTimeOut must be > 0. Using default value...");
+                }
+                else {
+                    ConfigVariables.zoneMoveTimeOut = zoneMoveTimeOut;
+                }
+            }
+
+            ConfigVariables.betterLogging = loadBoolConfigValueSafely(config, "betterLogging", ConfigVariables.betterLogging);
+        }
+
         // TEAM SECTION
         {
             // MAX TEAM SIZE LOADING
@@ -318,63 +375,6 @@ public class Initialization {
             {
                 ConfigVariables.superPowersFile = loadStringConfigValueSafely(config, "superpower.superPowersFile", ConfigVariables.superPowersFile);
             }
-        }
-
-        // FINAL ZONE SECTION
-        {
-            // FINAL ZONE MOVE DURATION LOADING
-            {
-                int finalZoneMoveDuration = loadIntConfigValueSafely(config, "finalZone.finalZoneMoveDuration", ConfigVariables.finalZoneMoveDuration);
-
-                if (finalZoneMoveDuration < 1) {
-                    Logger.getLogger().warn("finalZoneMoveDuration must be > 0. Using default value...");
-                }
-                else {
-                    ConfigVariables.finalZoneMoveDuration = finalZoneMoveDuration;
-                }
-            }
-
-            // MIN FINAL ZONE MOVE LOADING
-            {
-                int minFinalZoneMove = loadIntConfigValueSafely(config, "finalZone.minFinalZoneMove", ConfigVariables.minFinalZoneMove);
-
-                if (minFinalZoneMove < 1) {
-                    Logger.getLogger().warn("minFinalZoneMove must be > 0. Using default value...");
-                }
-                else {
-                    ConfigVariables.minFinalZoneMove = minFinalZoneMove;
-                }
-            }
-
-            // MAX FINAL ZONE MOVE LOADING
-            {
-                int maxFinalZoneMove = loadIntConfigValueSafely(config, "finalZone.maxFinalZoneMove", ConfigVariables.maxFinalZoneMove);
-
-                if (maxFinalZoneMove < 1) {
-                    Logger.getLogger().warn("maxFinalZoneMove must be > 0. Using default value...");
-                }
-                else if (maxFinalZoneMove < ConfigVariables.maxFinalZoneMove) {
-                    ConfigVariables.maxFinalZoneMove = ConfigVariables.minFinalZoneMove;
-                    Logger.getLogger().warn("maxFinalZoneMove must be >= minFinalZoneMove. Using default value...");
-                }
-                else {
-                    ConfigVariables.maxFinalZoneMove = maxFinalZoneMove;
-                }
-            }
-
-            // ZONE MOVE TIMEOUT LOADING
-            {
-                int zoneMoveTimeOut = loadIntConfigValueSafely(config, "finalZone.zoneMoveTimeOut", ConfigVariables.zoneMoveTimeOut);
-
-                if (zoneMoveTimeOut < 1) {
-                    Logger.getLogger().warn("zoneMoveTimeOut must be > 0. Using default value...");
-                }
-                else {
-                    ConfigVariables.zoneMoveTimeOut = zoneMoveTimeOut;
-                }
-            }
-
-            ConfigVariables.betterLogging = loadBoolConfigValueSafely(config, "betterLogging", ConfigVariables.betterLogging);
         }
     }
 

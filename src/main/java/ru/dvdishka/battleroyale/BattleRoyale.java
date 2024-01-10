@@ -5,11 +5,9 @@ import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
-import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.common.Common;
 import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Initialization;
-import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
 import java.io.File;

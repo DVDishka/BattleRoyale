@@ -15,7 +15,7 @@ attack_potions:
         1:
           name: weakness
           level: 3
-          duration: 60
+          duration: 30
     3:
       material: splash_potion
       amount: 1
@@ -23,7 +23,7 @@ attack_potions:
         1:
           name: weakness
           level: 3
-          duration: 60
+          duration: 30
     4:
       material: splash_potion
       amount: 1
@@ -31,7 +31,7 @@ attack_potions:
         1:
           name: weakness
           level: 3
-          duration: 60
+          duration: 30
     5:
       material: splash_potion
       amount: 1
@@ -39,7 +39,7 @@ attack_potions:
         1:
           name: darkness
           level: 1
-          duration: 90
+          duration: 30
     6:
       material: splash_potion
       amount: 1
@@ -47,7 +47,7 @@ attack_potions:
         1:
           name: darkness
           level: 1
-          duration: 90
+          duration: 30
     7:
       material: splash_potion
       amount: 1
@@ -55,7 +55,7 @@ attack_potions:
         1:
           name: darkness
           level: 1
-          duration: 90
+          duration: 30
     8:
       material: lingering_potion
       amount: 1
@@ -75,8 +75,9 @@ attack_potions:
       amount: 1
       effects:
         1:
-          name: instant_damage
-          level: 3
+          name: poison
+          level: 2
+          duration: 3
     11:
       material: lingering_potion
       amount: 1
@@ -84,23 +85,7 @@ attack_potions:
         1:
           name: poison
           level: 2
-          duration: 8
-    12:
-      material: lingering_potion
-      amount: 1
-      effects:
-        1:
-          name: poison
-          level: 2
-          duration: 8
-    13:
-      material: lingering_potion
-      amount: 1
-      effects:
-        1:
-          name: poison
-          level: 2
-          duration: 8
+          duration: 3
 weapons:
   items:
     1:
@@ -114,12 +99,12 @@ weapons:
           name: fire_aspect
           level: 1
     2:
-      material: diamond_axe
+      material: iron_axe
       amount: 1
       enchantments:
         1:
           name: sharpness
-          level: 3
+          level: 2
     3:
       material: bow
       amount: 1
@@ -141,7 +126,7 @@ weapons:
         1:
           name: darkness
           level: 1
-          duration: 45
+          duration: 15
     6:
       material: tipped_arrow
       amount: 4
@@ -156,7 +141,7 @@ weapons:
         1:
           name: poison
           level: 2
-          duration: 8
+          duration: 3
     8:
       material: tipped_arrow
       amount: 4
@@ -164,7 +149,7 @@ weapons:
         1:
           name: wither
           level: 2
-          duration: 8
+          duration: 3
     9:
       material: tipped_arrow
       amount: 16
@@ -172,7 +157,7 @@ weapons:
         1:
           name: nausea
           level: 1
-          duration: 45
+          duration: 10
     10:
       material: arrow
       amount: 64
@@ -200,7 +185,7 @@ armor:
           name: protection
           level: 2
     4:
-      material: diamond_boots
+      material: iron_boots
       amount: 1
       enchantments:
         1:
@@ -236,7 +221,7 @@ armor:
         1:
           name: health_boost
           level: 3
-          duration: 90
+          duration: 45
     9:
       material: potion
       amount: 1
@@ -244,7 +229,7 @@ armor:
         1:
           name: absorption
           level: 2
-          duration: 40
+          duration: 30
     10:
       material: potion
       amount: 1

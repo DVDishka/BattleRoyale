@@ -1,16 +1,27 @@
 game:
   # A zone from which movement to the first zone begins
-  defaultWorldBorderRadius: 2500
+  defaultWorldBorderRadius: 750
   # Zone radius (blocks) (must be in descending order)
-  zones: [1000, 750, 500, 350, 250, 100]
+  zones: [500, 400, 250, 100]
   # Zone duration (seconds) (the amount of time it will take to reach the corresponding zone after the previous one) (first time is between defaultWorldBorderRadius and first zone)
-  times: [900, 600, 300, 300, 300, 120]
+  times: [300, 300, 300, 300]
   # Timeout between zones (seconds) (amount of zones + 1) (first timeOut is between defaultWorldBorderRadius and first zone)
-  timeOuts: [1800, 900, 600, 450, 300, 150, 100]
+  timeOuts: [900, 450, 300, 120, 90]
   # Zone number after which PVP will be enabled (0 - zones.size + 1) 0 to enable pvp immediately, zones.size + 1 disable pvp for the entire game
   pvpEnableZone: 1
   # Zone number after which revival will be disabled (0 - zones.size + 1) 0 to disable reviving, zones.size + 1 to allow reviving for every zone
   lastReviveZone: 1
+
+
+finalZone:
+  # Final zone time (Seconds)
+  finalZoneMoveDuration: 120
+  # Minimum length of final zone movement
+  minFinalZoneMove: 50
+  # Maximum length of final zone movement
+  maxFinalZoneMove: 100
+  # Timeout between final zone movements (seconds)
+  zoneMoveTimeOut: 60
 
 
 team:
@@ -35,17 +46,6 @@ drop:
 superpower:
   # Superpowers configuration file
   superPowersFile: plugins/BattleRoyale/superpowers.yml
-
-
-finalZone:
-  # Final zone time (Seconds)
-  finalZoneMoveDuration: 120
-  # Minimum length of final zone movement
-  minFinalZoneMove: 50
-  # Maximum length of final zone movement
-  maxFinalZoneMove: 100
-  # Timeout between final zone movements (seconds)
-  zoneMoveTimeOut: 60
 
 
 betterLogging: false

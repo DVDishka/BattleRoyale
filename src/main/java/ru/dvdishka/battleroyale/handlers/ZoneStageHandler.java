@@ -282,7 +282,14 @@ public class ZoneStageHandler implements Listener  {
 
         // MOVE BORDERS MOVING TASK START
         Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
+
             GameVariables.isBreak = false;
+
+            // SPAWN DROP CONTAINERS
+            for (World world : ConfigVariables.dropSpawnWorlds) {
+                Bukkit.getPluginManager().callEvent(new DropCreateEvent(DropType.getRandomType(), world));
+            }
+
             Timer.getInstance().startTimer(ConfigVariables.finalZoneMoveDuration, ZonePhase.MOVE, true);
             Zone.getInstance().moveZone(x, z, ConfigVariables.finalZoneMoveDuration, Math.abs(moveLength));
         }, ConfigVariables.zoneMoveTimeOut * 20L);
