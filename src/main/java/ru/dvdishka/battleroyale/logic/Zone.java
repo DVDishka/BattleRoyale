@@ -1,12 +1,14 @@
 package ru.dvdishka.battleroyale.logic;
 
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import it.unimi.dsi.fastutil.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.common.GameVariables;
 import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -149,6 +151,11 @@ public class Zone {
         }
 
         int step = duration * 20 / steps;
+        HashMap<String, Pair<Integer, Integer>> worldCenterLastPosition = new HashMap<>();
+        for (World world : Bukkit.getWorlds()) {
+            worldCenterLastPosition.put(world.key().asString(), Pair.of(Zone.getInstance().getNewZoneCenterX(),
+                    Zone.getInstance().getNewZoneCenterZ()));
+        }
 
         isZoneMoving = true;
 
@@ -172,8 +179,13 @@ public class Zone {
                         z = zMove;
                     }
 
-                    world.getWorldBorder().setCenter(world.getWorldBorder().getCenter().x() + x,
-                            world.getWorldBorder().getCenter().z() + z);
+                    if (delay != duration * 20) {
+                        world.getWorldBorder().setCenter(world.getWorldBorder().getCenter().x() + x,
+                                world.getWorldBorder().getCenter().z() + z);
+                    } else {
+                        world.getWorldBorder().setCenter(worldCenterLastPosition.get(world.key().asString()).first(),
+                                worldCenterLastPosition.get(world.key().asString()).second());
+                    }
                 }
 
                 if (delay + step >= duration * 20) {

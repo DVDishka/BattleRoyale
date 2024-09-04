@@ -12,7 +12,7 @@ public class NoFallDamageHandler implements Listener {
     @EventHandler
     public void onFallDamage(EntityDamageEvent event) {
 
-        if (!(event.getEntity() instanceof Player player)) {
+        if (!(event.getEntity() instanceof Player player) || event.getCause() != EntityDamageEvent.DamageCause.FALL) {
             return;
         }
 

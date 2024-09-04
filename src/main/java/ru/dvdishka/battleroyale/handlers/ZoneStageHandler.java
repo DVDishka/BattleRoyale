@@ -228,7 +228,7 @@ public class ZoneStageHandler implements Listener  {
 
             // East
             case 0 -> {
-                Radar.getInstance().movingZoneChar = ">";
+                Radar.getInstance().movingZoneChar = "\uD83E\uDC62";
                 x = 1;
                 z = 0;
                 sideName = "East";
@@ -236,7 +236,7 @@ public class ZoneStageHandler implements Listener  {
 
             // WEST
             case 1 -> {
-                Radar.getInstance().movingZoneChar = "<";
+                Radar.getInstance().movingZoneChar = "\uD83E\uDC60";
                 x = -1;
                 z = 0;
                 sideName = "West";
@@ -244,7 +244,7 @@ public class ZoneStageHandler implements Listener  {
 
             // SOUTH
             case 2 -> {
-                Radar.getInstance().movingZoneChar = "V";
+                Radar.getInstance().movingZoneChar = "\uD83E\uDC63";
                 z = 1;
                 x = 0;
                 sideName = "South";
@@ -252,14 +252,14 @@ public class ZoneStageHandler implements Listener  {
 
             // NORTH
             case 3 -> {
-                Radar.getInstance().movingZoneChar = "A";
+                Radar.getInstance().movingZoneChar = "\uD83E\uDC61";
                 z = -1;
                 x = 0;
                 sideName = "North";
             }
 
             default -> {
-                Radar.getInstance().movingZoneChar = "=";
+                Radar.getInstance().movingZoneChar = "■";
                 x = 0;
                 z = 0;
                 sideName = "";

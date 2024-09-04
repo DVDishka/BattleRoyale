@@ -32,7 +32,7 @@ public class Radar {
     private final TextColor firstCordColor = NamedTextColor.YELLOW;
     private final TextColor secondCordColor = NamedTextColor.RED;
 
-    public String movingZoneChar = "=";
+    public String movingZoneChar = "■";
 
     private Radar() {
 
@@ -201,13 +201,13 @@ public class Radar {
             if (lineNumber == playerRadarPositionZ) {
 
                 component = Component
-                        .text("=".repeat(playerRadarPositionX))
+                        .text("■".repeat(playerRadarPositionX))
                         .append(playerSymbolComponent)
-                        .append(Component.text("=".repeat(10 - playerRadarPositionX)));
+                        .append(Component.text("■".repeat(10 - playerRadarPositionX)));
 
             } else {
 
-                component = Component.text("=".repeat(11));
+                component = Component.text("■".repeat(11));
             }
         }
 
@@ -221,7 +221,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("="));
+                    component = component.append(Component.text("■"));
                 }
 
                 if (playerRadarPositionX > 0 && playerRadarPositionX < 10) {
@@ -234,11 +234,11 @@ public class Radar {
                                     .color(movingZoneColor));
                 } else {
 
-                    if (!movingZoneChar.equals("<") && !movingZoneChar.equals(">")) {
+                    if (!movingZoneChar.equals("\uD83E\uDC60") && !movingZoneChar.equals("\uD83E\uDC62")) {
                         component = component.append(Component.text(movingZoneChar.repeat(9))
                                 .color(movingZoneColor));
                     } else {
-                        component = component.append(Component.text(movingZoneChar.repeat(10))
+                        component = component.append(Component.text(movingZoneChar.repeat(8))
                                 .color(movingZoneColor));
                     }
                 }
@@ -249,24 +249,24 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("="));
+                    component = component.append(Component.text("■"));
                 }
             } else {
                 component = Component
-                        .text("=");
+                        .text("■");
 
-                if (!movingZoneChar.equals("<") && !movingZoneChar.equals(">")) {
+                if (!movingZoneChar.equals("\uD83E\uDC60") && !movingZoneChar.equals("\uD83E\uDC62")) {
                         component = component
                                 .append(Component.text(movingZoneChar.repeat(9))
                                         .color(movingZoneColor));
                 } else {
                     component = component
-                            .append(Component.text(movingZoneChar.repeat(10))
+                            .append(Component.text(movingZoneChar.repeat(8))
                                     .color(movingZoneColor));
                 }
 
                 component = component
-                        .append(Component.text("="));
+                        .append(Component.text("■"));
             }
         }
 
@@ -282,7 +282,7 @@ public class Radar {
                 } else {
 
                     component = component
-                            .append(Component.text("="));
+                            .append(Component.text("■"));
                 }
 
                 if (playerRadarPositionX == 1) {
@@ -299,13 +299,13 @@ public class Radar {
                 if (playerRadarPositionX > 1 && playerRadarPositionX < 9) {
 
                     component = component
-                            .append(Component.text("=".repeat(playerRadarPositionX - 2)))
+                            .append(Component.text("■".repeat(playerRadarPositionX - 2)))
                             .append(playerSymbolComponent)
-                            .append(Component.text("=".repeat(8 - playerRadarPositionX)));
+                            .append(Component.text("■".repeat(8 - playerRadarPositionX)));
                 } else {
 
                     component = component
-                            .append(Component.text("=".repeat(7)));
+                            .append(Component.text("■".repeat(7)));
                 }
 
                 if (playerRadarPositionX == 9) {
@@ -327,20 +327,20 @@ public class Radar {
                 } else {
 
                     component = component
-                            .append(Component.text("="));
+                            .append(Component.text("■"));
                 }
 
             } else {
 
                 component = component
                         .append(Component
-                                .text("="))
+                                .text("■"))
                         .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
-                        .append(Component.text("=".repeat(7)))
+                        .append(Component.text("■".repeat(7)))
                         .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
-                        .append(Component.text("="));
+                        .append(Component.text("■"));
             }
         }
 
@@ -354,7 +354,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("="));
+                    component = component.append(Component.text("■"));
                 }
 
                 if (playerRadarPositionX == 1) {
@@ -373,21 +373,21 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("="));
+                    component = component.append(Component.text("■"));
                 }
 
                 if (playerRadarPositionX > 2 && playerRadarPositionX < 6) {
 
                     component = component
-                            .append(Component.text("=".repeat(playerRadarPositionX - 3))
+                            .append(Component.text("■".repeat(playerRadarPositionX - 3))
                                     .color(safeZoneColor))
                             .append(playerSymbolComponent)
-                            .append(Component.text("=".repeat(5 - (playerRadarPositionX - 3)))
+                            .append(Component.text("■".repeat(5 - (playerRadarPositionX - 3)))
                                     .color(safeZoneColor));
 
                 } else {
 
-                    component = component.append(Component.text("=".repeat(5))
+                    component = component.append(Component.text("■".repeat(5))
                             .color(safeZoneColor));
                 }
 
@@ -397,7 +397,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("="));
+                    component = component.append(Component.text("■"));
                 }
 
                 if (playerRadarPositionX == 9) {
@@ -416,22 +416,22 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("="));
+                    component = component.append(Component.text("■"));
                 }
 
             } else {
 
                 component = component
-                        .append(Component.text("="))
+                        .append(Component.text("■"))
                         .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
-                        .append(Component.text("="))
-                        .append(Component.text("=".repeat(5))
+                        .append(Component.text("■"))
+                        .append(Component.text("■".repeat(5))
                                 .color(safeZoneColor))
-                        .append(Component.text("="))
+                        .append(Component.text("■"))
                         .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
-                        .append(Component.text("="));
+                        .append(Component.text("■"));
             }
         }
 
@@ -445,7 +445,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("="));
+                    component = component.append(Component.text("■"));
                 }
 
                 if (playerRadarPositionX == 1) {
@@ -464,7 +464,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("="));
+                    component = component.append(Component.text("■"));
                 }
 
                 if (playerRadarPositionX == 3) {
@@ -474,20 +474,20 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("=")
+                    component = component.append(Component.text("■")
                             .color(safeZoneColor));
                 }
 
                 if (playerRadarPositionX > 3 && playerRadarPositionX < 7) {
 
                     component = component
-                            .append(Component.text("=".repeat(playerRadarPositionX - 4)))
+                            .append(Component.text("■".repeat(playerRadarPositionX - 4)))
                             .append(playerSymbolComponent)
-                            .append(Component.text("=".repeat(6 - playerRadarPositionX)));
+                            .append(Component.text("■".repeat(6 - playerRadarPositionX)));
 
                 } else {
 
-                    component = component.append(Component.text("=".repeat(3)));
+                    component = component.append(Component.text("■".repeat(3)));
                 }
 
                 if (playerRadarPositionX == 7) {
@@ -497,7 +497,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("=")
+                    component = component.append(Component.text("■")
                             .color(safeZoneColor));
                 }
 
@@ -507,7 +507,7 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("="));
+                    component = component.append(Component.text("■"));
                 }
 
                 if (playerRadarPositionX == 9) {
@@ -526,25 +526,25 @@ public class Radar {
 
                 } else {
 
-                    component = component.append(Component.text("="));
+                    component = component.append(Component.text("■"));
                 }
 
             } else {
 
                 component = component
-                        .append(Component.text("="))
+                        .append(Component.text("■"))
                         .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
-                        .append(Component.text("="))
-                        .append(Component.text("=")
+                        .append(Component.text("■"))
+                        .append(Component.text("■")
                                 .color(safeZoneColor))
-                        .append(Component.text("=".repeat(3)))
-                        .append(Component.text("=")
+                        .append(Component.text("■".repeat(3)))
+                        .append(Component.text("■")
                                 .color(safeZoneColor))
-                        .append(Component.text("="))
+                        .append(Component.text("■"))
                         .append(Component.text(movingZoneChar)
                                 .color(movingZoneColor))
-                        .append(Component.text("="));
+                        .append(Component.text("■"));
             }
         }
 
@@ -662,23 +662,43 @@ public class Radar {
         }
     }
 
-    private char getPlayerDirectionChar(Player player) {
+    private String getPlayerDirectionChar(Player player) {
 
         int side = ((int) player.getLocation().getYaw());
 
-        if (side >= -135 && side < -45) {
-            return '>';
+        //🢂
+        if (side >= -112 && side < -67) {
+            return "\uD83E\uDC82";
         }
-        else if (side >= -45 && side < 45) {
-            return 'V';
+        //🢆
+        else if (side >= -67 && side < -22) {
+            return "\uD83E\uDC86";
         }
-        else if (side >= 45 && side < 135) {
-            return '<';
+        //🢃
+        else if (side >= -22 && side < 23) {
+            return "\uD83E\uDC83";
         }
-        else if (side >= 135 || side < -135) {
-            return 'A';
+        //🢇
+        else if (side >= 23 && side < 68) {
+            return "\uD83E\uDC87";
+        }
+        //🢀
+        else if (side >= 68 && side < 113) {
+            return "\uD83E\uDC80";
+        }
+        //🢄
+        else if (side >= 113 && side < 158) {
+            return "\uD83E\uDC84";
+        }
+        //🢁
+        else if (side >= 158 || side < -157) {
+            return "\uD83E\uDC81";
+        }
+        //🢅
+        else if (side >= -157 && side < -112) {
+            return "\uD83E\uDC85";
         }
 
-        return 'O';
+        return "O";
     }
 }

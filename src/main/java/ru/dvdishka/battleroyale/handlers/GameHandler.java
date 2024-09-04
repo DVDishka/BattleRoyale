@@ -187,7 +187,7 @@ public class GameHandler implements Listener {
                     !PlayerVariables.isDead(onlinePlayer.getName())) {
 
                 if (Team.getTeam(onlinePlayer) != null) {
-                    if (!aliveTeams.contains(onlinePlayer.getName())) {
+                    if (!aliveTeams.contains(Team.getTeam(onlinePlayer).getName())) {
                         aliveTeams.add(Team.getTeam(onlinePlayer).getName());
                     }
                 } else {
