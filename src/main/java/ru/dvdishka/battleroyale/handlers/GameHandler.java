@@ -172,7 +172,7 @@ public class GameHandler implements Listener {
 
     @EventHandler
     public void onReviveRespawn(PlayerRespawnEvent event) {
-        if (GameVariables.isRevivalEnabled) {
+        if (GameVariables.isRevivalEnabled && !event.getRespawnFlags().contains(PlayerRespawnEvent.RespawnFlag.BED_SPAWN)) {
             StartElytraHandler.giveStartElytra(event.getPlayer());
         }
     }
@@ -259,8 +259,10 @@ public class GameHandler implements Listener {
         if (PlayerVariables.isReviveQueue(player)) {
 
             player.setGameMode(GameMode.SURVIVAL);
-            player.teleport(PluginVariables.overWorld.getSpawnLocation());
-            StartElytraHandler.giveStartElytra(player);
+            player.teleport(player.getRespawnLocation() == null ? PluginVariables.overWorld.getSpawnLocation() : player.getRespawnLocation());
+            if (player.getRespawnLocation() == null) {
+                StartElytraHandler.giveStartElytra(player);
+            }
 
             PlayerVariables.removeReviveQueue(player);
         }
