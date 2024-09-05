@@ -1,5 +1,6 @@
 package ru.dvdishka.battleroyale.logic.classes.drop;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -26,6 +27,8 @@ public class DropContainer {
     private DropContainerStage stage = DropContainerStage.PRE_CLICK_STAGE;
     private int timeToOpen;
     private final int maxTimeToOpen;
+
+    private ScheduledTask countdownTask;
 
     private static final HashMap<Location, DropContainer> dropContainers = new HashMap<>();
 
@@ -71,6 +74,9 @@ public class DropContainer {
     @SuppressWarnings("unused")
     public void setStage(DropContainerStage stage) {
         this.stage = stage;
+        if (this.countdownTask != null && !this.countdownTask.isCancelled()) {
+            this.countdownTask.cancel();
+        }
     }
 
     public DropContainerStage getStage() {
@@ -185,7 +191,7 @@ public class DropContainer {
 
         this.stage = DropContainerStage.OPENING_STAGE;
 
-        Scheduler.getScheduler().runSyncRepeatingTask(PluginVariables.plugin, (scheduledTask) -> {
+        countdownTask = Scheduler.getScheduler().runSyncRepeatingTask(PluginVariables.plugin, (scheduledTask) -> {
             if (timeToOpen > 0) {
                 for (Player player : this.location.getNearbyPlayers(25)) {
                     player.playSound(player, Sound.UI_BUTTON_CLICK, 100, 1);

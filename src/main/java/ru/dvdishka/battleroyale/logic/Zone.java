@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import static java.lang.Math.min;
+import static java.lang.Math.max;
+
 public class Zone {
 
     private int oldZoneDiameter;
@@ -95,9 +98,23 @@ public class Zone {
 
         for (long i = 0; i < timeSeconds * 2; i++) {
 
-            currentBorderSize += borderSizeStep;
-            currentZoneCenterX += borderCenterStepX;
-            currentZoneCenterZ += borderCenterStepZ;
+            if (borderSizeStep >= 0) {
+                currentBorderSize = min(currentBorderSize + borderSizeStep, newZoneDiameter);
+            } else {
+                currentBorderSize = max(currentBorderSize + borderSizeStep, newZoneDiameter);
+            }
+
+            if (borderCenterStepX >= 0) {
+                currentZoneCenterX = min(currentZoneCenterX + borderCenterStepX, newZoneCenterX);
+            } else {
+                currentZoneCenterX = max(currentZoneCenterX + borderCenterStepX, newZoneCenterX);
+            }
+
+            if (borderCenterStepZ >= 0) {
+                currentZoneCenterZ = min(currentZoneCenterZ + borderCenterStepZ, newZoneCenterZ);
+            } else {
+                currentZoneCenterZ = max(currentZoneCenterZ + borderCenterStepZ, newZoneCenterZ);
+            }
 
             final double borderSize = currentBorderSize;
             final double zoneCenterX = currentZoneCenterX;
@@ -109,8 +126,10 @@ public class Zone {
                 delay = 1;
             }
 
+            final long finalI = i;
+
             ScheduledTask moveTask = Scheduler.getScheduler().runSyncDelayed(PluginVariables.plugin, (scheduledTask) -> {
-                if (delay / 10 != timeSeconds * 2 - 1) {
+                if (finalI != timeSeconds * 2 - 1) {
                     for (World world : Bukkit.getWorlds()) {
                         world.getWorldBorder().setSize(borderSize);
                         world.getWorldBorder().setCenter(zoneCenterX, zoneCenterZ);
@@ -130,21 +149,17 @@ public class Zone {
 
     public int generateRandomZoneCenterX(int previousZoneRadius, int nextZoneRadius, int currentZoneCenterX) {
 
-        int nextZoneCenterX = new Random().nextInt(currentZoneCenterX - previousZoneRadius + nextZoneRadius,
+        return new Random().nextInt(currentZoneCenterX - previousZoneRadius + nextZoneRadius,
                 currentZoneCenterX + previousZoneRadius - nextZoneRadius + 1);
-
-        return nextZoneCenterX;
     }
 
     public int generateRandomZoneCenterZ(int previousZoneRadius, int nextZoneRadius, int currentZoneCenterZ) {
 
-        int nextZoneCenterZ = new Random().nextInt(currentZoneCenterZ - previousZoneRadius + nextZoneRadius,
+        return new Random().nextInt(currentZoneCenterZ - previousZoneRadius + nextZoneRadius,
                 currentZoneCenterZ + previousZoneRadius - nextZoneRadius + 1);
-
-        return nextZoneCenterZ;
     }
 
-    public void moveZone(int xMove, int zMove, int duration, int steps) {
+    public void moveZone(final int xStepSize, final int zStepSize, int duration, int steps) {
 
         if (!isActive) {
             return;
@@ -171,17 +186,21 @@ public class Zone {
 
                 for (World world : Bukkit.getWorlds()) {
 
-                    int x = 0, z = 0;
-                    if (xMove != 0) {
-                        x = xMove;
+                    double newCenterX, newCenterZ;
+                    if (xStepSize >= 0) {
+                        newCenterX = min(world.getWorldBorder().getCenter().x() + xStepSize, worldCenterLastPosition.get(world.key().asString()).first());
+                    } else {
+                        newCenterX = max(world.getWorldBorder().getCenter().x() + xStepSize, worldCenterLastPosition.get(world.key().asString()).first());
                     }
-                    if (zMove != 0) {
-                        z = zMove;
+
+                    if (zStepSize >= 0) {
+                        newCenterZ = min(world.getWorldBorder().getCenter().z() + zStepSize, worldCenterLastPosition.get(world.key().asString()).second());
+                    } else {
+                        newCenterZ = max(world.getWorldBorder().getCenter().z() + zStepSize, worldCenterLastPosition.get(world.key().asString()).second());
                     }
 
                     if (delay != duration * 20) {
-                        world.getWorldBorder().setCenter(world.getWorldBorder().getCenter().x() + x,
-                                world.getWorldBorder().getCenter().z() + z);
+                        world.getWorldBorder().setCenter(newCenterX, newCenterZ);
                     } else {
                         world.getWorldBorder().setCenter(worldCenterLastPosition.get(world.key().asString()).first(),
                                 worldCenterLastPosition.get(world.key().asString()).second());

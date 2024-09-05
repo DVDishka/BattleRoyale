@@ -57,7 +57,6 @@ public class DropHandler implements Listener {
             Component text = Component.empty();
 
             Component followButton = Component.empty();
-
             followButton = followButton
                     .append(Component.text("[FOLLOW]")
                             .color(NamedTextColor.GREEN)
@@ -65,12 +64,18 @@ public class DropHandler implements Listener {
                             .clickEvent(ClickEvent.runCommand("/battleroyale drop follow " + "\"" + dropContainer.getName() + "\"")));
 
             Component deleteButton = Component.empty();
-
             deleteButton = deleteButton
                     .append(Component.text("[DELETE]")
                             .color(NamedTextColor.RED)
                             .decorate(TextDecoration.BOLD)
                             .clickEvent(ClickEvent.runCommand("/battleroyale admin drop delete " + "\"" + dropContainer.getName() + "\"")));
+
+            Component openButton = Component.empty();
+            openButton = openButton
+                    .append(Component.text("[OPEN]")
+                            .color(NamedTextColor.LIGHT_PURPLE)
+                            .decorate(TextDecoration.BOLD)
+                            .clickEvent(ClickEvent.runCommand("/battleroyale admin drop open " + "\"" + dropContainer.getName() + "\"")));
 
             header = header
                     .append(Component.text("New drop container!")
@@ -100,6 +105,9 @@ public class DropHandler implements Listener {
                 text = text
                         .append(Component.space())
                         .append(deleteButton);
+                text = text
+                        .append(Component.space())
+                        .append(openButton);
             }
 
             Common.sendNotification(header, text, player);

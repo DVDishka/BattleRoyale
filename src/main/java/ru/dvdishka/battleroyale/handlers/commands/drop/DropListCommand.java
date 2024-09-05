@@ -37,7 +37,6 @@ public class DropListCommand implements CommandInterface {
         for (DropContainer dropContainer : DropContainer.getContainerList()) {
 
             Component followButton = Component.empty();
-
             followButton = followButton
                     .append(Component.text("[FOLLOW]")
                             .color(NamedTextColor.GREEN)
@@ -45,12 +44,18 @@ public class DropListCommand implements CommandInterface {
                             .clickEvent(ClickEvent.runCommand("/battleroyale drop follow " + "\"" + dropContainer.getName() + "\"")));
 
             Component deleteButton = Component.empty();
-
             deleteButton = deleteButton
                     .append(Component.text("[DELETE]")
                             .color(NamedTextColor.RED)
                             .decorate(TextDecoration.BOLD)
                             .clickEvent(ClickEvent.runCommand("/battleroyale admin drop delete " + "\"" + dropContainer.getName() + "\"")));
+
+            Component openButton = Component.empty();
+            openButton = openButton
+                    .append(Component.text("[OPEN]")
+                            .color(NamedTextColor.LIGHT_PURPLE)
+                            .decorate(TextDecoration.BOLD)
+                            .clickEvent(ClickEvent.runCommand("/battleroyale admin drop open " + "\"" + dropContainer.getName() + "\"")));
 
             message = message
                     .append(Component.text("=".repeat(24))
@@ -80,6 +85,9 @@ public class DropListCommand implements CommandInterface {
                 message = message
                         .append(Component.space())
                         .append(deleteButton);
+                message = message
+                        .append(Component.space())
+                        .append(openButton);
             }
 
             message = message

@@ -21,12 +21,15 @@ public class DropType {
 
     private final String name;
     private final ArrayList<ItemStack> items;
+    private final int chancePoints;
 
     private static final ArrayList<DropType> dropTypes = new ArrayList<>();
+    private static int chancePointsSum = 0;
 
-    private DropType(ArrayList<ItemStack> items, String name) {
+    private DropType(ArrayList<ItemStack> items, String name, int chancePoints) {
         this.items = items;
         this.name = name;
+        this.chancePoints = chancePoints;
     }
 
     public static DropType getByNameOrRandom(String name) {
@@ -44,7 +47,15 @@ public class DropType {
         if (dropTypes.isEmpty()) {
             return null;
         }
-        return dropTypes.get(new Random().nextInt(0, dropTypes.size()));
+        int index = new Random().nextInt(0, chancePointsSum);
+
+        for (DropType dropType : dropTypes) {
+            if (index - dropType.chancePoints < 0) {
+                return dropType;
+            }
+            index -= dropType.chancePoints;
+        }
+        return null;
     }
 
     public static ArrayList<DropType> getDropTypes() {
@@ -61,8 +72,9 @@ public class DropType {
 
     public static void deserialize(ConfigurationSection dropTypeConfig, String dropTypeName) {
 
-        Map<String, Object> serializedItems = dropTypeConfig.getConfigurationSection("items").getValues(false);
+        int chancePoints = dropTypeConfig.getInt("chancePoints");
 
+        Map<String, Object> serializedItems = dropTypeConfig.getConfigurationSection("items").getValues(false);
         ArrayList<ItemStack> deserializedItems = new ArrayList<>();
 
         for (Map.Entry<String, Object> serializedItemMap : serializedItems.entrySet()) {
@@ -119,6 +131,13 @@ public class DropType {
                         itemDeserializedEffectDuration = 20 * (int) dropTypeConfig.getConfigurationSection("items." + serializedItemMap.getKey() + ".effects." + serializedEffect.getKey()).get("duration");
                     } catch (Exception ignored) {}
 
+                    if (itemMaterial.equals(Material.LINGERING_POTION)) {
+                        itemDeserializedEffectDuration *= 4;
+                    }
+                    if (itemMaterial.equals(Material.TIPPED_ARROW)) {
+                        itemDeserializedEffectDuration *= 8;
+                    }
+
                     PotionMeta itemMeta = (PotionMeta) deserializedItem.getItemMeta();
                     itemMeta.addCustomEffect(new PotionEffect(itemDeserializedEffect, itemDeserializedEffectDuration, itemDeserializedEffectLevel), false);
 
@@ -129,6 +148,7 @@ public class DropType {
             deserializedItems.add(deserializedItem);
         }
 
-        dropTypes.add(new DropType(deserializedItems, dropTypeName));
+        dropTypes.add(new DropType(deserializedItems, dropTypeName, chancePoints));
+        chancePointsSum += chancePoints;
     }
 }

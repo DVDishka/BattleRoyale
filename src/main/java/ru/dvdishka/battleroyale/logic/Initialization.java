@@ -550,7 +550,6 @@ public class Initialization {
                     .then(new LiteralArgument("drop").withPermission(Permission.DROP_EDIT.getPermission())
 
                             .then(new LiteralArgument("create")
-
                                     .then(new StringArgument("dropTypeName")
 
                                             .includeSuggestions(ArgumentSuggestions.stringsWithTooltipsCollection(commandSenderSuggestionInfo -> {
@@ -582,7 +581,6 @@ public class Initialization {
                             )
 
                             .then(new LiteralArgument("delete")
-
                                     .then(new TextArgument("dropName")
                                             .includeSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
 
@@ -599,6 +597,27 @@ public class Initialization {
                                             .executes((commandSender, commandArguments) -> {
 
                                                 new DropDeleteCommand().execute(commandSender, commandArguments);
+                                            })
+                                    )
+                            )
+
+                            .then(new LiteralArgument("open")
+                                    .then(new TextArgument("dropName")
+                                            .includeSuggestions(ArgumentSuggestions.stringCollection((commandSenderSuggestionInfo) -> {
+
+                                                ArrayList<String> suggestions = new ArrayList<>();
+
+                                                for (DropContainer dropContainer : DropContainer.getContainerList()) {
+
+                                                    suggestions.add("\"" + dropContainer.getName() + "\"");
+                                                }
+
+                                                return suggestions;
+                                            }))
+
+                                            .executes((commandSender, commandArguments) -> {
+
+                                                new DropOpenCommand().execute(commandSender, commandArguments);
                                             })
                                     )
                             )
