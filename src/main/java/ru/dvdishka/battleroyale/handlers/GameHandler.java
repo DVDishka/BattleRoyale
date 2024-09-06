@@ -259,8 +259,8 @@ public class GameHandler implements Listener {
         if (PlayerVariables.isReviveQueue(player)) {
 
             player.setGameMode(GameMode.SURVIVAL);
-            player.teleport(player.getRespawnLocation() == null ? PluginVariables.overWorld.getSpawnLocation() : player.getRespawnLocation());
-            if (player.getRespawnLocation() == null) {
+            player.teleport(player.getBedSpawnLocation() == null ? PluginVariables.overWorld.getSpawnLocation() : player.getBedSpawnLocation());
+            if (player.getBedSpawnLocation() == null) {
                 StartElytraHandler.giveStartElytra(player);
             }
 

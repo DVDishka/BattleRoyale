@@ -55,11 +55,12 @@ public class ReviveCommand implements CommandInterface {
         if (revivePlayer != null) {
             revivePlayer.setGameMode(GameMode.SURVIVAL);
 
-            revivePlayer.teleport(revivePlayer.getRespawnLocation() == null ? PluginVariables.overWorld.getSpawnLocation() : revivePlayer.getRespawnLocation());
-            if (revivePlayer.getRespawnLocation() == null) {
+            revivePlayer.teleport(revivePlayer.getBedSpawnLocation() == null ? PluginVariables.overWorld.getSpawnLocation() : revivePlayer.getBedSpawnLocation());
+            if (revivePlayer.getBedSpawnLocation() == null) {
                 StartElytraHandler.giveStartElytra(revivePlayer);
             }
         } else {
+            PlayerVariables.removeKillQueue(revivePlayerName);
             PlayerVariables.addReviveQueue(revivePlayerName);
         }
 

@@ -31,6 +31,7 @@ public class KillCommand implements CommandInterface {
         }
 
         if (Bukkit.getPlayer(killedPlayerName) == null) {
+            PlayerVariables.removeReviveQueue(killedPlayerName);
             PlayerVariables.addKillQueue(killedPlayerName);
         }
 

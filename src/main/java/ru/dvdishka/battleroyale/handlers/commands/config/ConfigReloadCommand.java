@@ -3,6 +3,7 @@ package ru.dvdishka.battleroyale.handlers.commands.config;
 import dev.jorel.commandapi.executors.CommandArguments;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import ru.dvdishka.battleroyale.BattleRoyale;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.logic.Initialization;
 import ru.dvdishka.battleroyale.logic.Logger;
@@ -16,6 +17,7 @@ public class ConfigReloadCommand implements CommandInterface {
     @Override
     public void execute(CommandSender sender, CommandArguments args) {
 
+        BattleRoyale.getProvidingPlugin(BattleRoyale.class).reloadConfig();
         send("Loading config...", sender);
         Initialization.initConfig(PluginVariables.plugin.getConfig());
         send("Config has been loaded", sender);
