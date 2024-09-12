@@ -8,11 +8,13 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
+import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.Zone;
 import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.common.GameVariables;
 import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Radar {
@@ -178,12 +180,19 @@ public class Radar {
 
     public void unregister() {
 
+        isInitialized = false;
+        instance = null;
+
         try {
-            isInitialized = false;
             radarFirstPage.destroy();
+        } catch (Exception e) {
+            //Logger.getLogger().warn(Arrays.toString(e.getStackTrace()));
+        }
+        try {
             radarPager.destroy();
-            instance = null;
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            //Logger.getLogger().warn(Arrays.toString(e.getStackTrace()));
+        }
     }
 
     private Component updateRadar(Player player, int lineNumber) {

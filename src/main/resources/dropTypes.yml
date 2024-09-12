@@ -151,21 +151,13 @@ weapons:
           duration: 8
     8:
       material: tipped_arrow
-      amount: 4
-      effects:
-        1:
-          name: wither
-          level: 2
-          duration: 4
-    9:
-      material: tipped_arrow
       amount: 16
       effects:
         1:
           name: nausea
           level: 1
           duration: 10
-    10:
+    9:
       material: arrow
       amount: 64
 

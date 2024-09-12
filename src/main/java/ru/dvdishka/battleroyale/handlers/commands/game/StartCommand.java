@@ -34,7 +34,7 @@ public class StartCommand implements CommandInterface {
     public void execute(CommandSender sender, CommandArguments args) {
 
         if (GameVariables.isGameStarted) {
-            returnFailure("You need to stop battleroyale to start it again \"/battleroyale admin stop\"", sender);
+            returnFailure("You need to stop battleroyale to start it again \"/battleroyale admin game stop\"", sender);
             return;
         }
 
@@ -79,7 +79,9 @@ public class StartCommand implements CommandInterface {
             });
 
             if (!SuperPower.isEmpty()) {
-                SuperPower.getRandom().setToPlayer(player);
+                try {
+                    SuperPower.getRandom().setToPlayer(player);
+                } catch (Exception ignored) {}
             }
 
             player.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_0, 1000, 0);

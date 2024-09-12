@@ -49,7 +49,7 @@ public class Common {
                 PluginVariables.overWorld.getSpawnLocation().getBlockZ());
 
         if (Radar.isInitialized()) {
-            Radar.getInstance().movingZoneChar = "=";
+            Radar.getInstance().movingZoneChar = "■";
             Radar.getInstance().unregister();
         }
 

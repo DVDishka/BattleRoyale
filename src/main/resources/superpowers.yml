@@ -9,11 +9,17 @@ runner:
     3:
       name: no_fall_damage
       level: 1
+    4:
+      name: damage_resistance
+      level: 1
 miner:
   effects:
     1:
       name: fast_digging
       level: 5
+    2:
+      name: damage_resistance
+      level: 1
 aqua_man:
   effects:
     1:
@@ -25,6 +31,9 @@ aqua_man:
     3:
       name: dolphins_grace
       level: 4
+    4:
+      name: damage_resistance
+      level: 1
 cat:
   effects:
     1:
@@ -36,20 +45,29 @@ cat:
     3:
       name: luck
       level: 5
+    4:
+      name: damage_resistance
+      level: 1
 husky:
   effects:
     1:
       name: health_boost
       level: 3
+    2:
+      name: damage_resistance
+      level: 1
 tank:
   effects:
     1:
       name: damage_resistance
-      level: 1
+      level: 2
 healer:
   effects:
     1:
       name: regeneration
+      level: 1
+    2:
+      name: damage_resistance
       level: 1
 bounty_hunter:
   effects:
@@ -58,4 +76,7 @@ bounty_hunter:
       level: 1
     2:
       name: glowing
+      level: 1
+    3:
+      name: damage_resistance
       level: 1
