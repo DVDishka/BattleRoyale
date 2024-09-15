@@ -97,8 +97,7 @@ public class InviteTeamCommand implements CommandInterface {
             text = text
                     .append(acceptButton)
                     .append(Component.space())
-                    .append(declineButton)
-                    .append(Component.newline());
+                    .append(declineButton);
 
             Common.sendNotification(header, text, invitedPlayer);
         }

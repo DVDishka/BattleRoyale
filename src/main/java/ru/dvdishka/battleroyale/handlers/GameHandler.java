@@ -35,6 +35,8 @@ public class GameHandler implements Listener {
     @EventHandler
     public void onTeamWin(TeamWinEvent event) {
 
+        Logger.getLogger().devLog("TeamWinEvent fired. Team: " + event.getTeamName());
+
         Zone.getInstance().stopMoving();
         Timer.getInstance().unregister();
 
@@ -69,6 +71,8 @@ public class GameHandler implements Listener {
     @EventHandler
     public void onTeamEliminate(TeamEliminateEvent event) {
 
+        Logger.getLogger().devLog("TeamEliminateEvent fired. Team: " + event.getTeamName());
+
         Team.deadTeams.add(event.getTeamName());
 
         for (Player onlinePlayer : PlayerVariables.getOnlinePlayers()) {
@@ -94,6 +98,8 @@ public class GameHandler implements Listener {
 
     @org.bukkit.event.EventHandler
     public void onGameDeath(GameDeathEvent event) {
+
+        Logger.getLogger().devLog("GameDeathEvent fired. Player: " + event.getPlayerName());
 
         String playerName = event.getPlayerName();
         Team playerTeam = Team.getTeam(playerName);

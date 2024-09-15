@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.common.GameVariables;
 import ru.dvdishka.battleroyale.logic.event.game.GameDeathEvent;
 import ru.dvdishka.battleroyale.logic.event.game.ReviveDeathEvent;
@@ -14,6 +15,8 @@ public class EventHandler implements Listener {
     public void onPortal(PlayerPortalEvent event) {
 
         if (GameVariables.isPortalLocked) {
+
+            Logger.getLogger().devLog("BlockPortalTeleportationEvent fired. Player: " + event.getPlayer().getName() + " from " + event.getFrom() + " " + event.getTo());
 
             event.setCancelled(true);
         }

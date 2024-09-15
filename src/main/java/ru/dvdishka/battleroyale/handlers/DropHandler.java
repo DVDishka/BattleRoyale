@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import ru.dvdishka.battleroyale.handlers.commands.common.Permission;
+import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.common.Common;
 import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Zone;
@@ -34,6 +35,8 @@ public class DropHandler implements Listener {
 
     @EventHandler
     public void onDropCreateEvent(DropCreateEvent event) {
+
+        Logger.getLogger().devLog("DropCreateEvent fired");
 
         if (!GameVariables.isGameStarted || DropType.getDropTypes().isEmpty()) {
             return;
@@ -116,6 +119,8 @@ public class DropHandler implements Listener {
 
     @EventHandler
     public void onDropClickEvent(DropClickEvent event) {
+
+        Logger.getLogger().devLog("DropClickEvent fired, Stage: " + event.getDropContainer().getStage().name() + ", Location: " + event.getDropContainer().getLocation());
 
         if (event.getDropContainer().getStage().equals(DropContainerStage.PRE_CLICK_STAGE)) {
 
