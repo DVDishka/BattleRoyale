@@ -14,17 +14,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import ru.dvdishka.battleroyale.handlers.StartElytraHandler;
+import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.CreateStartBoxCommand;
 import ru.dvdishka.battleroyale.handlers.commands.startbox.OpenStartBoxCommand;
 import ru.dvdishka.battleroyale.logic.Logger;
+import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.logic.classes.superpower.EffectUpdateTask;
 import ru.dvdishka.battleroyale.logic.classes.superpower.SuperPower;
 import ru.dvdishka.battleroyale.logic.common.*;
 import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
-import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.Scheduler;
 import ru.dvdishka.battleroyale.ui.Radar;
 import ru.dvdishka.battleroyale.ui.Timer;
-import ru.dvdishka.battleroyale.logic.classes.superpower.EffectUpdateTask;
 
 import java.util.ArrayList;
 

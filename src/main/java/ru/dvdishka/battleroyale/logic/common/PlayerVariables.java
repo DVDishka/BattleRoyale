@@ -3,7 +3,9 @@ package ru.dvdishka.battleroyale.logic.common;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class PlayerVariables {
 

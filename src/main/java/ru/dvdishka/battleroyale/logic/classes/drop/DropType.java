@@ -9,12 +9,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Logger;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
-import java.util.*;
 
 
 public class DropType {

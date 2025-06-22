@@ -7,11 +7,11 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
 import ru.dvdishka.battleroyale.logic.common.GameVariables;
 import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 import ru.dvdishka.battleroyale.logic.event.NextGameStageEvent;
-import ru.dvdishka.battleroyale.logic.classes.ZonePhase;
-import ru.dvdishka.battleroyale.logic.Scheduler;
 
 import java.util.ArrayList;
 

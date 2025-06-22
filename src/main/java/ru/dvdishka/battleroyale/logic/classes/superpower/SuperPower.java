@@ -8,8 +8,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
-import ru.dvdishka.battleroyale.logic.common.Common;
 import ru.dvdishka.battleroyale.logic.Logger;
+import ru.dvdishka.battleroyale.logic.common.Common;
 
 import java.util.*;
 

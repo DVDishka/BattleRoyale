@@ -8,13 +8,11 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
-import ru.dvdishka.battleroyale.logic.Logger;
 import ru.dvdishka.battleroyale.logic.Zone;
 import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.common.GameVariables;
 import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Radar {

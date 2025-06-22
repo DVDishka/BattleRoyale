@@ -6,8 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.Scheduler;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.common.GameVariables;
 import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 

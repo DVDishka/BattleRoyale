@@ -1,11 +1,10 @@
 package ru.dvdishka.battleroyale.logic.classes.superpower;
 
-import ru.dvdishka.battleroyale.logic.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import ru.dvdishka.battleroyale.logic.common.PlayerVariables;
+import ru.dvdishka.battleroyale.logic.Scheduler;
 import ru.dvdishka.battleroyale.logic.common.PluginVariables;
 
 import java.util.List;

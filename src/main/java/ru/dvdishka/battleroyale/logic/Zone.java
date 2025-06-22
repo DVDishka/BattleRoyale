@@ -1,7 +1,7 @@
 package ru.dvdishka.battleroyale.logic;
 
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
-import it.unimi.dsi.fastutil.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
-import static java.lang.Math.min;
 import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class Zone {
 
@@ -188,22 +188,22 @@ public class Zone {
 
                     double newCenterX, newCenterZ;
                     if (xStepSize >= 0) {
-                        newCenterX = min(world.getWorldBorder().getCenter().x() + xStepSize, worldCenterLastPosition.get(world.key().asString()).first());
+                        newCenterX = min(world.getWorldBorder().getCenter().x() + xStepSize, worldCenterLastPosition.get(world.key().asString()).getLeft());
                     } else {
-                        newCenterX = max(world.getWorldBorder().getCenter().x() + xStepSize, worldCenterLastPosition.get(world.key().asString()).first());
+                        newCenterX = max(world.getWorldBorder().getCenter().x() + xStepSize, worldCenterLastPosition.get(world.key().asString()).getLeft());
                     }
 
                     if (zStepSize >= 0) {
-                        newCenterZ = min(world.getWorldBorder().getCenter().z() + zStepSize, worldCenterLastPosition.get(world.key().asString()).second());
+                        newCenterZ = min(world.getWorldBorder().getCenter().z() + zStepSize, worldCenterLastPosition.get(world.key().asString()).getRight());
                     } else {
-                        newCenterZ = max(world.getWorldBorder().getCenter().z() + zStepSize, worldCenterLastPosition.get(world.key().asString()).second());
+                        newCenterZ = max(world.getWorldBorder().getCenter().z() + zStepSize, worldCenterLastPosition.get(world.key().asString()).getRight());
                     }
 
                     if (delay != duration * 20) {
                         world.getWorldBorder().setCenter(newCenterX, newCenterZ);
                     } else {
-                        world.getWorldBorder().setCenter(worldCenterLastPosition.get(world.key().asString()).first(),
-                                worldCenterLastPosition.get(world.key().asString()).second());
+                        world.getWorldBorder().setCenter(worldCenterLastPosition.get(world.key().asString()).getLeft(),
+                                worldCenterLastPosition.get(world.key().asString()).getRight());
                     }
                 }
 

@@ -8,7 +8,6 @@ import ru.dvdishka.battleroyale.logic.classes.drop.DropContainer;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropContainerStage;
 import ru.dvdishka.battleroyale.logic.common.Common;
 import ru.dvdishka.battleroyale.logic.common.GameVariables;
-import ru.dvdishka.battleroyale.ui.DropBar;
 
 public class DropOpenCommand implements CommandInterface {
 

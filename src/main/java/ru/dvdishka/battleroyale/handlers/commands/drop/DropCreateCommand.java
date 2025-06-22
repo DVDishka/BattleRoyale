@@ -5,8 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import ru.dvdishka.battleroyale.handlers.commands.common.CommandInterface;
-import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.classes.drop.DropType;
+import ru.dvdishka.battleroyale.logic.common.ConfigVariables;
 import ru.dvdishka.battleroyale.logic.common.GameVariables;
 import ru.dvdishka.battleroyale.logic.event.drop.DropCreateEvent;
 

@@ -13,7 +13,7 @@
 
     <description>BattleRoyale plugin</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <url>mc.dvdcraft.ru</url>
@@ -31,12 +31,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.6.0</version>
                 <configuration>
                     <relocations>
                         <relocation>
                             <pattern>dev.jorel.commandapi</pattern>
                             <shadedPattern>ru.dvdishka.shade.commandapi</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.tcoded.folialib</pattern>
+                            <shadedPattern>ru.dvdishka.battleroyale.lib.folialib</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -63,6 +67,11 @@
 
     <repositories>
         <repository>
+            <id>tcoded-releases</id>
+            <name>TCoded Maven</name>
+            <url>https://repo.tcoded.com/releases</url>
+        </repository>
+        <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
@@ -75,27 +84,52 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
         <repository>
+            <id>viaversion-everything</id>
+            <name>ViaVersion Repository</name>
+            <url>https://repo.viaversion.com/everything</url>
+        </repository>
+        <repository>
             <id>maven_central</id>
             <name>Maven Central</name>
             <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>catcoder-snapshots</id>
+            <name>CatCoder's repository</name>
+            <url>https://catcoder.pl.ua/snapshots</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <dependencies>
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.20.2-R0.1-SNAPSHOT</version>
+            <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>dev.jorel</groupId>
             <artifactId>commandapi-bukkit-shade</artifactId>
-            <version>9.5.1</version>
+            <version>10.0.1</version>
         </dependency>
         <dependency>
             <groupId>me.catcoder</groupId>
             <artifactId>bukkit-sidebar</artifactId>
-            <version>6.2.5-SNAPSHOT</version>
+            <version>6.2.10-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>26.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tcoded</groupId>
+            <artifactId>FoliaLib</artifactId>
+            <version>0.5.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
