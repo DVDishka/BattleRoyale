@@ -380,7 +380,7 @@ public class Initialization {
 
     public static void initCommands() {
 
-        CommandTree commandTree = new CommandTree("battleRoyale");
+        CommandTree commandTree = new CommandTree("battleroyale");
 
         // TEAM
         {
